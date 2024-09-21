@@ -1,4 +1,0 @@
-org.springframework.test.context.ContextCustomizerFactory = com.\
-    yulcomtechnologies.gump.config.\
-    SqlTestContainersSpringContextCustomizerFactory,com.yulcomtechnologies.gump.\
-    config.RedisTestContainersSpringContextCustomizerFactory
