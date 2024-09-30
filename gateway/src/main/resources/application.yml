@@ -5,12 +5,16 @@ eureka:
     registerWithEureka: false
     fetchRegistry: false
 
+keycloak:
+    auth-server-url: http://localhost:9080
+    realm: myrealm
+
 spring:
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: "http://localhost:9090/realms/myrealm"
+          issuer-uri: http://localhost:9080/realms/myrealm
   cloud:
     gateway:
       mvc:
