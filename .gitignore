@@ -2,6 +2,7 @@
 # Node
 ######################
 /node/
+uploads
 node_tmp/
 node_modules/
 npm-debug.log.*
