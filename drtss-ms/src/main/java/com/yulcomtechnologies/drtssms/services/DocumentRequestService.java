@@ -29,9 +29,9 @@ public class DocumentRequestService {
     private final DocumentRequestRepository documentRequestRepository;
     private final FileRepository fileRepository;
 
-    public DocumentRequest submitDocumentRequest(String requesterId, MultipartFile idCardFile, MultipartFile driverLicenseFile) throws IOException {
-        File idCard = saveFile(idCardFile, "Document 1");
-        File driverLicense = saveFile(driverLicenseFile, "Document 2");
+    public DocumentRequest submitDocumentRequest(String requesterId, MultipartFile attestationCnss, MultipartFile attestationAnpe) throws IOException {
+        File idCard = saveFile(attestationCnss, "Attestation CNSS");
+        File driverLicense = saveFile(attestationAnpe, "Attestation ANPE");
 
         var documentRequest = DocumentRequest.builder()
             .requesterId(requesterId)

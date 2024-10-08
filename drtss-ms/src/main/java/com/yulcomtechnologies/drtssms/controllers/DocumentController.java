@@ -23,10 +23,10 @@ public class DocumentController {
     @PostMapping("demandes")
     public ResponseEntity<CreatedResource> submitDocumentRequest(
         @RequestParam("requesterId") String requesterId,
-        @RequestParam("document1") MultipartFile document1,
-        @RequestParam("document2") MultipartFile document2) throws IOException {
+        @RequestParam("attestationCnss") MultipartFile attestationCnss,
+        @RequestParam("attestationAnpe") MultipartFile attestationAnpe) throws IOException {
 
-        DocumentRequest documentRequest = documentRequestService.submitDocumentRequest(requesterId, document1, document2);
+        DocumentRequest documentRequest = documentRequestService.submitDocumentRequest(requesterId, attestationCnss, attestationAnpe);
 
         return ResponseEntity.ok(new CreatedResource(documentRequest.getId().toString()));
     }
