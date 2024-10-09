@@ -29,12 +29,12 @@ public class DocumentRequestService {
     private final DocumentRequestRepository documentRequestRepository;
     private final FileRepository fileRepository;
 
-    public DocumentRequest submitDocumentRequest(String requesterId, MultipartFile attestationCnss, MultipartFile attestationAnpe) throws IOException {
+    public DocumentRequest submitDocumentRequest(MultipartFile attestationCnss, MultipartFile attestationAnpe) throws IOException {
         File idCard = saveFile(attestationCnss, "Attestation CNSS");
         File driverLicense = saveFile(attestationAnpe, "Attestation ANPE");
 
         var documentRequest = DocumentRequest.builder()
-            .requesterId(requesterId)
+            .requesterId("requesterId")
             .createdAt(LocalDateTime.now())
             .status(DocumentRequestStatus.PENDING.name()).build();
 

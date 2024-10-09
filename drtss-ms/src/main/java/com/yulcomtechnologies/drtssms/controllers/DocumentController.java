@@ -22,11 +22,10 @@ public class DocumentController {
 
     @PostMapping("demandes")
     public ResponseEntity<CreatedResource> submitDocumentRequest(
-        @RequestParam("requesterId") String requesterId,
         @RequestParam("attestationCnss") MultipartFile attestationCnss,
         @RequestParam("attestationAnpe") MultipartFile attestationAnpe) throws IOException {
 
-        DocumentRequest documentRequest = documentRequestService.submitDocumentRequest(requesterId, attestationCnss, attestationAnpe);
+        DocumentRequest documentRequest = documentRequestService.submitDocumentRequest(attestationCnss, attestationAnpe);
 
         return ResponseEntity.ok(new CreatedResource(documentRequest.getId().toString()));
     }
