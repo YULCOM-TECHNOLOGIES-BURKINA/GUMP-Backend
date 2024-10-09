@@ -1,0 +1,47 @@
+services:
+  drtss:
+    image: kulturman/gump-drtss:latest
+    container_name: gump-drtss-backend
+    depends_on:
+      - drtss-database
+      - eureka-server
+    restart: on-failure
+    networks:
+      - gump-network
+    ports:
+      - 8082:8082
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://drtss-database:5432/gump
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+
+  eureka-server:
+    image: kulturman/gump-eureka:latest
+    container_name: gump-drtss-eureka-server
+    networks:
+      - gump-network
+    ports:
+      - 8761:8761
+
+  drtss-database:
+    image: postgres:16.4
+    networks:
+        - gump-network
+    volumes:
+      - drtss-data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=gump
+      - POSTGRES_PASSWORD=gump
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - 5431:5432
+
+volumes:
+  drtss-data:
+
+networks:
+  gump-network:
