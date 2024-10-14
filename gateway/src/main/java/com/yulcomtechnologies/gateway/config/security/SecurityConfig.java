@@ -7,7 +7,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.oauth2.jwt.JwtDecoders;
 import org.springframework.security.web.SecurityFilterChain;
 
 
@@ -33,10 +32,10 @@ public class SecurityConfig {
                         .permitAll()
                         .anyRequest()
                 .authenticated()
-            )
-            .oauth2ResourceServer(oauth2 -> oauth2
-                .jwt(jwt -> jwt.decoder(JwtDecoders.fromIssuerLocation("http://localhost:9080/realms/myrealm")))
             );
+            /*.oauth2ResourceServer(oauth2 -> oauth2
+                .jwt(jwt -> jwt.decoder(JwtDecoders.fromIssuerLocation("http://localhost:9080/realms/myrealm")))
+            );*/
         return http.build();
     }
 }
