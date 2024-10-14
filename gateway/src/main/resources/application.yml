@@ -14,7 +14,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:9080/realms/myrealm
+          issuer-uri: ${keycloak.auth-server-url}/realms/${keycloak.realm}
   cloud:
     gateway:
       mvc:

@@ -9,4 +9,5 @@ public class RegisterRequest {
     public String email;
     public String firstName;
     public String lastName;
+    public String societyName;
 }

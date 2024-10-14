@@ -40,6 +40,27 @@ services:
     ports:
       - 5431:5432
 
+  keycloak:
+    networks:
+      - gump-network
+    extends:
+      file: ./keycloak.yml
+      service: keycloak
+
+  gump-gateway:
+    depends_on:
+      - keycloak
+    image: kulturman/gump-gateway:latest
+    container_name: gump-gateway-backend
+    networks:
+      - gump-network
+    ports:
+      - 9090:9090
+    environment:
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - KEYCLOAK_AUTH_SERVER_URL=http://keycloak:9080
+      - KEYCLOAK_REALM=myrealm
+
 volumes:
   drtss-data:
 
