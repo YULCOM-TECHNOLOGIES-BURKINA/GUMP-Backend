@@ -7,6 +7,7 @@ import java.util.Set;
 
 @Data
 public class DocumentRequestDto {
+    private String id;
     private String requesterId;
     private String status;
     private String reviewedBy;

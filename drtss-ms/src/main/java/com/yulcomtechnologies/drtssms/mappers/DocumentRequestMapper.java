@@ -11,6 +11,7 @@ public class DocumentRequestMapper {
 
     public static DocumentRequestDto toDto(DocumentRequest documentRequest) {
         DocumentRequestDto dto = new DocumentRequestDto();
+        dto.setId(documentRequest.getId().toString());
         dto.setRequesterId(documentRequest.getRequesterId());
         dto.setStatus(documentRequest.getStatus());
         dto.setReviewedBy(documentRequest.getReviewedBy());

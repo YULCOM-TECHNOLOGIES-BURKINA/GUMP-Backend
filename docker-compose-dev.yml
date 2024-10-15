@@ -1,6 +1,6 @@
 services:
   drtss:
-    image: kulturman/gump-drtss:latest
+    image: kulturman/gump-drtss:v3
     container_name: gump-drtss-backend
     depends_on:
       - drtss-database
@@ -25,7 +25,7 @@ services:
   drtss-database:
     image: postgres:16.4
     networks:
-        - gump-network
+      - gump-network
     volumes:
       - drtss-data:/var/lib/postgresql/data/
     environment:
@@ -50,7 +50,7 @@ services:
   gump-gateway:
     depends_on:
       - keycloak
-    image: kulturman/gump-gateway:latest
+    image: kulturman/gump-gateway:v5
     container_name: gump-gateway-backend
     networks:
       - gump-network
