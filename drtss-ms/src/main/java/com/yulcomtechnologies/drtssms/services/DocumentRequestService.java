@@ -28,6 +28,7 @@ import java.util.UUID;
 public class DocumentRequestService {
     private final DocumentRequestRepository documentRequestRepository;
     private final FileRepository fileRepository;
+    private final DocumentRequestMapper documentRequestMapper;
 
     public DocumentRequest submitDocumentRequest(MultipartFile attestationCnss, MultipartFile attestationAnpe) throws IOException {
         File idCard = saveFile(attestationCnss, "Attestation CNSS");
@@ -63,12 +64,12 @@ public class DocumentRequestService {
     }
 
     public Page<DocumentRequestDto> getPaginatedDocumentRequests(Pageable pageable) {
-        return documentRequestRepository.findAll(pageable).map(DocumentRequestMapper::toDto);
+        return documentRequestRepository.findAll(pageable).map(documentRequestMapper::toDto);
     }
 
     public DocumentRequestDto getDocumentRequest(String id) {
         return documentRequestRepository.findById(Long.parseLong(id))
-            .map(DocumentRequestMapper::toDto)
+            .map(documentRequestMapper::toDto)
             .orElseThrow(() -> new IllegalArgumentException("Document request not found"));
     }
 

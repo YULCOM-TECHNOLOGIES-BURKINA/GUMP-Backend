@@ -4,12 +4,19 @@ import com.yulcomtechnologies.drtssms.dtos.DocumentRequestDto;
 import com.yulcomtechnologies.drtssms.dtos.FileDto;
 import com.yulcomtechnologies.drtssms.entities.DocumentRequest;
 import com.yulcomtechnologies.drtssms.entities.File;
+import com.yulcomtechnologies.drtssms.repositories.FileRepository;
+import com.yulcomtechnologies.drtssms.services.FileService;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
 
+@Service
+@AllArgsConstructor
 public class DocumentRequestMapper {
+    private final FileService fileService;
 
-    public static DocumentRequestDto toDto(DocumentRequest documentRequest) {
+    public DocumentRequestDto toDto(DocumentRequest documentRequest) {
         DocumentRequestDto dto = new DocumentRequestDto();
         dto.setId(documentRequest.getId().toString());
         dto.setRequesterId(documentRequest.getRequesterId());
@@ -20,17 +27,17 @@ public class DocumentRequestMapper {
 
         if (documentRequest.getFiles() != null) {
             dto.setFiles(documentRequest.getFiles().stream()
-                .map(DocumentRequestMapper::fileToDto)
+                .map(this::fileToDto)
                 .collect(Collectors.toSet()));
         }
 
         return dto;
     }
 
-    public static FileDto fileToDto(File file) {
+    public FileDto fileToDto(File file) {
         FileDto fileDto = new FileDto();
         fileDto.setLabel(file.getLabel());
-        fileDto.setPath(file.getPath());
+        fileDto.setPath(fileService.getPath(file));
         return fileDto;
     }
 }

@@ -16,3 +16,5 @@ server:
   servlet:
     context-path: /api
 
+app:
+  url: http://localhost:8082/api
