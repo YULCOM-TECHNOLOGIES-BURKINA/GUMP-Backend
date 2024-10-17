@@ -1,5 +1,6 @@
 package com.yulcomtechnologies.drtssms.mappers;
 
+import com.yulcomtechnologies.drtssms.dtos.AttestationDto;
 import com.yulcomtechnologies.drtssms.dtos.DocumentRequestDto;
 import com.yulcomtechnologies.drtssms.dtos.FileDto;
 import com.yulcomtechnologies.drtssms.entities.DocumentRequest;
@@ -25,6 +26,15 @@ public class DocumentRequestMapper {
         dto.setCreatedAt(documentRequest.getCreatedAt());
 
         if (documentRequest.isApproved()) {
+            var attestation = documentRequest.getAttestation();
+
+            dto.setAttestation(
+                new AttestationDto(
+                    fileStorageService.getPath(attestation.getFile()),
+                    attestation.getNumber(),
+                    attestation.getExpirationDate().toLocalDate()
+                )
+            );
             dto.setGeneratedDocumentUrl(fileStorageService.getPath(documentRequest.getAttestation().getFile()));
         }
 
