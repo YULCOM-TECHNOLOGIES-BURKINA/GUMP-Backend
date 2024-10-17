@@ -35,7 +35,6 @@ public class DocumentRequestMapper {
                     attestation.getExpirationDate().toLocalDate()
                 )
             );
-            dto.setGeneratedDocumentUrl(fileStorageService.getPath(documentRequest.getAttestation().getFile()));
         }
 
         if (documentRequest.getFiles() != null) {
