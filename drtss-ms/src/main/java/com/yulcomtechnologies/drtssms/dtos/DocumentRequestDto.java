@@ -14,4 +14,5 @@ public class DocumentRequestDto {
     private String approvedBy;
     private LocalDateTime createdAt;
     private Set<FileDto> files;
+    private String generatedDocumentUrl;
 }

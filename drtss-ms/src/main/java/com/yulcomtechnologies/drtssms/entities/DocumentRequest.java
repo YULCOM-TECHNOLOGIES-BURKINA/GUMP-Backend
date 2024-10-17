@@ -52,4 +52,8 @@ public class DocumentRequest {
     @OneToOne(mappedBy = "documentRequest", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private Attestation attestation;
+
+    public boolean isApproved() {
+        return "APPROVED".equals(status);
+    }
 }

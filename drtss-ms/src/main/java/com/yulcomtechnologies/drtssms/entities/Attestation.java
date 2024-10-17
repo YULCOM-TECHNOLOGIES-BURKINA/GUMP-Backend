@@ -1,17 +1,23 @@
 package com.yulcomtechnologies.drtssms.entities;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "attestations")
+@AllArgsConstructor
+@Data
+@Builder
+@ToString
 public class Attestation {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "document_request_id")
     private Long id;
+
     private String uuid;
 
     @Column(name = "attestation_anpe_number")
@@ -31,11 +37,16 @@ public class Attestation {
     @Column(unique = true)
     private String number;
 
-    @Column(name = "document_path")
-    private String documentPath;
+    @ManyToOne
+    @JoinColumn(name = "file_id")
+    private File file;
 
     @OneToOne
     @MapsId
     @JoinColumn(name = "document_request_id")
     private DocumentRequest documentRequest;
+
+    public Attestation() {
+        uuid = UUID.randomUUID().toString();
+    }
 }

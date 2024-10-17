@@ -28,7 +28,7 @@ public class DocumentRequestService {
     private final DocumentRequestRepository documentRequestRepository;
     private final FileRepository fileRepository;
     private final DocumentRequestMapper documentRequestMapper;
-    private final FileService fileService;
+    private final FileStorageService fileStorageService;
     private final AttestationGenerator attestationGenerator;
 
     public DocumentRequest submitDocumentRequest(MultipartFile attestationCnss, MultipartFile attestationAnpe) throws IOException {
@@ -52,7 +52,7 @@ public class DocumentRequestService {
     private File saveFile(MultipartFile file, String label) throws IOException {
         String UPLOAD_DIR = "uploads/";
         Path filePath = Paths.get(UPLOAD_DIR, UUID.randomUUID() + "-" + file.getOriginalFilename());
-        fileService.saveFile(file.getBytes(), filePath.toString());
+        fileStorageService.saveFile(file.getBytes(), filePath.toString());
 
         File fileEntity = new File(label, filePath.toString());
 
@@ -83,11 +83,17 @@ public class DocumentRequestService {
         DocumentRequest documentRequest = documentRequestRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("DocumentRequest not found"));
 
+        if (documentRequest.isApproved()) {
+            throw new RuntimeException("DocumentRequest already approved");
+        }
+
         documentRequest.setStatus(DocumentRequestStatus.APPROVED.name());
         documentRequest.setApprovedBy("KeycloakUserUtil.getCurrentUserId()");
 
-        //Generate the document and save it
-        //documentRequest.setGeneratedDocument();
+        attestationGenerator.generateDocument(
+            approveDocumentRequestDto,
+            documentRequest.getId()
+        );
 
         documentRequestRepository.save(documentRequest);
 

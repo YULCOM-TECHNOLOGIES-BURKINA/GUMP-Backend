@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -51,7 +52,7 @@ public class DocumentController {
     @PostMapping("demandes/{id}/approve")
     public ResponseEntity<?> approveDocumentRequest(
         @PathVariable Long id,
-        @RequestBody ApproveDocumentRequestDto approveDocumentRequestDto
+        @RequestBody @Validated ApproveDocumentRequestDto approveDocumentRequestDto
         ) {
         documentRequestService.approveDocumentRequest(id, approveDocumentRequestDto);
         return ResponseEntity.ok().build();

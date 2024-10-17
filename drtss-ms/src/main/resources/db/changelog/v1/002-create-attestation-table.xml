@@ -18,9 +18,10 @@
         "number"                  VARCHAR(255) UNIQUE,
         "expiration_date"         TIMESTAMP,
         "document_request_id"     INT PRIMARY KEY ,
+        "file_id"                 INT NOT NULL,
         "created_at"              TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        "document_path"           VARCHAR(255) NOT NULL,
-        FOREIGN KEY ("document_request_id") REFERENCES "document_requests" ("id")
+        FOREIGN KEY ("document_request_id") REFERENCES "document_requests" ("id"),
+        FOREIGN KEY ("file_id") REFERENCES "files" ("id")
       );
 
     </sql>

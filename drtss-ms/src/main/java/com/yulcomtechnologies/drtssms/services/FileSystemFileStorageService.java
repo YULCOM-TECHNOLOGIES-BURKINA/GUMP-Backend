@@ -10,10 +10,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Service
-public class FileSystemFileService implements FileService {
+public class FileSystemFileStorageService implements FileStorageService {
     private final String appUrl;
 
-    public FileSystemFileService(@Value("${app..url}") String uploadDir) {
+    public FileSystemFileStorageService(@Value("${app..url}") String uploadDir) {
         this.appUrl = uploadDir;
     }
 
