@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -29,6 +28,7 @@ public class DocumentRequestService {
     private final DocumentRequestRepository documentRequestRepository;
     private final FileRepository fileRepository;
     private final DocumentRequestMapper documentRequestMapper;
+    private final FileService fileService;
 
     public DocumentRequest submitDocumentRequest(MultipartFile attestationCnss, MultipartFile attestationAnpe) throws IOException {
         File idCard = saveFile(attestationCnss, "Attestation CNSS");
@@ -51,14 +51,9 @@ public class DocumentRequestService {
     private File saveFile(MultipartFile file, String label) throws IOException {
         String UPLOAD_DIR = "uploads/";
         Path filePath = Paths.get(UPLOAD_DIR, UUID.randomUUID() + "-" + file.getOriginalFilename());
+        fileService.saveFile(file.getBytes(), filePath.toString());
 
-        Files.createDirectories(filePath.getParent());
-
-        Files.write(filePath, file.getBytes());
-
-        File fileEntity = new File();
-        fileEntity.setLabel(label);
-        fileEntity.setPath(filePath.toString());
+        File fileEntity = new File(label, filePath.toString());
 
         return fileRepository.save(fileEntity);
     }

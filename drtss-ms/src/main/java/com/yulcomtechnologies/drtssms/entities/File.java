@@ -25,4 +25,10 @@ public class File {
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    public File(String label, String path) {
+        this.label = label;
+        this.path = path;
+        createdAt = LocalDateTime.now();
+    }
 }
