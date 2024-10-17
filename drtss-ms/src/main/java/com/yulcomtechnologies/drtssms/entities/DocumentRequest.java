@@ -48,4 +48,8 @@ public class DocumentRequest {
         inverseJoinColumns = @JoinColumn(name = "file_id")
     )
     private Set<File> files = new HashSet<>();
+
+    @OneToOne(mappedBy = "documentRequest", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private Attestation attestation;
 }

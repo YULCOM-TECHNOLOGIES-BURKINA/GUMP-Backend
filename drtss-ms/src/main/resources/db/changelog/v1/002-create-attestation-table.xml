@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+>
+
+  <changeSet id="002" author="kulturman">
+    <sql>
+      CREATE TABLE "attestations"
+      (
+        "uuid"                    VARCHAR(255) NOT NULL,
+        "attestation_anpe_number" VARCHAR(255),
+        "attestation_cnss_number" VARCHAR(255),
+        "attestation_anpe_date"   DATE,
+        "attestation_cnss_date"   DATE,
+        "number"                  VARCHAR(255) UNIQUE,
+        "expiration_date"         TIMESTAMP,
+        "document_request_id"     INT PRIMARY KEY ,
+        "created_at"              TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        "document_path"           VARCHAR(255) NOT NULL,
+        FOREIGN KEY ("document_request_id") REFERENCES "document_requests" ("id")
+      );
+
+    </sql>
+  </changeSet>
+</databaseChangeLog>

@@ -1,7 +1,6 @@
 package com.yulcomtechnologies.gateway.dtos;
 
 import lombok.Data;
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +14,5 @@ public class KeycloakCreateUserDto {
     public String lastName;
     public Boolean emailVerified;
     public Boolean enabled;
-
     public List<Map<String, Object>> credentials = new ArrayList<>();
 }

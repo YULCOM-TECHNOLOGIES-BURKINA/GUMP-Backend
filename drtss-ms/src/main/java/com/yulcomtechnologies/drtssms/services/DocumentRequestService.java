@@ -29,6 +29,7 @@ public class DocumentRequestService {
     private final FileRepository fileRepository;
     private final DocumentRequestMapper documentRequestMapper;
     private final FileService fileService;
+    private final AttestationGenerator attestationGenerator;
 
     public DocumentRequest submitDocumentRequest(MultipartFile attestationCnss, MultipartFile attestationAnpe) throws IOException {
         File idCard = saveFile(attestationCnss, "Attestation CNSS");
