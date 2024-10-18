@@ -53,7 +53,7 @@ public class DocumentController {
     public ResponseEntity<?> approveDocumentRequest(
         @PathVariable Long id,
         @RequestBody @Validated ApproveDocumentRequestDto approveDocumentRequestDto
-        ) {
+        ) throws IOException {
         documentRequestService.approveDocumentRequest(id, approveDocumentRequestDto);
         return ResponseEntity.ok().build();
     }

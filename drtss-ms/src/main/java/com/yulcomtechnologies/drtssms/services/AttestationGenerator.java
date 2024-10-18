@@ -11,11 +11,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.UUID;
 
-//@Async
+@Async
 @Service
 @AllArgsConstructor
 public class AttestationGenerator {
@@ -24,20 +25,38 @@ public class AttestationGenerator {
     private final DocumentRequestRepository documentRequestRepository;
     private final FileStorageService fileStorageService;
     private final FileRepository fileRepository;
+    private final TemplateProcessor templateProcessor;
 
     public void generateDocument(
         ApproveDocumentRequestDto approveDocumentRequestDto,
         Long documentRequestId
-    ) {
+    ) throws IOException {
         var documentRequest = documentRequestRepository.findById(documentRequestId).orElseThrow();
+        var filePath = "attestations/" + UUID.randomUUID() + ".pdf";
 
         var file = new File(
             "Attestation",
-            "attestations/" + UUID.randomUUID() + ".pdf"
+            filePath
         );
 
-        //Generate and save file
+        var map = new HashMap<String, Object>();
+        map.put("attestationNumber", approveDocumentRequestDto.getAttestationAnpeNumber());
+        map.put("anpeNumber", approveDocumentRequestDto.getAttestationAnpeNumber());
+        map.put("cnssNumber", approveDocumentRequestDto.getAttestationCnssNumber());
+        map.put("cnssDate", approveDocumentRequestDto.getAttestationCnssDate());
+        map.put("anpeDate", approveDocumentRequestDto.getAttestationAnpeDate());
+        map.put("companyName", "Yulcom technologies");
+        map.put("location", "Yulcom technologies");
+        map.put("address", "Yulcom technologies");
+        map.put("bp", "Yulcom technologies");
+        map.put("region", "Centre");
+        map.put("telephone", "50-50-50-50");
+
+
+        var filledTemplate = templateProcessor.fillVariables("attestation.html", map);
+        var fileBytes = templateProcessor.htmlToPdf(filledTemplate);
         fileRepository.save(file);
+        fileStorageService.saveFile(fileBytes, filePath);
 
         var attestation = Attestation.builder()
             .expirationDate(LocalDate.now().plusMonths(VALIDITY_PERIOD_IN_MONTHS).atTime(23, 59, 59))

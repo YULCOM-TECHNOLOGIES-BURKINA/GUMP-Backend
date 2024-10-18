@@ -79,7 +79,7 @@ public class DocumentRequestService {
         documentRequestRepository.save(documentRequest);
     }
 
-    public void approveDocumentRequest(Long id, ApproveDocumentRequestDto approveDocumentRequestDto) {
+    public void approveDocumentRequest(Long id, ApproveDocumentRequestDto approveDocumentRequestDto) throws IOException {
         DocumentRequest documentRequest = documentRequestRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("DocumentRequest not found"));
 
