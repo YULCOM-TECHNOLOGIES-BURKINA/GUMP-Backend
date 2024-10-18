@@ -25,6 +25,7 @@ public class AttestationGenerator {
     private final FileStorageService fileStorageService;
     private final FileRepository fileRepository;
     private final TemplateProcessor templateProcessor;
+    private final PdfQRCodeService pdfQRCodeService;
 
     public void generateDocument(
         ApproveDocumentRequestDto approveDocumentRequestDto,
@@ -53,9 +54,14 @@ public class AttestationGenerator {
 
 
         var filledTemplate = templateProcessor.fillVariables("attestation.html", map);
-        var fileBytes = templateProcessor.htmlToPdf(filledTemplate);
-        fileRepository.save(file);
-        fileStorageService.saveFile(fileBytes, filePath);
+
+        try {
+            var fileBytes = pdfQRCodeService.addQRCodeToPDF(templateProcessor.htmlToPdf(filledTemplate), "QR code content");
+            fileRepository.save(file);
+            fileStorageService.saveFile(fileBytes, filePath);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         var attestation = Attestation.builder()
             .expirationDate(LocalDate.now().plusMonths(VALIDITY_PERIOD_IN_MONTHS).atTime(23, 59, 59))
