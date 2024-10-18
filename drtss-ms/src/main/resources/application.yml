@@ -18,3 +18,13 @@ server:
 
 app:
   url: http://localhost:8082/api
+  security:
+    public-key: classpath:public.pem
+    private-key: classpath:private.pem
+
+keystore:
+  path: classpath:keystore/signing-keystore.p12
+  password: your-keystore-password
+  key:
+    alias: pdf-signing-key
+    password: your-key-password
