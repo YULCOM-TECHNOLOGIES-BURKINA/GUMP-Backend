@@ -8,7 +8,6 @@ import com.yulcomtechnologies.drtssms.repositories.AttestationRepository;
 import com.yulcomtechnologies.drtssms.repositories.DocumentRequestRepository;
 import com.yulcomtechnologies.drtssms.repositories.FileRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -16,7 +15,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.UUID;
 
-@Async
+//@Async
 @Service
 @AllArgsConstructor
 public class AttestationGenerator {
@@ -46,8 +45,8 @@ public class AttestationGenerator {
         map.put("cnssDate", approveDocumentRequestDto.getAttestationCnssDate());
         map.put("anpeDate", approveDocumentRequestDto.getAttestationAnpeDate());
         map.put("companyName", "Yulcom technologies");
-        map.put("location", "Yulcom technologies");
-        map.put("address", "Yulcom technologies");
+        map.put("location", "Ouagadougou");
+        map.put("address", "Ouaga 2000");
         map.put("bp", "Yulcom technologies");
         map.put("region", "Centre");
         map.put("telephone", "50-50-50-50");

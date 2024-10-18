@@ -32,6 +32,8 @@ local.properties
 .settings/
 .loadpath
 .factorypath
+uploads
+attestations
 
 # External tool builders
 .externalToolBuilders/**
