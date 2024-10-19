@@ -26,6 +26,6 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+    - run: ls
     - name: Build drtss-ms
-      run: cd drtss-ms |
-           mvn clean install
+      run: cd drtss-ms && mvn clean install
