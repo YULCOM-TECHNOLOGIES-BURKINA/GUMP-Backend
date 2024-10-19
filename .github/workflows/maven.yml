@@ -1,7 +1,7 @@
 name: Build and deploy micro-services
 
 env:
-  CR_PAT: 
+  CR_PAT: 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
 
 on:
   push:
@@ -27,7 +27,7 @@ jobs:
     - run: ls
 
     - name: Log in to registry
-      run: echo {{ secrets.CI_TOKEN }} | docker login ghcr.io -u kulturman --password-stdin
+      run: echo CR_PAT | docker login ghcr.io -u kulturman --password-stdin
     
     - name: Build drtss-ms
       run: mvn clean install
