@@ -25,12 +25,13 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - run: ls
-
-    - name: Log in to registry
-      run: echo $CR_PAT | docker login ghcr.io -u kulturman --password-stdin
     
     - name: Build drtss-ms
       run: mvn clean install
+      
+    - name: Log in to registry
+      run: echo $CR_PAT | docker login ghcr.io -u kulturman --password-stdin
 
     - name: build-docker-image
-      run: docker build -t gump-drtss . && docker tag gump-drtss kulturman/gump-drtss:latest
+      run: docker build -t YULCOM-TECHNOLOGIES-BURKINA/gump-drtss:latest && docker push ghcr.io/YULCOM-TECHNOLOGIES-BURKINA/gump-drtss:latest
+
