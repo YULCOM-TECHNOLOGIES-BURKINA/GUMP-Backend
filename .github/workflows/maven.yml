@@ -1,12 +1,4 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
-
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
-name: Java CI with Maven
+name: Build and deploy micro-services
 
 on:
   push:
@@ -16,6 +8,9 @@ on:
 
 jobs:
   build:
+    defaults:
+      run:
+        working-directory: drtss-ms
     runs-on: ubuntu-latest
 
     steps:
@@ -27,5 +22,10 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - run: ls
+    
     - name: Build drtss-ms
-      run: cd drtss-ms && mvn clean install
+      run: mvn clean install
+
+    - name: build-docker-image
+      run: docker build -t gump-drtss . |
+           docker tag gump-drtss kulturman/gump-drtss:v6
