@@ -33,5 +33,5 @@ jobs:
       run: echo $CR_PAT | docker login ghcr.io -u kulturman --password-stdin
 
     - name: build-docker-image
-      run: docker build -t YULCOM-TECHNOLOGIES-BURKINA/gump-drtss:latest . && docker push ghcr.io/YULCOM-TECHNOLOGIES-BURKINA/gump-drtss:latest
+      run: docker build -t yulcom-technologies-burkina/gump-drtss:latest . && docker push ghcr.io/yulcom-technologies-burkina/gump-drtss:latest
 
