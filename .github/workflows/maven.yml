@@ -27,5 +27,4 @@ jobs:
       run: mvn clean install
 
     - name: build-docker-image
-      run: docker build -t gump-drtss . |
-           docker tag gump-drtss kulturman/gump-drtss:latest
+      run: docker build -t gump-drtss .
