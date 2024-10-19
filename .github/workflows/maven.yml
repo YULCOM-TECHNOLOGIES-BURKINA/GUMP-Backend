@@ -1,5 +1,8 @@
 name: Build and deploy micro-services
 
+env:
+  CR_PAT: 
+
 on:
   push:
     branches: [ "main" ]
@@ -22,6 +25,9 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - run: ls
+
+    - name: Log in to registry
+      run: echo {{ secrets.CI_TOKEN }} | docker login ghcr.io -u kulturman --password-stdin
     
     - name: Build drtss-ms
       run: mvn clean install
