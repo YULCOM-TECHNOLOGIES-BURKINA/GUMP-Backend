@@ -1,19 +1,64 @@
-# This configuration is intended for development purpose, it's **your** responsibility to harden it for production
-name: gateway
 services:
-  postgresql:
-    extends:
-      file: ./postgresql.yml
-      service: postgresql
+  drtss-database:
+    image: postgres:16.4
+    networks:
+      - gump-network
+    volumes:
+      - drtss-data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=gump
+      - POSTGRES_PASSWORD=gump
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - 5431:5432
+
+  tresor-database:
+    image: postgres:16.4
+    networks:
+      - gump-network
+    volumes:
+      - tresor-data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=gump
+      - POSTGRES_PASSWORD=gump
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - 5430:5432
+
   keycloak:
+    networks:
+      - gump-network
     extends:
       file: ./keycloak.yml
       service: keycloak
-  consul:
-    extends:
-      file: ./consul.yml
-      service: consul
-  consul-config-loader:
-    extends:
-      file: ./consul.yml
-      service: consul-config-loader
+
+  gump-gateway:
+    depends_on:
+      - keycloak
+    image: kulturman/gump-gateway:v5
+    container_name: gump-gateway-backend
+    networks:
+      - gump-network
+    ports:
+      - 9090:9090
+    environment:
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - KEYCLOAK_AUTH_SERVER_URL=http://keycloak:9080
+      - KEYCLOAK_REALM=myrealm
+
+volumes:
+  drtss-data:
+  tresor-data:
+
+networks:
+  gump-network:

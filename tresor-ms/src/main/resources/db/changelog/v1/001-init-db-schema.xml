@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+>
+
+  <changeSet id="001" author="kulturman">
+    <sql>
+      CREATE TABLE "document_requests" (
+         "id" SERIAL PRIMARY KEY,
+         "request_type" VARCHAR(50) NOT NULL,
+         "status" VARCHAR(50) NOT NULL,
+         "requester_id" VARCHAR(50) NOT NULL,
+         "business_domain" VARCHAR(100),
+         "rccm_reference" VARCHAR(50),
+         "ifu_number" VARCHAR(50),
+         "address" VARCHAR(255),
+         "phone_number" VARCHAR(20),
+
+         "bank_account_reference" VARCHAR(50),
+         "contract_reference" VARCHAR(50),
+         "contract_purpose" VARCHAR(255),
+
+         "contracting_organization_name" VARCHAR(100),
+         "organization_address" VARCHAR(255),
+         "organization_phone" VARCHAR(20),
+
+         "created_at" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+    </sql>
+  </changeSet>
+</databaseChangeLog>

@@ -1,8 +1,15 @@
 spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5430/gump
+    username: gump
+    password: gump
   application:
     name: tresor-ms
 server:
   port: 8080
+  servlet:
+    context-path: /api
 
 eureka:
   client:

@@ -14,6 +14,21 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://drtss-database:5432/gump
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
 
+  tresor:
+    image: kulturman/gump-tresor:v3
+    container_name: gump-tresor-backend
+    depends_on:
+      - tresor-database
+      - eureka-server
+    restart: on-failure
+    networks:
+      - gump-network
+    ports:
+      - 8082:8082
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://tresor-database:5432/gump
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+
   eureka-server:
     image: kulturman/gump-eureka:latest
     container_name: gump-drtss-eureka-server
@@ -39,6 +54,24 @@ services:
       retries: 10
     ports:
       - 5431:5432
+        
+  tresor-database:
+    image: postgres:16.4
+    networks:
+      - gump-network
+    volumes:
+      - tresor-data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=gump
+      - POSTGRES_PASSWORD=gump
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - 5430:5432
 
   keycloak:
     networks:
@@ -63,6 +96,7 @@ services:
 
 volumes:
   drtss-data:
+  tresor-data:
 
 networks:
   gump-network:
