@@ -41,6 +41,9 @@ public class DocumentRequest {
     @JoinColumn(name = "generated_document_id", referencedColumnName = "id")
     private File generatedDocument;
 
+    @Column(name = "is_paid")
+    private Boolean isPaid;
+
     @ManyToMany
     @JoinTable(
         name = "document_request_files",

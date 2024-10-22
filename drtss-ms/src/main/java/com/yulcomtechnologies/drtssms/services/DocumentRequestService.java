@@ -5,6 +5,7 @@ import com.yulcomtechnologies.drtssms.dtos.DocumentRequestDto;
 import com.yulcomtechnologies.drtssms.entities.DocumentRequest;
 import com.yulcomtechnologies.drtssms.entities.File;
 import com.yulcomtechnologies.drtssms.enums.DocumentRequestStatus;
+import com.yulcomtechnologies.drtssms.exceptions.BadRequestException;
 import com.yulcomtechnologies.drtssms.mappers.DocumentRequestMapper;
 import com.yulcomtechnologies.drtssms.repositories.DocumentRequestRepository;
 import com.yulcomtechnologies.drtssms.repositories.FileRepository;
@@ -84,7 +85,11 @@ public class DocumentRequestService {
             .orElseThrow(() -> new RuntimeException("DocumentRequest not found"));
 
         if (documentRequest.isApproved()) {
-            throw new RuntimeException("DocumentRequest already approved");
+            throw new BadRequestException("Document déjà approuvé");
+        }
+
+        if (!documentRequest.getIsPaid()) {
+            throw new BadRequestException("Document non payé");
         }
 
         documentRequest.setStatus(DocumentRequestStatus.APPROVED.name());

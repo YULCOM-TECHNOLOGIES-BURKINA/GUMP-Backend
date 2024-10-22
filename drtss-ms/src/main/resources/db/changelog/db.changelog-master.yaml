@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/v1/001-init-db-schema.xml
   - include:
       file: db/changelog/v1/002-create-attestation-table.xml
+  - include:
+        file: db/changelog/v1/003-add-is-paid-column-to-demandes.xml

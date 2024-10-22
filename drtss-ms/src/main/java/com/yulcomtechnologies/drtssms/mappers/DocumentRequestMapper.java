@@ -24,6 +24,7 @@ public class DocumentRequestMapper {
         dto.setReviewedBy(documentRequest.getReviewedBy());
         dto.setApprovedBy(documentRequest.getApprovedBy());
         dto.setCreatedAt(documentRequest.getCreatedAt());
+        dto.setIsPaid(documentRequest.getIsPaid());
 
         if (documentRequest.isApproved()) {
             var attestation = documentRequest.getAttestation();

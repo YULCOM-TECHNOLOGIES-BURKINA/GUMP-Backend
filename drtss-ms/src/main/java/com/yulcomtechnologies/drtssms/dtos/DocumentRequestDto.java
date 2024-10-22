@@ -15,4 +15,5 @@ public class DocumentRequestDto {
     private LocalDateTime createdAt;
     private Set<FileDto> files;
     private AttestationDto attestation;
+    private Boolean isPaid;
 }
