@@ -1,0 +1,37 @@
+name: Build and deploy micro-services
+
+env:
+  CR_PAT: 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
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    defaults:
+      run:
+        working-directory: drtss-ms
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+    - run: ls
+    
+    - name: Build drtss-ms
+      run: mvn clean install
+      
+    - name: Log in to registry
+      run: echo $CR_PAT | docker login ghcr.io -u kulturman --password-stdin
+
+    - name: build-docker-image
+      run: docker build --tag ghcr.io/yulcom-technologies-burkina/gump-drtss:latest . && docker push ghcr.io/yulcom-technologies-burkina/gump-drtss:latest
+
