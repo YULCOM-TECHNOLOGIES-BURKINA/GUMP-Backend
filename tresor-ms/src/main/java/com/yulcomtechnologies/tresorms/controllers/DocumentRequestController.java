@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 
 @RestController
 @AllArgsConstructor
@@ -44,7 +46,7 @@ public class DocumentRequestController {
     @PostMapping("demandes/{id}/approve")
     public ResponseEntity<?> approveDocumentRequest(
         @PathVariable Long id
-    ) {
+    ) throws IOException {
         documentRequestService.approveDocumentRequest(id);
         return ResponseEntity.ok().build();
     }

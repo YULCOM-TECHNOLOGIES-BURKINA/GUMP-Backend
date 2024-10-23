@@ -1,6 +1,7 @@
 package com.yulcomtechnologies.tresorms.entities;
 
 
+import com.yulcomtechnologies.tresorms.enums.DocumentRequestStatus;
 import com.yulcomtechnologies.tresorms.enums.RequestType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -64,4 +65,11 @@ public class DocumentRequest {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @OneToOne(mappedBy = "documentRequest", cascade = CascadeType.ALL)
+    private Attestation attestation;
+
+    public boolean isApproved() {
+        return status.equals(DocumentRequestStatus.APPROVED.toString());
+    }
 }
