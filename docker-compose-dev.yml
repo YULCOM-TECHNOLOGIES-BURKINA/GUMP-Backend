@@ -73,13 +73,6 @@ services:
     ports:
       - 5430:5432
 
-  keycloak:
-    networks:
-      - gump-network
-    extends:
-      file: ./keycloak.yml
-      service: keycloak
-
   gump-gateway:
     depends_on:
       - keycloak

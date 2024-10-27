@@ -53,7 +53,7 @@ jobs:
           username: ${{ env.REMOTE_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "docker-compose-dev.yml"
-          target: "/home/ubuntu/gump/docker-compose-dev.yml"
+          target: "/home/ubuntu/gump"
       - run: ls
       - name: Deploy to dev environnement
         uses: appleboy/ssh-action@v1.0.3
