@@ -40,8 +40,7 @@ jobs:
     env:
       REMOTE_HOST: 54.37.13.176
       REMOTE_USER: ubuntu
-    needs:
-      - build
+   # needs: [build]
     runs-on: ubuntu-latest
     steps:
       - run: ls
