@@ -8,6 +8,7 @@ on:
 
 jobs:
   build:
+    if: github.ref == 'refs/heads/me'
     strategy:
       matrix:
         ms: [drtss-ms, tresor-ms, gateway]
@@ -48,8 +49,8 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
         with:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
-          host: $REMOTE_HOST
-          username: $REMOTE_USER
+          host: ${{ env.REMOTE_HOST }}
+          username: ${{ env.SSH_USER }} 
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd gump
