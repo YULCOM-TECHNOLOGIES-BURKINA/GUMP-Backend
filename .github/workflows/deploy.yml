@@ -8,9 +8,12 @@ on:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        ms: [drtss-ms, tresor-ms, gateway]
     defaults:
       run:
-        working-directory: drtss-ms
+        working-directory: ${{matrix.ms}}
     runs-on: ubuntu-latest
 
     steps:
@@ -23,12 +26,12 @@ jobs:
         cache: maven
     - run: ls
     
-    - name: Build drtss-ms
+    - name: Build ${{matrix.ms}}
       run: mvn clean install
       
     - name: Log in to registry
       run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u kulturman --password-stdin
 
     - name: build-docker-image
-      run: docker build --tag ghcr.io/yulcom-technologies-burkina/gump-drtss:latest . && docker push ghcr.io/yulcom-technologies-burkina/gump-drtss:latest
+      run: docker build --tag ghcr.io/yulcom-technologies-burkina/gump-${{matrix.ms}}:latest . && docker push ghcr.io/yulcom-technologies-burkina/gump-${{matrix.ms}}:latest
 
