@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  REMOTE_HOST: 54.37.13.176
+  REMOTE_USER: ubuntu
+
 jobs:
   build:
     if: github.ref == 'refs/heads/me'
@@ -37,20 +41,28 @@ jobs:
         run: docker build --tag ghcr.io/yulcom-technologies-burkina/gump-${{matrix.ms}}:latest . && docker push ghcr.io/yulcom-technologies-burkina/gump-${{matrix.ms}}:latest
 
   deploy:
-    env:
-      REMOTE_HOST: 54.37.13.176
-      REMOTE_USER: ubuntu
-   # needs: [build]
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+      - name: Copy docker-compose file to remote server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "docker-compose-dev.yml"
+          target: "/home/ubuntu/gump/docker-compose-dev.yml"
       - run: ls
       - name: Deploy to dev environnement
         uses: appleboy/ssh-action@v1.0.3
         with:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           host: ${{ env.REMOTE_HOST }}
-          username: ${{ env.REMOTE_USER }} 
+          username: ${{ env.REMOTE_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd gump
-            docker-compose -f docker-compose.yml up -d
+            echo BACKEND_IMAGE=$BACKEND_IMAGE > .env
+            docker-compose -f docker-compose-dev.yml up -d
