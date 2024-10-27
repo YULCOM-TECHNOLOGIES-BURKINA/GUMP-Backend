@@ -1,6 +1,6 @@
 services:
   drtss:
-    image: kulturman/gump-drtss:v7
+    image: kulturman/gump-drtss:latest
     container_name: gump-drtss-backend
     depends_on:
       - drtss-database
@@ -15,7 +15,7 @@ services:
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
 
   tresor:
-    image: kulturman/gump-tresor:v1
+    image: kulturman/gump-tresor:latest
     container_name: gump-tresor-backend
     depends_on:
       - tresor-database
