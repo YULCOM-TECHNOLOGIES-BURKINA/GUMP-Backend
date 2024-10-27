@@ -52,7 +52,7 @@ jobs:
           host: ${{ env.REMOTE_HOST }}
           username: ${{ env.REMOTE_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "docker-compose-dev.yml"
+          source: "docker-compose-dev.yml,realm-config,keycloak.yml"
           target: "/home/ubuntu/gump"
       - run: ls
       - name: Deploy to dev environnement
