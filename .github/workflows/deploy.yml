@@ -1,8 +1,5 @@
 name: Build and deploy micro-services
 
-env:
-  CR_PAT: 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
-
 on:
   push:
     branches: [ "main" ]
@@ -30,7 +27,7 @@ jobs:
       run: mvn clean install
       
     - name: Log in to registry
-      run: echo $CR_PAT | docker login ghcr.io -u kulturman --password-stdin
+      run: echo ${{ secrets.CI_TOKEN }} | docker login ghcr.io -u kulturman --password-stdin
 
     - name: build-docker-image
       run: docker build --tag ghcr.io/yulcom-technologies-burkina/gump-drtss:latest . && docker push ghcr.io/yulcom-technologies-burkina/gump-drtss:latest
