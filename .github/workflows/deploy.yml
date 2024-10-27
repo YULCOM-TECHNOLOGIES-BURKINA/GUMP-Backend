@@ -43,9 +43,11 @@ jobs:
       - build
     runs-on: ubuntu-latest
     steps:
+      - run: ls
       - name: Deploy to dev environnement
         uses: appleboy/ssh-action@v1.0.3
         with:
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
           host: $REMOTE_HOST
           username: $REMOTE_USER
           key: ${{ secrets.SSH_PRIVATE_KEY }}
