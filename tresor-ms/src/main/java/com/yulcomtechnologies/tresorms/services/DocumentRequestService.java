@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @Service
@@ -19,11 +20,11 @@ import java.util.UUID;
 public class DocumentRequestService {
     private DocumentRequestRepository repository;
     private DocumentRequestMapper documentRequestMapper;
+    private final AttestationGenerator attestationGenerator;
 
     public DocumentRequest submitDocumentRequest(DocumentRequestDto documentRequestDto) {
         var documentRequest = new DocumentRequest();
         BeanUtils.copyProperties(documentRequestDto, documentRequest);
-        documentRequest.setRequesterId(UUID.randomUUID().toString());
         documentRequest.setStatus(DocumentRequestStatus.PENDING.toString());
 
         return repository.save(documentRequest);
@@ -39,11 +40,12 @@ public class DocumentRequestService {
             .orElseThrow(() -> new IllegalArgumentException("Document request not found"));
     }
 
-    public void approveDocumentRequest(Long id) {
+    public void approveDocumentRequest(Long id) throws IOException {
         var documentRequest = repository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Document request not found"));
 
         documentRequest.setStatus(DocumentRequestStatus.APPROVED.toString());
+        attestationGenerator.generateDocument(id);
         repository.save(documentRequest);
     }
 }

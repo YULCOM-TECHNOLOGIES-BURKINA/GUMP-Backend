@@ -1,6 +1,6 @@
 services:
   drtss:
-    image: kulturman/gump-drtss:v3
+    image: kulturman/gump-drtss:v7
     container_name: gump-drtss-backend
     depends_on:
       - drtss-database
@@ -15,7 +15,7 @@ services:
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
 
   tresor:
-    image: kulturman/gump-tresor:v3
+    image: kulturman/gump-tresor:v1
     container_name: gump-tresor-backend
     depends_on:
       - tresor-database
@@ -24,7 +24,7 @@ services:
     networks:
       - gump-network
     ports:
-      - 8082:8082
+      - 8080:8080
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://tresor-database:5432/gump
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
@@ -54,7 +54,7 @@ services:
       retries: 10
     ports:
       - 5431:5432
-        
+
   tresor-database:
     image: postgres:16.4
     networks:

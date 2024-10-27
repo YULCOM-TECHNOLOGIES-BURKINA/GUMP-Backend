@@ -89,7 +89,7 @@ public class DocumentRequestService {
         }
 
         if (!documentRequest.getIsPaid()) {
-            throw new BadRequestException("Document non payé");
+            //throw new BadRequestException("Document non payé");
         }
 
         documentRequest.setStatus(DocumentRequestStatus.APPROVED.name());

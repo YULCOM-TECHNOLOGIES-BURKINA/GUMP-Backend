@@ -20,4 +20,5 @@ public class GetDocumentRequestDto {
     private String organizationAddress;
     private String organizationPhone;
     private String status;
+    private AttestationDto attestation;
 }
