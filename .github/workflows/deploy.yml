@@ -17,21 +17,38 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
-    - run: ls
-    
-    - name: Build ${{matrix.ms}}
-      run: mvn clean install
-      
-    - name: Log in to registry
-      run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u kulturman --password-stdin
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+      - run: ls
 
-    - name: build-docker-image
-      run: docker build --tag ghcr.io/yulcom-technologies-burkina/gump-${{matrix.ms}}:latest . && docker push ghcr.io/yulcom-technologies-burkina/gump-${{matrix.ms}}:latest
+      - name: Build ${{matrix.ms}}
+        run: mvn clean install
 
+      - name: Log in to registry
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u kulturman --password-stdin
+
+      - name: build-docker-image
+        run: docker build --tag ghcr.io/yulcom-technologies-burkina/gump-${{matrix.ms}}:latest . && docker push ghcr.io/yulcom-technologies-burkina/gump-${{matrix.ms}}:latest
+
+  deploy:
+    env:
+      REMOTE_HOST: 54.37.13.176
+      REMOTE_USER: ubuntu
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to dev environnement
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: $REMOTE_HOST
+          username: $REMOTE_USER
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd gump
+            docker-compose -f docker-compose.yml up -d
