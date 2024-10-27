@@ -30,7 +30,7 @@ services:
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
 
   eureka-server:
-    image: ghcr.io/yulcom-technologies-burkina/gump-eureka:latest
+    image: ghcr.io/yulcom-technologies-burkina/gump-eureka-server:latest
     container_name: gump-drtss-eureka-server
     networks:
       - gump-network
