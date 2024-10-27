@@ -1,6 +1,6 @@
 services:
   drtss:
-    image: kulturman/gump-drtss:latest
+    image: ghcr.io/yulcom-technologies-burkina/gump-drtss-ms:latest
     container_name: gump-drtss-backend
     depends_on:
       - drtss-database
@@ -15,7 +15,7 @@ services:
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
 
   tresor:
-    image: kulturman/gump-tresor:latest
+    image: ghcr.io/yulcom-technologies-burkina/gump-tresor-ms:latest
     container_name: gump-tresor-backend
     depends_on:
       - tresor-database
@@ -30,7 +30,7 @@ services:
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
 
   eureka-server:
-    image: kulturman/gump-eureka:latest
+    image: ghcr.io/yulcom-technologies-burkina/gump-eureka:latest
     container_name: gump-drtss-eureka-server
     networks:
       - gump-network
@@ -83,7 +83,7 @@ services:
   gump-gateway:
     depends_on:
       - keycloak
-    image: kulturman/gump-gateway:v5
+    image: ghcr.io/yulcom-technologies-burkina/gump-gateway:latest
     container_name: gump-gateway-backend
     networks:
       - gump-network

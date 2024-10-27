@@ -8,10 +8,10 @@ on:
 
 jobs:
   build:
-    if: github.event_name == '_push'
+    #if: github.event_name == '_push'
     strategy:
       matrix:
-        ms: [drtss-ms, tresor-ms, gateway]
+        ms: [drtss-ms, tresor-ms, gateway, eureka-server]
     defaults:
       run:
         working-directory: ${{matrix.ms}}
@@ -40,7 +40,7 @@ jobs:
     env:
       REMOTE_HOST: 54.37.13.176
       REMOTE_USER: ubuntu
-    #needs: [build]
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -64,5 +64,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd gump
+            echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u kulturman --password-stdin
             echo BACKEND_IMAGE=$BACKEND_IMAGE > .env
             docker-compose -f docker-compose-dev.yml up -d
