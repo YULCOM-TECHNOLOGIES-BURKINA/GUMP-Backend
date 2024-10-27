@@ -49,7 +49,7 @@ jobs:
         with:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           host: ${{ env.REMOTE_HOST }}
-          username: ${{ env.SSH_USER }} 
+          username: ${{ env.REMOTE_USER }} 
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd gump
