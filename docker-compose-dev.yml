@@ -37,12 +37,12 @@ services:
     ports:
       - 8761:8761
 
-  drtss-database:
+  users-database:
     image: postgres:16.4
     networks:
       - gump-network
     volumes:
-      - drtss-data:/var/lib/postgresql/data/
+      - users-data:/var/lib/postgresql/data/
     environment:
       - POSTGRES_USER=gump
       - POSTGRES_PASSWORD=gump
@@ -53,7 +53,7 @@ services:
       timeout: 5s
       retries: 10
     ports:
-      - 5431:5432
+      - 5429:5432
 
   tresor-database:
     image: postgres:16.4
@@ -72,6 +72,25 @@ services:
       retries: 10
     ports:
       - 5430:5432
+
+  drtss-database:
+    image: postgres:16.4
+    networks:
+      - gump-network
+    volumes:
+      - drtss-data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=gump
+      - POSTGRES_PASSWORD=gump
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    healthcheck:
+      test: [ 'CMD-SHELL', 'pg_isready -U $${POSTGRES_USER}' ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - 5431:5432
+
 
   keycloak:
     networks:
@@ -97,6 +116,7 @@ services:
 volumes:
   drtss-data:
   tresor-data:
+  users-data:
 
 networks:
   gump-network:

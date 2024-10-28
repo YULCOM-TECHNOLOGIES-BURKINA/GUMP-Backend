@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+>
+
+  <changeSet id="001" author="kulturman">
+    <sql>
+      CREATE TABLE "companies"(
+          "id" SERIAL PRIMARY KEY,
+          "ifu" VARCHAR(255) NOT NULL UNIQUE,
+          "name" VARCHAR(255) NOT NULL,
+          "address" VARCHAR(255) NOT NULL,
+          "phone" VARCHAR(255) NOT NULL,
+          "email" VARCHAR(255) NOT NULL
+      );
+
+      CREATE TABLE "users" (
+          "id" SERIAL PRIMARY KEY,
+          "keycloak_user_id" VARCHAR(255) NOT NULL,
+          "email" VARCHAR(255) NOT NULL,
+          "role" VARCHAR(255) NOT NULL,
+          "company_id" INTEGER,
+          FOREIGN KEY ("company_id") REFERENCES "companies" ("id")
+      );
+    </sql>
+  </changeSet>
+</databaseChangeLog>
