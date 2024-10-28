@@ -1,30 +1,5 @@
 spring:
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5431/gump
-    username: gump
-    password: gump
   application:
     name: drtss-ms
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-server:
-  port: 8082
-  servlet:
-    context-path: /api
-
-app:
-  url: http://localhost:8082/api
-  security:
-    public-key: classpath:public.pem
-    private-key: classpath:private.pem
-
-keystore:
-  path: classpath:keystore/signing-keystore.p12
-  password: your-keystore-password
-  key:
-    alias: pdf-signing-key
-    password: your-key-password
+  config:
+    import: optional:configserver:http://localhost:8888
