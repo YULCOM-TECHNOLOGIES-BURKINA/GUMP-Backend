@@ -66,4 +66,4 @@ jobs:
             cd gump
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u kulturman --password-stdin
             echo BACKEND_IMAGE=$BACKEND_IMAGE > .env
-            docker-compose -f docker-compose-dev.yml up -d
+            docker-compose -f docker-compose-dev.yml up -d --build

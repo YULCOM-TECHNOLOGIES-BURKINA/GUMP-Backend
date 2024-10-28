@@ -22,7 +22,15 @@ spring:
           - id: tresor-ms
             uri: http://localhost:8080
             predicates:
-              - Path=/tresor-ms/**
+              - Header=service, tresor-ms
+            filters:
+              - StripPrefix=1
+              - PrefixPath=/api
+
+          - id: drtss-ms
+            uri: http://localhost:8082
+            predicates:
+              - Header=service, drtss-ms
             filters:
               - StripPrefix=1
               - PrefixPath=/api
