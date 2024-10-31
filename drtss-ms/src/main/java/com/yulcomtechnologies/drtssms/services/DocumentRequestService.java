@@ -9,6 +9,7 @@ import com.yulcomtechnologies.drtssms.exceptions.BadRequestException;
 import com.yulcomtechnologies.drtssms.mappers.DocumentRequestMapper;
 import com.yulcomtechnologies.drtssms.repositories.DocumentRequestRepository;
 import com.yulcomtechnologies.drtssms.repositories.FileRepository;
+import com.yulcomtechnologies.sharedlibrary.services.FileStorageService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,8 +34,8 @@ public class DocumentRequestService {
     private final AttestationGenerator attestationGenerator;
 
     public DocumentRequest submitDocumentRequest(MultipartFile attestationCnss, MultipartFile attestationAnpe) throws IOException {
-        File idCard = saveFile(attestationCnss, "Attestation CNSS");
-        File driverLicense = saveFile(attestationAnpe, "Attestation ANPE");
+        File cnssAttestation = saveFile(attestationCnss, "Attestation CNSS");
+        File anpeAttestation = saveFile(attestationAnpe, "Attestation ANPE");
 
         var documentRequest = DocumentRequest.builder()
             .requesterId("requesterId")
@@ -43,8 +44,8 @@ public class DocumentRequestService {
 
         // Set the files in the document request
         Set<File> files = new HashSet<>();
-        files.add(idCard);
-        files.add(driverLicense);
+        files.add(cnssAttestation);
+        files.add(anpeAttestation);
         documentRequest.setFiles(files);
 
         return documentRequestRepository.save(documentRequest);

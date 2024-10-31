@@ -7,10 +7,12 @@ import com.yulcomtechnologies.drtssms.entities.File;
 import com.yulcomtechnologies.drtssms.repositories.AttestationRepository;
 import com.yulcomtechnologies.drtssms.repositories.DocumentRequestRepository;
 import com.yulcomtechnologies.drtssms.repositories.FileRepository;
+import com.yulcomtechnologies.sharedlibrary.services.FileStorageService;
+import com.yulcomtechnologies.sharedlibrary.services.PdfQRCodeService;
+import com.yulcomtechnologies.sharedlibrary.services.TemplateProcessor;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.UUID;
@@ -30,7 +32,7 @@ public class AttestationGenerator {
     public void generateDocument(
         ApproveDocumentRequestDto approveDocumentRequestDto,
         Long documentRequestId
-    ) throws IOException {
+    ) {
         var documentRequest = documentRequestRepository.findById(documentRequestId).orElseThrow();
         var filePath = "attestations/" + UUID.randomUUID() + ".pdf";
 

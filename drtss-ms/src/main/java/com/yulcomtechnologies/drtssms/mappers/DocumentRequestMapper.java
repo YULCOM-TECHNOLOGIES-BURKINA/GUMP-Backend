@@ -5,7 +5,7 @@ import com.yulcomtechnologies.drtssms.dtos.DocumentRequestDto;
 import com.yulcomtechnologies.drtssms.dtos.FileDto;
 import com.yulcomtechnologies.drtssms.entities.DocumentRequest;
 import com.yulcomtechnologies.drtssms.entities.File;
-import com.yulcomtechnologies.drtssms.services.FileStorageService;
+import com.yulcomtechnologies.sharedlibrary.services.FileStorageService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

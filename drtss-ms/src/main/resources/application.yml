@@ -1,5 +1,23 @@
 spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5431/gump
+    username: gump
+    password: gump
+
   application:
     name: drtss-ms
   config:
     import: optional:configserver:http://localhost:8888
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+server:
+  port: 8082
+  servlet:
+    context-path: /api
+
+app:
+  url: http://localhost:8082/api
