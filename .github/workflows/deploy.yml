@@ -25,9 +25,14 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
+          server-id: github
+          server-username: GITHUB_ACTOR
+          server-password: GITHUB_TOKEN
       - run: ls
 
       - name: Build ${{matrix.ms}}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: mvn clean install
 
       - name: Log in to registry
