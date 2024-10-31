@@ -74,8 +74,6 @@ jobs:
           script: |
             cd gump
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u kulturman --password-stdin
-            echo DRTSS_IMAGE=${{github.sha}} >> .env
-            echo TRESOR_IMAGE=${{github.sha}} >> .env
-            echo GATEWAY_IMAGE=${{github.sha}} >> .env
-            echo EUREKA_IMAGE=${{github.sha}} >> .env
+            echo COMMIT_SHA=${{github.sha}} > .env
+            docker-compose -f docker-compose-dev.yml down
             docker-compose -f docker-compose-dev.yml up -d --build
