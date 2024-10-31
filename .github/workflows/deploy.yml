@@ -41,6 +41,7 @@ jobs:
       - name: build-docker-image
         run: |
           docker build --tag ghcr.io/yulcom-technologies-burkina/gump-${{matrix.ms}}:latest .
+          docker build --tag ghcr.io/yulcom-technologies-burkina/gump-${{matrix.ms}}:${{github.sha}} .
           docker push ghcr.io/yulcom-technologies-burkina/gump-${{matrix.ms}}:latest
           docker push ghcr.io/yulcom-technologies-burkina/gump-${{matrix.ms}}:${{github.sha}}
 
