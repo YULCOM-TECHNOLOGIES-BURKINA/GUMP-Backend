@@ -33,7 +33,7 @@ jobs:
       - name: Build ${{matrix.ms}}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: mvn clean install
+        run: mvn clean install -s ../settings.xml
 
       - name: Log in to registry
         run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u kulturman --password-stdin
