@@ -1,9 +1,9 @@
 package com.yulcomtechnologies.tresorms.mappers;
 
+import com.yulcomtechnologies.sharedlibrary.services.FileStorageService;
 import com.yulcomtechnologies.tresorms.dtos.AttestationDto;
 import com.yulcomtechnologies.tresorms.dtos.GetDocumentRequestDto;
 import com.yulcomtechnologies.tresorms.entities.DocumentRequest;
-import com.yulcomtechnologies.tresorms.services.FileStorageService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;

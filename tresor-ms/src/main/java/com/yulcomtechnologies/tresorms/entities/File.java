@@ -1,5 +1,6 @@
 package com.yulcomtechnologies.tresorms.entities;
 
+import com.yulcomtechnologies.sharedlibrary.services.FileInterface;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Table(name = "files")
 @Data
-public class File {
+public class File implements FileInterface {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,5 +31,15 @@ public class File {
         this.label = label;
         this.path = path;
         createdAt = LocalDateTime.now();
+    }
+
+    @Override
+    public String getId() {
+        return id.toString();
+    }
+
+    @Override
+    public String getPath() {
+        return path;
     }
 }

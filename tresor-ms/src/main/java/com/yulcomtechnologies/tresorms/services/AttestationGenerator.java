@@ -1,5 +1,8 @@
 package com.yulcomtechnologies.tresorms.services;
 
+import com.yulcomtechnologies.sharedlibrary.services.FileStorageService;
+import com.yulcomtechnologies.sharedlibrary.services.PdfQRCodeService;
+import com.yulcomtechnologies.sharedlibrary.services.TemplateProcessor;
 import com.yulcomtechnologies.tresorms.entities.Attestation;
 import com.yulcomtechnologies.tresorms.entities.DocumentRequest;
 import com.yulcomtechnologies.tresorms.entities.File;
