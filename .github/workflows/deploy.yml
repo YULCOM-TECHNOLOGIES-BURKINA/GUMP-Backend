@@ -58,7 +58,7 @@ jobs:
           username: ${{ vars.REMOTE_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "docker-compose-dev.yml,realm-config,keycloak.yml"
-          target: "/home/${{ vars.REMOTE_HOST }}/gump"
+          target: "/home/${{ vars.REMOTE_USER }}/gump"
       - run: ls
       - name: Deploy to dev environnement
         uses: appleboy/ssh-action@v1.0.3
