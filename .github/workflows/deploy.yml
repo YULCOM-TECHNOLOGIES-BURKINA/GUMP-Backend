@@ -54,18 +54,18 @@ jobs:
         uses: appleboy/scp-action@master
         with:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
-          host: ${{ env.REMOTE_HOST }}
-          username: ${{ env.REMOTE_USER }}
+          host: ${{ vars.REMOTE_HOST }}
+          username: ${{ vars.REMOTE_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "docker-compose-dev.yml,realm-config,keycloak.yml"
-          target: "/home/${{ env.REMOTE_HOST }}/gump"
+          target: "/home/${{ vars.REMOTE_HOST }}/gump"
       - run: ls
       - name: Deploy to dev environnement
         uses: appleboy/ssh-action@v1.0.3
         with:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
-          host: ${{ env.REMOTE_HOST }}
-          username: ${{ env.REMOTE_USER }}
+          host: ${{ vars.REMOTE_HOST }}
+          username: ${{ vars.REMOTE_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd gump
