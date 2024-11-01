@@ -53,7 +53,6 @@ jobs:
       - name: Copy docker-compose file to remote server
         uses: appleboy/scp-action@master
         with:
-          passphrase: ${{ secrets.SSH_PASSPHRASE }}
           host: ${{ vars.REMOTE_HOST }}
           username: ${{ vars.REMOTE_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -63,7 +62,6 @@ jobs:
       - name: Deploy to dev environnement
         uses: appleboy/ssh-action@v1.0.3
         with:
-          passphrase: ${{ secrets.SSH_PASSPHRASE }}
           host: ${{ vars.REMOTE_HOST }}
           username: ${{ vars.REMOTE_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
