@@ -4,6 +4,7 @@ spring:
     url: jdbc:postgresql://localhost:5431/gump
     username: gump
     password: gump
+
   application:
     name: drtss-ms
   config:
@@ -23,4 +24,4 @@ server:
     context-path: /api
 
 app:
-  url: http://localhost:9090/api
+  url: http://localhost:8082/api
