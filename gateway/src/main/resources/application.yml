@@ -34,6 +34,14 @@ spring:
             filters:
               - StripPrefix=1
               - PrefixPath=/api
+
+          - id: users-ms
+            uri: http://localhost:8081
+            predicates:
+              - Header=service, users-ms
+            filters:
+              - StripPrefix=1
+              - PrefixPath=/api
   application:
     name: gateway
   config:
