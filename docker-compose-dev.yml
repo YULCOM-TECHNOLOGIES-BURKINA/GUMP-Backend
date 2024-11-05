@@ -28,6 +28,23 @@ services:
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://tresor-database:5432/gump
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      
+      
+  users:
+    image: ghcr.io/yulcom-technologies-burkina/gump-users-ms:$COMMIT_SHA
+    container_name: gump-users-backend
+    depends_on:
+      - users-database
+      - eureka-server
+      - keycloak
+    restart: on-failure
+    networks:
+      - gump-network
+    ports:
+      - 8081:8081
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://users-database:5432/gump
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
 
   eureka-server:
     image: ghcr.io/yulcom-technologies-burkina/gump-eureka-server:$COMMIT_SHA

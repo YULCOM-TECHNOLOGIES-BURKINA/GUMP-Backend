@@ -10,7 +10,7 @@ jobs:
   build:
     strategy:
       matrix:
-        ms: [drtss-ms, tresor-ms, gateway, eureka-server]
+        ms: [drtss-ms, tresor-ms, gateway, eureka-server, users-ms]
     defaults:
       run:
         working-directory: ${{matrix.ms}}
