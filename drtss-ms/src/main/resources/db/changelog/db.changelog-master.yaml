@@ -9,3 +9,9 @@ databaseChangeLog:
         file: db/changelog/v1/004-add-public-contract-number-to-document-requests.xml
   - include:
         file: db/changelog/v1/005-create-application-config-table.xml
+  - include:
+        file: db/changelog/v1/004-create-utilisateurs-drtss-table.xml
+  - include:
+        file: db/changelog/v1/005-create-signature_scanner-table.xml
+  - include:
+        file: db/changelog/v1/006-create-signature_certificat-table.xml
