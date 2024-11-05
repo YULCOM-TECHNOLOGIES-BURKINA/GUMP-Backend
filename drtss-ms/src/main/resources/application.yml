@@ -10,6 +10,10 @@ spring:
   config:
     import: optional:configserver:http://localhost:8888
 
+keycloak:
+  auth-server-url: https://sso.kulturman.com
+  realm: gump
+
 eureka:
   client:
     service-url:

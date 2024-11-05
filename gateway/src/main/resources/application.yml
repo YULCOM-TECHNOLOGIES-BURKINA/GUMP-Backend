@@ -7,7 +7,7 @@ eureka:
 
 keycloak:
     auth-server-url: http://localhost:9080
-    realm: myrealm
+    realm: gump
 
 spring:
   security:

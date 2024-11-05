@@ -13,15 +13,16 @@
           "ifu" VARCHAR(255) NOT NULL UNIQUE,
           "name" VARCHAR(255) NOT NULL,
           "address" VARCHAR(255) NOT NULL,
-          "phone" VARCHAR(255) NOT NULL,
-          "email" VARCHAR(255) NOT NULL
+          "email" VARCHAR(255) NOT NULL,
+          "phone" VARCHAR(255) NOT NULL
       );
 
       CREATE TABLE "users" (
           "id" SERIAL PRIMARY KEY,
-          "keycloak_user_id" VARCHAR(255) NOT NULL,
-          "email" VARCHAR(255) NOT NULL,
+          "keycloak_user_id" VARCHAR(255) NOT NULL UNIQUE ,
+          "email" VARCHAR(255) NOT NULL UNIQUE ,
           "role" VARCHAR(255) NOT NULL,
+          "user_type" VARCHAR(255) NOT NULL,
           "company_id" INTEGER,
           FOREIGN KEY ("company_id") REFERENCES "companies" ("id")
       );

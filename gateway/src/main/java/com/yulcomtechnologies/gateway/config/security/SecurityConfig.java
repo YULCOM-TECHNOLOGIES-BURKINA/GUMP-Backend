@@ -24,21 +24,22 @@ public class SecurityConfig {
             .cors(Customizer.withDefaults())
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(req ->
-                    req.requestMatchers(
-                            "/auth/**",
-                            "/v2/api-docs",
-                            "/v3/api-docs/**",
-                            "/swagger-resources",
-                            "/swagger-resources/**",
-                            "/swagger-ui/**"
-                        )
-                        .permitAll()
-                        .anyRequest()
-                        .permitAll()
+                req.requestMatchers(
+                        "/auth/**",
+                        "/v2/api-docs",
+                        "/v3/api-docs/**",
+                        "/swagger-resources",
+                        "/swagger-resources/**",
+                        "/swagger-ui/**"
+                )
+                .permitAll()
+                .anyRequest()
+                .permitAll()
             )
-            /*.oauth2ResourceServer(oauth2 -> oauth2
+            .oauth2ResourceServer(oauth2 -> oauth2
                 .jwt(jwt -> jwt.decoder(JwtDecoders.fromIssuerLocation(issuerUri)))
-            );*/;
+            );
+
         return http.build();
     }
 }

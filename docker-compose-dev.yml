@@ -92,12 +92,52 @@ services:
       - 5431:5432
 
 
+  keycloak-database:
+    image: postgres:16.4
+    networks:
+      - gump-network
+    volumes:
+      - keycloak-db-data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=gump
+      - POSTGRES_PASSWORD=gump
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    healthcheck:
+      test: [ 'CMD-SHELL', 'pg_isready -U $${POSTGRES_USER}' ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - 5422:5432
+
+
   keycloak:
     networks:
       - gump-network
-    extends:
-      file: ./keycloak.yml
-      service: keycloak
+    container_name: gump-keycloak
+    depends_on:
+      - keycloak-database
+    image: quay.io/keycloak/keycloak:24.0.3
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-database/gump
+      KC_DB_USERNAME: gump
+      KC_DB_PASSWORD: gump
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      PROXY_ADDRESS_FORWARDING: true
+      KC_PROXY_ADDRESS_FORWARDING: true
+      KC_PROXY: edge
+    ports:
+      - "9080:8080"
+    command:
+      - start-dev
+      - --proxy-headers=xforwarded
+      - --hostname-strict=false
+      - --hostname-strict-https=true
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+    restart: always
 
   gump-gateway:
     depends_on:
@@ -117,6 +157,8 @@ volumes:
   drtss-data:
   tresor-data:
   users-data:
+  keycloak_data:
+  keycloak-db-data:
 
 networks:
   gump-network:
