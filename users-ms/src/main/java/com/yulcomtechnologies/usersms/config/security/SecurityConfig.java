@@ -16,7 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(securedEnabled = true)
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}") String issuerUri;
@@ -31,6 +31,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(req ->
                 req.requestMatchers(
                     "/auth/**",
+                    "/get-ifu/**",
                     "/v2/api-docs",
                     "/v3/api-docs/**",
                     "/swagger-resources",
