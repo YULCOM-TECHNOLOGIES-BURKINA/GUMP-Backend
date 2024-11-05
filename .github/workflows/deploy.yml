@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-    #if: github.event_name == '_push'
     strategy:
       matrix:
         ms: [drtss-ms, tresor-ms, gateway, eureka-server]
@@ -46,9 +45,6 @@ jobs:
           docker push ghcr.io/yulcom-technologies-burkina/gump-${{matrix.ms}}:${{github.sha}}
 
   deploy:
-    env:
-      REMOTE_HOST: 54.37.13.176
-      REMOTE_USER: ubuntu
     needs: [build]
     runs-on: ubuntu-latest
     steps:
@@ -57,23 +53,21 @@ jobs:
       - name: Copy docker-compose file to remote server
         uses: appleboy/scp-action@master
         with:
-          passphrase: ${{ secrets.SSH_PASSPHRASE }}
-          host: ${{ env.REMOTE_HOST }}
-          username: ${{ env.REMOTE_USER }}
+          host: ${{ vars.REMOTE_HOST }}
+          username: ${{ vars.REMOTE_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "docker-compose-dev.yml,realm-config,keycloak.yml"
-          target: "/home/ubuntu/gump"
+          target: "/home/${{ vars.REMOTE_USER }}/gump"
       - run: ls
       - name: Deploy to dev environnement
         uses: appleboy/ssh-action@v1.0.3
         with:
-          passphrase: ${{ secrets.SSH_PASSPHRASE }}
-          host: ${{ env.REMOTE_HOST }}
-          username: ${{ env.REMOTE_USER }}
+          host: ${{ vars.REMOTE_HOST }}
+          username: ${{ vars.REMOTE_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd gump
-            echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u kulturman --password-stdin
+            echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u gump-ci --password-stdin
             echo COMMIT_SHA=${{github.sha}} > .env
             docker-compose -f docker-compose-dev.yml down
             docker-compose -f docker-compose-dev.yml up -d --build
