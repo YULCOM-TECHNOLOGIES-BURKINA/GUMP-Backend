@@ -28,8 +28,7 @@ services:
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://tresor-database:5432/gump
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
-      
-      
+
   users:
     image: ghcr.io/yulcom-technologies-burkina/gump-users-ms:$COMMIT_SHA
     container_name: gump-users-backend
@@ -159,6 +158,10 @@ services:
   gump-gateway:
     depends_on:
       - keycloak
+      - eureka-server
+      - tresor
+      - drtss
+      - users
     image: ghcr.io/yulcom-technologies-burkina/gump-gateway:$COMMIT_SHA
     container_name: gump-gateway-backend
     networks:
@@ -168,7 +171,11 @@ services:
     environment:
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
       - KEYCLOAK_AUTH_SERVER_URL=http://keycloak:9080
-      - KEYCLOAK_REALM=myrealm
+      - KEYCLOAK_REALM=gump
+      - TRESOR_MS_URI=http://tresor:8080
+      - DRTSS_MS_URI=http://drtss:8082
+      - USERS_MS_URI=http://users:8081
+    restart: on-failure
 
 volumes:
   drtss-data:

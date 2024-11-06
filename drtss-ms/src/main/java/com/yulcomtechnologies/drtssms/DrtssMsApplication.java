@@ -10,8 +10,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableDiscoveryClient
 @EnableAsync
 @ComponentScan({
-    "com.yulcomtechnologies.drtssms",
     "com.yulcomtechnologies.sharedlibrary",
+    "com.yulcomtechnologies.drtssms"
 })
 public class DrtssMsApplication {
 

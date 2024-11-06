@@ -20,7 +20,7 @@ spring:
       mvc:
         routes:
           - id: tresor-ms
-            uri: http://localhost:8080
+            uri: ${TRESOR_MS_URI:http://localhost:8080}
             predicates:
               - Header=service, tresor-ms
             filters:
@@ -28,7 +28,7 @@ spring:
               - PrefixPath=/api
 
           - id: drtss-ms
-            uri: http://localhost:8082
+            uri: ${DRTSS_MS_URI:http://localhost:8082}
             predicates:
               - Header=service, drtss-ms
             filters:
@@ -36,7 +36,7 @@ spring:
               - PrefixPath=/api
 
           - id: users-ms
-            uri: http://localhost:8081
+            uri: ${USERS_MS_URI:http://localhost:8081}
             predicates:
               - Header=service, users-ms
             filters:

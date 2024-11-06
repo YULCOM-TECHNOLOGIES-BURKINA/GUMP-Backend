@@ -6,9 +6,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@RestController("users")
 @AllArgsConstructor
 public class UsersController {
     private final CorporationInfosExtractor corporationInfosExtractor;
@@ -22,5 +23,10 @@ public class UsersController {
         );
 
         return ResponseEntity.ok(data);
+    }
+
+    @PostMapping("auth/register")
+    public ResponseEntity<?> createUser() throws Exception {
+        return ResponseEntity.ok().build();
     }
 }
