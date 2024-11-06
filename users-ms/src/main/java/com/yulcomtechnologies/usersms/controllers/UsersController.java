@@ -1,18 +1,19 @@
 package com.yulcomtechnologies.usersms.controllers;
 
+import com.yulcomtechnologies.usersms.dtos.CreateUserRequest;
 import com.yulcomtechnologies.usersms.services.CorporationData;
 import com.yulcomtechnologies.usersms.services.CorporationInfosExtractor;
+import com.yulcomtechnologies.usersms.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 @RestController("users")
 @AllArgsConstructor
 public class UsersController {
     private final CorporationInfosExtractor corporationInfosExtractor;
+    private final UserService userService;
 
     @GetMapping("get-ifu/{ifu}")
     public ResponseEntity<CorporationData> getUsers(
@@ -25,8 +26,11 @@ public class UsersController {
         return ResponseEntity.ok(data);
     }
 
-    @PostMapping("auth/register")
-    public ResponseEntity<?> createUser() throws Exception {
+    @PostMapping("users")
+    public ResponseEntity<?> createUser(
+        @Validated @RequestBody CreateUserRequest createUserRequest
+    ) throws Exception {
+        userService.createUser(createUserRequest);
         return ResponseEntity.ok().build();
     }
 }

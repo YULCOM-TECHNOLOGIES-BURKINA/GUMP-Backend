@@ -63,6 +63,7 @@ public class KeycloakSsoService implements SsoProvider {
     }
 
     public String createUser(CreateUserCommand createUserCommand) {
+        System.out.println(createUserCommand);
         var keycloakRegisterDto = new KeycloakCreateUserDto();
         var adminToken = getAdminToken().getBody();
 
