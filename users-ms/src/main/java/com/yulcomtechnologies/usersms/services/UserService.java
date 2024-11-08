@@ -57,4 +57,12 @@ public class UserService {
             userType == null ? userRepository.findAll(pageable): userRepository.findAllByUserType(pageable, userType);
         return users.map(userMapper::toUserDto);
     }
+
+    public UserDto getUser(Long id) {
+        var user = userRepository.findById(id).orElseThrow(
+            () -> new RuntimeException("User not found")
+        );
+
+        return userMapper.toUserDto(user);
+    }
 }

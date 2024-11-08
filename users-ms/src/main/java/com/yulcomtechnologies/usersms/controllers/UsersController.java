@@ -45,4 +45,11 @@ public class UsersController {
     ) {
         return ResponseEntity.ok(userService.getUsers(pageable, userType));
     }
+
+    @GetMapping("users/{id}")
+    public ResponseEntity<UserDto> getUser(
+        @PathVariable Long id
+    ) {
+        return ResponseEntity.ok(userService.getUser(id));
+    }
 }
