@@ -40,9 +40,13 @@
 
 	<dependencies>
     <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-openfeign</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.yulcomtechnologies</groupId>
       <artifactId>shared-library</artifactId>
-      <version>0.0.9-SNAPSHOT</version>
+      <version>0.0.10-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.pdfbox</groupId>
