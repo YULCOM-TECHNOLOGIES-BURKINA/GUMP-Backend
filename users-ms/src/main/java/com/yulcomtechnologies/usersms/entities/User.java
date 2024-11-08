@@ -24,6 +24,18 @@ public class User {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
+    @Column(name = "lastname")
+    private String lastname;
+
+    @Column(name = "forename")
+    private String forename;
+
+    @Column(name = "region")
+    private String region;
+
+    @Column(name = "username")
+    private String username;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private UserRole role;

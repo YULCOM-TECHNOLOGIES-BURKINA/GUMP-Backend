@@ -51,6 +51,7 @@ public class AuthService {
             .email(registerRequest.getEmail())
             .keycloakUserId(createdUserId)
             .role(UserRole.USER)
+            .username(registerRequest.getIfuNumber())
             .userType(UserType.USER)
             .company(corporation)
             .build();

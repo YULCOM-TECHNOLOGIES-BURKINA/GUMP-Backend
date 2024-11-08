@@ -32,7 +32,5 @@ public class AuthControllerTest extends BaseIntegrationTest {
             )
             .andDo(print())
             .andExpect(status().isOk());
-
-        System.out.println(companyRepository.findAll());
     }
 }

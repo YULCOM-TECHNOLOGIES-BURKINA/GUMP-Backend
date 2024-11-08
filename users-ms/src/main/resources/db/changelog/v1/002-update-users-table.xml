@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+>
+
+  <changeSet id="002" author="kulturman">
+    <sql>
+      CREATE TABLE "regions" (
+          "code" VARCHAR(255) NOT NULL UNIQUE,
+          "name" VARCHAR(255) NOT NULL UNIQUE,
+          PRIMARY KEY ("code")
+      );
+
+      INSERT INTO "regions" ("code", "name") VALUES
+       ('BOUCLE_DU_MOUHOUN', 'Boucle du Mouhoun'),
+       ('CASCADES', 'Cascades'),
+       ('CENTRE', 'Centre'),
+       ('CENTRE_EST', 'Centre-Est'),
+       ('CENTRE_NORD', 'Centre-Nord'),
+       ('CENTRE_OUEST', 'Centre-Ouest'),
+       ('CENTRE_SUD', 'Centre-Sud'),
+       ('EST', 'Est'),
+       ('HAUTS_BASSINS', 'Hauts-Bassins'),
+       ('NORD', 'Nord'),
+       ('PLATEAU_CENTRAL', 'Plateau-Central'),
+       ('SAHEL', 'Sahel'),
+       ('SUD_OUEST', 'Sud-Ouest');
+
+      INSERT INTO "regions" ("code", "name") VALUES ('N', 'North');
+
+
+      ALTER TABLE "users" ADD COLUMN "forename" VARCHAR(255) NULL;
+      ALTER TABLE "users" ADD COLUMN "lastname" VARCHAR(255) NULL;
+
+      UPDATE "users" SET "forename" = 'John', "lastname" = 'Doe' WHERE "id" = 1;
+      ALTER TABLE "users" ADD COLUMN "username" VARCHAR(255) NOT NULL;
+
+      ALTER TABLE "users" ADD COLUMN "region" VARCHAR(255) NULL;
+
+    </sql>
+  </changeSet>
+</databaseChangeLog>
