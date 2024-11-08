@@ -94,6 +94,7 @@ public class AuthServiceTest {
               .role(UserRole.USER)
               .userType(UserType.USER)
               .email(registrationRequest.email)
+              .username(registrationRequest.ifuNumber)
               .keycloakUserId("123456")
               .company(company)
               .build()
