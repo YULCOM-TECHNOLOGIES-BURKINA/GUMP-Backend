@@ -5,6 +5,7 @@ import com.yulcomtechnologies.drtssms.dtos.SignatureLocationDto;
 import com.yulcomtechnologies.drtssms.entities.SignatureScanner;
 import com.yulcomtechnologies.drtssms.entities.UtilisateursDrtss;
 import com.yulcomtechnologies.drtssms.enums.FileStoragePath;
+import com.yulcomtechnologies.drtssms.repositories.FileRepository;
 import com.yulcomtechnologies.drtssms.repositories.SignatureCertificatRepository;
 import com.yulcomtechnologies.drtssms.repositories.SignatureScannerRepository;
 import com.yulcomtechnologies.drtssms.repositories.UtilisateursDrtssRepository;
@@ -40,6 +41,7 @@ public class SignatureDocumentService {
     private UtilisateursDrtssRepository utilisateursDrtssRepository;
     private SignatureCertificatRepository signatureCertificatRepository;
     private SignatureScannerRepository signatureScannerRepository;
+    private FileRepository fileRepository;
 
     @Autowired
     private CertificateService certificateService;
@@ -136,7 +138,7 @@ public class SignatureDocumentService {
                 throw new IllegalArgumentException("Fichier de signature introuvable pour le signataire ID : " + signatoryId);
             }
 
-            // Définir la localisation de la signature
+            // Définir la Emplacement de la signature
             SignatureLocationDto signatureLocation = signatureLocation(attestationFile);
             if (signatureLocation == null) {
                 throw new IllegalStateException("Emplacement de signature non trouvé dans le fichier PDF");
@@ -182,6 +184,7 @@ public class SignatureDocumentService {
         }
         return path.toFile();
     }
+
 
     /**
      *

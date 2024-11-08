@@ -27,6 +27,9 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.cert.Certificate;
+import java.util.HashMap;
+import java.util.Map;
 
 @AllArgsConstructor
 @RestController
@@ -46,24 +49,46 @@ public class signatureElectroniqueController {
      * @param userId
      * @return
      */
+
+
     @PostMapping(path = "/create_signataire", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> createSignataire(@RequestParam("file") MultipartFile file, @RequestParam("userId") int userId) {
+    public ResponseEntity<Map<String, Object>> createSignataire(@RequestParam("file") MultipartFile file, @RequestParam("userId") int userId) {
+        Map<String, Object> response = new HashMap<>();
+
         try {
             if (file.isEmpty()) {
-                return ResponseEntity.badRequest().body("Le fichier est vide.");
-            }
-            //  uniquement les images PNG ou JPEG
-            String contentType = file.getContentType();
-            if (!"image/png".equals(contentType) && !"image/jpeg".equals(contentType)) {
-                return ResponseEntity.badRequest().body("Type de fichier non pris en charge. Veuillez télécharger une image PNG ou JPEG.");
+                response.put("status", "error");
+                response.put("message", "Le fichier est vide.");
+                return ResponseEntity.badRequest().body(response);
             }
 
+            // Vérifie les types de fichiers
+            String contentType = file.getContentType();
+            if (!"image/png".equals(contentType) && !"image/jpeg".equals(contentType)) {
+                response.put("status", "error");
+                response.put("message", "Type de fichier non pris en charge. Veuillez télécharger une image PNG ou JPEG.");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            // Sauvegarde le signataire
             SignatureScanner savedSignature = signatureDocumentService.createSignatory(file, (long) userId);
-            return ResponseEntity.ok().body("Image téléchargée avec succès. ID de la signature : " + savedSignature.getId());
+
+            response.put("status", "success");
+            response.put("message", "Signataire enregistré avec succès.");
+            response.put("signataireId", savedSignature.getId());
+            response.put("signataireInfo", savedSignature);
+
+            return ResponseEntity.ok(response);
+
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors du traitement du fichier : " + e.getMessage());
+            response.put("status", "error");
+            response.put("message", "Erreur lors du traitement du fichier : " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Échec du téléchargement de l'image : " + e.getMessage());
+            response.put("status", "error");
+            response.put("message", "Échec du téléchargement de l'image : " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
@@ -118,32 +143,32 @@ public class signatureElectroniqueController {
         return signatureDocumentService.listSignatory(page,size);
     }
 
-    @PostMapping(path = "/download_certificate", consumes = MediaType.ALL_VALUE)
-    public ResponseEntity<Resource> loadFile(@RequestBody FileDto fileDto) {
-        Path path = Paths.get(fileDto.getPath());
+    /**
+     * Telechager le Certificat
+     * @param path
+     * @return
+     */
+    @GetMapping("download_certificate")
+    public ResponseEntity<Resource> downloadCertificate(@RequestParam("path") String path) {
 
-        try {
-            File file = signatureDocumentService.loadFileByPath(path);
+        Path filePath = Paths.get(path);
+        File file = filePath.toFile();
 
-            // Fichier introuvable ou non lisible
-            if (!file.exists() || !file.canRead()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(null);
-            }
-
-            Resource resource = new FileSystemResource(file);
-
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
-                    .header(HttpHeaders.CONTENT_TYPE, Files.probeContentType(path))
-                    .body(resource);
-
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(null); // Erreur d'accès au fichier
-        } catch (java.io.IOException e) {
-            throw new RuntimeException(e);
+        if (!file.exists()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+
+
+        Resource resource = new FileSystemResource(file);
+        String contentType = "application/octet-stream";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.parseMediaType(contentType))
+                .body(resource);
     }
 
     /**

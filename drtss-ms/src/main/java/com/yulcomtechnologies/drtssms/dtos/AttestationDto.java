@@ -5,6 +5,8 @@ import java.time.LocalDate;
 public record AttestationDto(
     String path,
     String number,
-    LocalDate expirationDate
-) {
+    LocalDate expirationDate,
+    String pathFile
+
+    ) {
 }
