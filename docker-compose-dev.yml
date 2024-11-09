@@ -196,7 +196,8 @@ services:
       - 9090:9090
     environment:
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
-      - KEYCLOAK_AUTH_SERVER_URL=http://keycloak:9080
+      - KEYCLOAK_AUTH_SERVER_URL=https://sso.kulturman.com
+      #- KEYCLOAK_AUTH_SERVER_URL=http://keycloak:9080
       - KEYCLOAK_REALM=gump
       - TRESOR_MS_URI=http://tresor:8080
       - DRTSS_MS_URI=http://drtss:8082
