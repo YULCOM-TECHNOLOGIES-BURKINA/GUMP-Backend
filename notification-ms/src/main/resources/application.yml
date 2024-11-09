@@ -1,6 +1,6 @@
 spring:
   application:
-    name: notifcation-ms
+    name: notification-ms
   mail:
     host: localhost
     port: 1025
