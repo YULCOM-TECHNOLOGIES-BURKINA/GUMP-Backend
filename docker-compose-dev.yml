@@ -18,12 +18,13 @@ services:
       image: ghcr.io/yulcom-technologies-burkina/gump-notification-ms:$COMMIT_SHA
       container_name: gump-notification
       restart: on-failure
+      depends_on:
+        - eureka-server
       networks:
         - gump-network
       ports:
         - 8084:8084
       environment:
-        - SPRING_DATASOURCE_URL=jdbc:postgresql://drtss-database:5432/gump
         - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
         - SPRING_MAIL_HOST=mailhog
         - SPRING_MAIL_PORT=1025
@@ -44,7 +45,7 @@ services:
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://tresor-database:5432/gump
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
-  
+
   mailhog:
     image: mailhog/mailhog
     container_name: gump-mailhog
