@@ -28,6 +28,15 @@ services:
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://tresor-database:5432/gump
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+  
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog
+    networks:
+      - gump-network
+    ports:
+      - 8025:8025
+      - 1025:1025
 
   users:
     image: ghcr.io/yulcom-technologies-burkina/gump-users-ms:$COMMIT_SHA
