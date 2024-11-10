@@ -40,7 +40,8 @@ public class AuthServiceTest {
             "ifuNumber",
             "password",
             "password",
-            "lupin.arsene@gmail.com"
+            "lupin.arsene@gmail.com",
+            "1234"
         );
 
         var corporationData = new CorporationData(
@@ -73,7 +74,8 @@ public class AuthServiceTest {
                 "ifuNumber",
                 "password",
                 "password",
-                "lupin.arsene@gmail.com"
+                "lupin.arsene@gmail.com",
+                "1234"
             )
         );
 

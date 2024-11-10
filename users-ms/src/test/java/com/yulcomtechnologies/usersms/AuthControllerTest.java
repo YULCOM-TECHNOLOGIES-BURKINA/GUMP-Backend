@@ -25,7 +25,8 @@ public class AuthControllerTest extends BaseIntegrationTest {
                             "00077218Y",
                             "12345678",
                             "12345678",
-                            "arnaud.bakyono@gmail.com"
+                            "arnaud.bakyono@gmail.com",
+                            "1234"
                         )
                     ))
                     .contentType("application/json")
