@@ -7,6 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class RegisterRequest {
     public String ifuNumber;
+    public String cnssNumber;
     public String password;
     public String passwordConfirmation;
     public String email;

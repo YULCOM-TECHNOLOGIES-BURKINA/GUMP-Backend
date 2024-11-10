@@ -36,6 +36,9 @@ public class User {
     @Column(name = "username")
     private String username;
 
+    @Column(name = "cnss_number")
+    private String cnssNumber;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private UserRole role;
