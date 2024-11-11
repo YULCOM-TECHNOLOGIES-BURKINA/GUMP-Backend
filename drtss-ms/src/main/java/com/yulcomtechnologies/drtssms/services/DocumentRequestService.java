@@ -44,6 +44,7 @@ public class DocumentRequestService {
             .requesterId("requesterId")
             .isPaid(false)
             .createdAt(LocalDateTime.now())
+            .publicContractNumber(publicContractNumber)
             .status(DocumentRequestStatus.PENDING.name()).build();
 
         // Set the files in the document request

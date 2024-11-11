@@ -7,6 +7,7 @@ import com.yulcomtechnologies.drtssms.entities.DocumentRequest;
 import com.yulcomtechnologies.drtssms.entities.File;
 import com.yulcomtechnologies.sharedlibrary.services.FileStorageService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
@@ -18,6 +19,7 @@ public class DocumentRequestMapper {
 
     public DocumentRequestDto toDto(DocumentRequest documentRequest) {
         DocumentRequestDto dto = new DocumentRequestDto();
+        BeanUtils.copyProperties(documentRequest, dto);
         dto.setId(documentRequest.getId().toString());
         dto.setRequesterId(documentRequest.getRequesterId());
         dto.setStatus(documentRequest.getStatus());

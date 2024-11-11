@@ -24,6 +24,9 @@ public class ApplicationConfig {
     @Column(name = "validity_time_in_months", length = 255)
     private Integer validityTimeInMonths;
 
+    @Column(name = "processing_time_in_days", length = 255)
+    private Integer processingTimeInDays;
+
     @Column(name = "header", columnDefinition = "TEXT")
     private String header;
 

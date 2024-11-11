@@ -14,7 +14,7 @@
           validity_time_in_months INT,
           header TEXT,
           footer TEXT,
-          processingTimeInDays INT DEFAULT 1
+          processing_time_in_days INT DEFAULT 1
       );
 
       ALTER TABLE application_config ADD CONSTRAINT fk_logo_id FOREIGN KEY (logo_id) REFERENCES files(id);

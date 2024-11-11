@@ -12,6 +12,8 @@ public class DocumentRequestDto {
     private String status;
     private String reviewedBy;
     private String approvedBy;
+    private String publicContractNumber;
+    private String rejectionReason;
     private LocalDateTime createdAt;
     private Set<FileDto> files;
     private AttestationDto attestation;
