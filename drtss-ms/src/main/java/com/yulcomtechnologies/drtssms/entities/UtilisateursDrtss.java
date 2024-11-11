@@ -32,6 +32,9 @@ public class UtilisateursDrtss {
     @Column(name = "matricule",unique = true)
     private String matricule;
 
+    @Column(name = "titre_honorifique")
+    private String titre_honorifique;
+
     @Column(name = "tel")
     private String tel;
 

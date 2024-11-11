@@ -15,6 +15,7 @@
       "prenom"      VARCHAR(255) NOT NULL,
       "email"       VARCHAR(255) UNIQUE NOT NULL,
       "matricule"   VARCHAR(255) UNIQUE NOT NULL,
+      "titre_honorifique" VARCHAR(255),
       "tel"         VARCHAR(20) NOT NULL,
       "actif"       BOOLEAN DEFAULT TRUE NOT NULL,
       "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
