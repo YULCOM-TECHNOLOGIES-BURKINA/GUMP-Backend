@@ -13,7 +13,8 @@
           logo_id INT,
           validity_time_in_months INT,
           header TEXT,
-          footer TEXT
+          footer TEXT,
+          processingTimeInDays INT DEFAULT 1
       );
 
       ALTER TABLE application_config ADD CONSTRAINT fk_logo_id FOREIGN KEY (logo_id) REFERENCES files(id);
@@ -26,7 +27,9 @@
       INSERT INTO application_config (logo_id, validity_time_in_months, header, footer)
       VALUES ((SELECT "id" FROM insertedId), 2, 'header', 'footer');
 
-     ALTER TABLE "document_requests" ADD COLUMN "rejection_reason" TEXT DEFAULT NULL;
+      ALTER TABLE "document_requests" ADD COLUMN "rejection_reason" TEXT DEFAULT NULL;
+
+      UPDATE "document_requests" SET "is_paid" = FALSE;
     </sql>
   </changeSet>
 </databaseChangeLog>

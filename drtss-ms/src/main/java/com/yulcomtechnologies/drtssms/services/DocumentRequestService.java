@@ -42,6 +42,7 @@ public class DocumentRequestService {
 
         var documentRequest = DocumentRequest.builder()
             .requesterId("requesterId")
+            .isPaid(false)
             .createdAt(LocalDateTime.now())
             .status(DocumentRequestStatus.PENDING.name()).build();
 
