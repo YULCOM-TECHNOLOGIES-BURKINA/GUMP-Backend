@@ -69,15 +69,7 @@ public class AuthServiceTest {
         ))).thenReturn("123456");
 
 
-        authService.register(
-            new RegisterRequest(
-                "ifuNumber",
-                "password",
-                "password",
-                "lupin.arsene@gmail.com",
-                "1234"
-            )
-        );
+        authService.register(registrationRequest);
 
         var company =  new Company(
             registrationRequest.ifuNumber,
@@ -95,6 +87,7 @@ public class AuthServiceTest {
           User.builder()
               .role(UserRole.USER)
               .userType(UserType.USER)
+              .cnssNumber(registrationRequest.cnssNumber)
               .email(registrationRequest.email)
               .username(registrationRequest.ifuNumber)
               .keycloakUserId("123456")
