@@ -6,8 +6,6 @@ import com.yulcomtechnologies.usersms.enums.UserType;
 import com.yulcomtechnologies.usersms.repositories.CompanyRepository;
 import com.yulcomtechnologies.usersms.repositories.UserRepository;
 import com.yulcomtechnologies.usersms.services.SsoProvider;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;

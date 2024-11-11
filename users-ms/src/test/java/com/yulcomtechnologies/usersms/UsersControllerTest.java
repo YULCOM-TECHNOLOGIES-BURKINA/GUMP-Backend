@@ -38,7 +38,7 @@ public class UsersControllerTest extends BaseIntegrationTest {
                 .build()
         );
 
-        userRepository.save(
+        var user = userRepository.save(
             User.builder()
                 .id(1L)
                 .region("CENTRE")
@@ -61,7 +61,7 @@ public class UsersControllerTest extends BaseIntegrationTest {
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.content").isArray())
-            .andExpect(jsonPath("$.content[0].id").value(1))
+            .andExpect(jsonPath("$.content[0].id").value(user.getId()))
             .andExpect(jsonPath("$.content[0].forename").value("Yulcom"))
             .andExpect(jsonPath("$.content[0].lastname").value("Yulcom"))
             .andExpect(jsonPath("$.content[0].email").value("yulcom@gmail.com"))
