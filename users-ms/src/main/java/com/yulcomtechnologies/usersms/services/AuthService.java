@@ -52,6 +52,7 @@ public class AuthService {
             .keycloakUserId(createdUserId)
             .role(UserRole.USER)
             .username(registerRequest.getIfuNumber())
+            .cnssNumber(registerRequest.getCnssNumber())
             .userType(UserType.USER)
             .company(corporation)
             .build();
