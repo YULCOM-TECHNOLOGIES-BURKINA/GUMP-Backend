@@ -28,6 +28,7 @@ public class AttestationGenerator {
     private final FileRepository fileRepository;
     private final TemplateProcessor templateProcessor;
     private final PdfQRCodeService pdfQRCodeService;
+    private final PdfFiligraneService pdfFiligraneService;
 
     public void generateDocument(
         Long documentRequestId
@@ -53,11 +54,19 @@ public class AttestationGenerator {
         }
 
         var filledTemplate = templateProcessor.fillVariables(documentRequest.getRequestType().toString().toLowerCase() + ".html", map);
-
+        var typeResquest= documentRequest.getRequestType().toString();
         try {
+
+
             var fileBytes = pdfQRCodeService.addQRCodeToPDF(templateProcessor.htmlToPdf(filledTemplate), "QR code content");
+            var filigraneTexte="Agence judiciaire de l'Etat - Valable pour (03 mois)";
+            if (typeResquest=="LIQUIDATION"){
+                filigraneTexte="Agence judiciaire de l'Etat - Valable pour (01 mois)";
+            }
+            var finalFileBytes = pdfFiligraneService.addFiligraneToPDF(fileBytes,filigraneTexte);
+
             fileRepository.save(file);
-            fileStorageService.saveFile(fileBytes, filePath);
+            fileStorageService.saveFile(finalFileBytes, filePath);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -4,9 +4,10 @@
   <meta charset="UTF-8">
   <style>
     body {
+      background-color: #fcfac5;
       font-family: Arial, sans-serif;
       max-width: 800px;
-      margin: 20px auto;
+      margin: 10px auto;
       padding: 20px;
     }
 
@@ -25,6 +26,7 @@
       justify-content: center;
       align-items: center;
       margin: 20px 0;
+
     }
 
     .logo {
@@ -47,12 +49,13 @@
       text-align: center;
       font-size: 18px;
       font-weight: bold;
-      margin: 30px 0;
+      margin: 5px 0;
+
       text-transform: uppercase;
     }
 
     .form-field {
-      margin: 15px 0;
+      margin: 5px 0;
       border-bottom: 1px dotted #000;
       padding: 5px 0;
     }
@@ -62,12 +65,13 @@
     }
 
     .footer {
-      margin-top: 40px;
+      margin-top: 30px;
       font-size: 12px;
     }
 
     .watermark {
       position: absolute;
+
       display: none;
       top: 50%;
       left: 50%;
@@ -89,7 +93,7 @@
   </style>
 </head>
 <body>
-<div class="watermark">Agence judiciaire de l'Etat</div>
+<div class="watermark"> </div>
 
 <div class="header">
   <div class="ministry-name">MINISTERE DE L'ECONOMIE,<br>DES FINANCES ET DE LA<br>PROSPECTIVE</div>
@@ -101,9 +105,14 @@
 </div>
 
 <div class="logo-container">
-  <div class="logo">AJE</div>
-</div>
+  <div class="logo">
+    <img class="logo"
+         src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Coat_of_arms_of_Burkina_Faso.svg/640px-Coat_of_arms_of_Burkina_Faso.svg.png"
+          alt="AJE">
+  </div>
 
+
+</div>
 <div class="document-number">
   Numéro: N° <span th:text="${documentNumber}">0069501</span>
 </div>
