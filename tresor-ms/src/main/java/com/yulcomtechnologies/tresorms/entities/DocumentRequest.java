@@ -69,6 +69,15 @@ public class DocumentRequest {
     @OneToOne(mappedBy = "documentRequest", cascade = CascadeType.ALL)
     private Attestation attestation;
 
+    @Column(name = "is_paid")
+    private Boolean isPaid;
+
+    @Column(name = "rejection_reason")
+    private String rejectionReason;
+
+    @Column(name = "public_contract_number")
+    private String public_contract_number;
+
     public boolean isApproved() {
         return status.equals(DocumentRequestStatus.APPROVED.toString());
     }

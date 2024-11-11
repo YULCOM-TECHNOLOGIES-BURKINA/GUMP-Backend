@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+>
+
+  <changeSet id="003" author="kulturman">
+    <sql>
+        CREATE TABLE application_config (
+          id SERIAL PRIMARY KEY,
+          logo_id INT,
+          validity_time_in_months_for_liquidation INT,
+          validity_time_in_months_for_soumission INT,
+          header TEXT,
+          footer TEXT,
+          processing_time_in_days_for_liquidation INT DEFAULT 1,
+          processing_time_in_days_for_soumission INT DEFAULT 1
+        );
+
+        ALTER TABLE application_config ADD CONSTRAINT fk_logo_id FOREIGN KEY (logo_id) REFERENCES files(id);
+
+        WITH insertedId AS (
+        INSERT INTO "files"(label, path, created_at)
+        VALUES('Logo', 'uploads/logo.png',NOW()) RETURNING "id"
+          )
+
+        INSERT INTO application_config (
+                logo_id, validity_time_in_months_for_liquidation, validity_time_in_months_for_soumission, header, footer
+                ,processing_time_in_days_for_liquidation, processing_time_in_days_for_soumission
+          )
+        VALUES ((SELECT "id" FROM insertedId), 1, 3, 'header', 'footer', 1, 10);
+
+          ALTER TABLE "document_requests" ADD COLUMN "is_paid" BOOLEAN DEFAULT FALSE;
+          ALTER TABLE "document_requests" ADD COLUMN "rejectionReason" VARCHAR(255) NULL;
+          ALTER TABLE "document_requests" ADD COLUMN "public_contract_number" VARCHAR(255) NULL;
+        </sql>
+  </changeSet>
+</databaseChangeLog>
