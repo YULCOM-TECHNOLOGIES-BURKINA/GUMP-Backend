@@ -29,7 +29,7 @@
 
       ALTER TABLE "document_requests" ADD COLUMN "rejection_reason" TEXT DEFAULT NULL;
 
-      UPDATE "document_requests" SET "is_paid" = FALSE;
+      UPDATE "document_requests" SET "is_paid" = FALSE, "requester_id" = 5;
     </sql>
   </changeSet>
 </databaseChangeLog>
