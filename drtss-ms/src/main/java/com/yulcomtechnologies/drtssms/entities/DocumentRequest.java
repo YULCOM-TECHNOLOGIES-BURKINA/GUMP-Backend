@@ -25,8 +25,14 @@ public class DocumentRequest {
     @Column(name = "requester_id", nullable = false)
     private String requesterId;  // Keycloak user ID of the requester
 
+    @Column(name = "public_contract_number", nullable = false)
+    private String publicContractNumber;
+
     @Column(nullable = false)
     private String status = "PENDING";
+
+    @Column(name = "rejection_reason")
+    private String rejectionReason;
 
     @Column(name = "reviewed_by")
     private String reviewedBy;

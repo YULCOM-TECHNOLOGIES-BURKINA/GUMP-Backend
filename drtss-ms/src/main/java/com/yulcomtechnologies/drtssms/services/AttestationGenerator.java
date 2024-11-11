@@ -4,6 +4,7 @@ import com.yulcomtechnologies.drtssms.dtos.ApproveDocumentRequestDto;
 import com.yulcomtechnologies.drtssms.entities.Attestation;
 import com.yulcomtechnologies.drtssms.entities.DocumentRequest;
 import com.yulcomtechnologies.drtssms.entities.File;
+import com.yulcomtechnologies.drtssms.repositories.ApplicationConfigRepository;
 import com.yulcomtechnologies.drtssms.repositories.AttestationRepository;
 import com.yulcomtechnologies.drtssms.repositories.DocumentRequestRepository;
 import com.yulcomtechnologies.drtssms.repositories.FileRepository;
@@ -21,13 +22,13 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class AttestationGenerator {
-    public static final int VALIDITY_PERIOD_IN_MONTHS = 3;
     private final AttestationRepository attestationRepository;
     private final DocumentRequestRepository documentRequestRepository;
     private final FileStorageService fileStorageService;
     private final FileRepository fileRepository;
     private final TemplateProcessor templateProcessor;
     private final PdfQRCodeService pdfQRCodeService;
+    private final ApplicationConfigRepository applicationConfigRepository;
 
     public void generateDocument(
         ApproveDocumentRequestDto approveDocumentRequestDto,
@@ -52,6 +53,7 @@ public class AttestationGenerator {
         map.put("address", "Ouaga 2000");
         map.put("bp", "Yulcom technologies");
         map.put("region", "Centre");
+        map.put("logo", fileStorageService.getPath(applicationConfigRepository.get().getLogo()));
         map.put("telephone", "50-50-50-50");
 
 
@@ -66,7 +68,9 @@ public class AttestationGenerator {
         }
 
         var attestation = Attestation.builder()
-            .expirationDate(LocalDate.now().plusMonths(VALIDITY_PERIOD_IN_MONTHS).atTime(23, 59, 59))
+            .expirationDate(LocalDate.now().plusMonths(
+                applicationConfigRepository.get().getValidityTimeInMonths()
+            ).atTime(23, 59, 59))
             .attestationAnpeNumber(approveDocumentRequestDto.getAttestationAnpeNumber())
             .attestationCnssNumber(approveDocumentRequestDto.getAttestationCnssNumber())
             .attestationAnpeDate(approveDocumentRequestDto.getAttestationAnpeDate())
@@ -77,6 +81,7 @@ public class AttestationGenerator {
             .documentRequest(documentRequest)
             .file(file)
             .build();
+
 
         attestationRepository.save(attestation);
     }

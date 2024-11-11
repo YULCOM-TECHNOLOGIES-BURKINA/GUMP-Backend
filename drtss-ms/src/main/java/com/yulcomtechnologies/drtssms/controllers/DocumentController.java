@@ -24,9 +24,15 @@ public class DocumentController {
     @PostMapping("demandes")
     public ResponseEntity<CreatedResource> submitDocumentRequest(
         @RequestParam("attestationCnss") MultipartFile attestationCnss,
-        @RequestParam("attestationAnpe") MultipartFile attestationAnpe) throws IOException {
+        @RequestParam("attestationAnpe") MultipartFile attestationAnpe,
+        @RequestParam("publicContractNumber") String publicContractNumber
+    ) throws IOException {
 
-        DocumentRequest documentRequest = documentRequestService.submitDocumentRequest(attestationCnss, attestationAnpe);
+        DocumentRequest documentRequest = documentRequestService.submitDocumentRequest(
+            attestationCnss,
+            attestationAnpe,
+            publicContractNumber
+        );
 
         return ResponseEntity.ok(new CreatedResource(documentRequest.getId().toString()));
     }
@@ -44,8 +50,12 @@ public class DocumentController {
     }
 
     @PostMapping("demandes/{id}/review")
-    public ResponseEntity<?> reviewDocumentRequest(@PathVariable Long id, @RequestParam("status") DocumentRequestStatus status) {
-        documentRequestService.reviewDocumentRequest(id, status);
+    public ResponseEntity<?> reviewDocumentRequest(
+        @PathVariable Long id,
+        @RequestParam("status") DocumentRequestStatus status,
+        @RequestParam(required = false) String rejectionReason
+    ) {
+        documentRequestService.reviewDocumentRequest(id, status, rejectionReason);
         return ResponseEntity.ok().build();
     }
 

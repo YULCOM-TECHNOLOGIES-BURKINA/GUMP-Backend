@@ -5,9 +5,11 @@ import com.yulcomtechnologies.drtssms.dtos.DocumentRequestDto;
 import com.yulcomtechnologies.drtssms.entities.DocumentRequest;
 import com.yulcomtechnologies.drtssms.entities.File;
 import com.yulcomtechnologies.drtssms.enums.DocumentRequestStatus;
+import com.yulcomtechnologies.drtssms.events.DocumentRequestChanged;
 import com.yulcomtechnologies.drtssms.mappers.DocumentRequestMapper;
 import com.yulcomtechnologies.drtssms.repositories.DocumentRequestRepository;
 import com.yulcomtechnologies.drtssms.repositories.FileRepository;
+import com.yulcomtechnologies.sharedlibrary.events.EventPublisher;
 import com.yulcomtechnologies.sharedlibrary.exceptions.BadRequestException;
 import com.yulcomtechnologies.sharedlibrary.services.FileStorageService;
 import lombok.AllArgsConstructor;
@@ -32,8 +34,9 @@ public class DocumentRequestService {
     private final DocumentRequestMapper documentRequestMapper;
     private final FileStorageService fileStorageService;
     private final AttestationGenerator attestationGenerator;
+    private final EventPublisher eventPublisher;
 
-    public DocumentRequest submitDocumentRequest(MultipartFile attestationCnss, MultipartFile attestationAnpe) throws IOException {
+    public DocumentRequest submitDocumentRequest(MultipartFile attestationCnss, MultipartFile attestationAnpe, String publicContractNumber) throws IOException {
         File cnssAttestation = saveFile(attestationCnss, "Attestation CNSS");
         File anpeAttestation = saveFile(attestationAnpe, "Attestation ANPE");
 
@@ -71,14 +74,24 @@ public class DocumentRequestService {
             .orElseThrow(() -> new IllegalArgumentException("Document request not found"));
     }
 
-    public void reviewDocumentRequest(Long id, DocumentRequestStatus status) {
+    public void reviewDocumentRequest(
+        Long id,
+        DocumentRequestStatus status,
+        String rejectionReason
+    ) {
+        if (status == DocumentRequestStatus.REJECTED && rejectionReason == null) {
+            throw new BadRequestException("Vous devenez fournir un motif de rejet");
+        }
+
         DocumentRequest documentRequest = documentRequestRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("DocumentRequest not found"));
 
         documentRequest.setStatus(status.name());
+        documentRequest.setRejectionReason(rejectionReason);
         documentRequest.setReviewedBy("KeycloakUserUtil.getCurrentUserId()");
 
         documentRequestRepository.save(documentRequest);
+        eventPublisher.dispatch(new DocumentRequestChanged(documentRequest.getId()));
     }
 
     public void approveDocumentRequest(Long id, ApproveDocumentRequestDto approveDocumentRequestDto) throws IOException {
@@ -102,7 +115,7 @@ public class DocumentRequestService {
         );
 
         documentRequestRepository.save(documentRequest);
-
+        eventPublisher.dispatch(new DocumentRequestChanged(documentRequest.getId()));
     }
 }
 

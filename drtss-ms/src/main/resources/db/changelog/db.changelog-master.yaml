@@ -5,3 +5,7 @@ databaseChangeLog:
       file: db/changelog/v1/002-create-attestation-table.xml
   - include:
         file: db/changelog/v1/003-add-is-paid-column-to-demandes.xml
+  - include:
+        file: db/changelog/v1/004-add-public-contract-number-to-document-requests.xml
+  - include:
+        file: db/changelog/v1/005-create-application-config-table.xml

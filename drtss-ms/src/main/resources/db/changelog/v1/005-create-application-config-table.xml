@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+>
+
+  <changeSet id="005" author="kulturman">
+    <sql>
+      CREATE TABLE application_config (
+          id SERIAL PRIMARY KEY,
+          logo_id INT,
+          validity_time_in_months INT,
+          header TEXT,
+          footer TEXT
+      );
+
+      ALTER TABLE application_config ADD CONSTRAINT fk_logo_id FOREIGN KEY (logo_id) REFERENCES files(id);
+
+      WITH insertedId AS (
+        INSERT INTO "files"(label, path, created_at)
+        VALUES('Logo', 'uploads/logo.png',NOW()) RETURNING "id"
+      )
+
+      INSERT INTO application_config (logo_id, validity_time_in_months, header, footer)
+      VALUES ((SELECT "id" FROM insertedId), 2, 'header', 'footer');
+
+     ALTER TABLE "document_requests" ADD COLUMN "rejection_reason" TEXT DEFAULT NULL;
+    </sql>
+  </changeSet>
+</databaseChangeLog>
