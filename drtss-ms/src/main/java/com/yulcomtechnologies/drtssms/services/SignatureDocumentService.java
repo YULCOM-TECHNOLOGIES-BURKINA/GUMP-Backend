@@ -129,38 +129,49 @@ public class SignatureDocumentService {
 
 
         if (!signatory.isActif()) {
+            String jsonError = "{\"error\": \"Utilisateur inactif, signature non autorisée\"}";
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(("Utilisateur inactif, signature non autorisée").getBytes());
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(jsonError.getBytes());
         }
 
         try {
             // Charger le fichier d'attestation
             File attestationFile = loadFileByPath(Path.of(attestationPath));
             if (!attestationFile.exists() || !attestationFile.canRead()) {
-                throw new IllegalArgumentException("Fichier d'attestation introuvable ou non lisible : " + attestationPath);
+                String jsonError = "{\"error\": \"Fichier d'attestation introuvable ou non lisible : " + attestationPath + "\"}";
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(jsonError.getBytes());
             }
 
             // Charger le fichier de signature du signataire
             File signatoryFileImg = getSignatoryFileImg(signatoryId);
             if (signatoryFileImg == null || !signatoryFileImg.exists()) {
-                throw new IllegalArgumentException("Fichier de signature introuvable pour le signataire ID : " + signatoryId);
+                String jsonError = "{\"error\": \"Fichier de signature introuvable pour le signataire ID : " + signatoryId + "\"}";
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(jsonError.getBytes());
             }
 
-             SignatureLocationDto signatureLocation = signatureLocation(attestationFile);
+            SignatureLocationDto signatureLocation = signatureLocation(attestationFile);
             if (signatureLocation == null) {
-                throw new IllegalStateException("Emplacement de signature non trouvé dans le fichier PDF");
+                String jsonError = "{\"error\": \"Emplacement de signature non trouvé dans le fichier PDF\"}";
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(jsonError.getBytes());
             }
 
-             certificateService.addSignatureImgToFile(
+            certificateService.addSignatureImgToFile(
                     attestationFile, signatoryFileImg, x, y,
                     signatureLocation.getWidth(), signatureLocation.getHeight(),
-                    signatureLocation.getPageSelect(), signatory.getNom() + " " + signatory.getPrenom(),signatory.getTitre_honorifique()
+                    signatureLocation.getPageSelect(), signatory.getNom() + " " + signatory.getPrenom(), signatory.getTitre_honorifique()
             );
 
             // Certifier le document avec le certificat du signataire
             certificateService.certifyThedocument(attestationFile, keyStoreFile, keyStorePassword, alias);
 
-             try (FileInputStream fis = new FileInputStream(attestationFile)) {
+            try (FileInputStream fis = new FileInputStream(attestationFile)) {
                 byte[] data = fis.readAllBytes();
                 return ResponseEntity.ok()
                         .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attestationFile.getName() + "\"")
@@ -169,11 +180,15 @@ public class SignatureDocumentService {
             }
 
         } catch (IOException e) {
+            String jsonError = "{\"error\": \"Erreur lors du chargement du fichier d'attestation : " + e.getMessage() + "\"}";
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(("Erreur lors du chargement du fichier d'attestation : " + e.getMessage()).getBytes());
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(jsonError.getBytes());
         } catch (Exception e) {
+            String jsonError = "{\"error\": \"Erreur lors de la signature de l'attestation : " + e.getMessage() + "\"}";
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(("Erreur lors de la signature de l'attestation : " + e.getMessage()).getBytes());
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(jsonError.getBytes());
         }
     }
 
