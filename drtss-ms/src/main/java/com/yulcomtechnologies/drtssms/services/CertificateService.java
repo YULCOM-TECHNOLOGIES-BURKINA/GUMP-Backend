@@ -142,8 +142,8 @@ public class CertificateService {
             contentStream.showText(signatoryName.toUpperCase());
 
             if (titleSignatory!=null){
-             contentStream.newLineAtOffset(xPosition, yPosition-14);
-             contentStream.showText(titleSignatory);
+             contentStream.newLineAtOffset(xPosition-90, yPosition-100);
+             contentStream.showText(titleSignatory+" MCT");
 
             }
 
