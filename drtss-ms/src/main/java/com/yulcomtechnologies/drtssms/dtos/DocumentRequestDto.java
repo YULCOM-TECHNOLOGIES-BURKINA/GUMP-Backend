@@ -18,4 +18,5 @@ public class DocumentRequestDto {
     private Set<FileDto> files;
     private AttestationDto attestation;
     private Boolean isPaid;
+    private Boolean isPastDue;
 }

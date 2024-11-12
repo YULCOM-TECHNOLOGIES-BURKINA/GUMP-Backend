@@ -7,6 +7,7 @@ import com.yulcomtechnologies.drtssms.entities.File;
 import com.yulcomtechnologies.drtssms.enums.DocumentRequestStatus;
 import com.yulcomtechnologies.drtssms.events.DocumentRequestChanged;
 import com.yulcomtechnologies.drtssms.mappers.DocumentRequestMapper;
+import com.yulcomtechnologies.drtssms.repositories.ApplicationConfigRepository;
 import com.yulcomtechnologies.drtssms.repositories.DocumentRequestRepository;
 import com.yulcomtechnologies.drtssms.repositories.FileRepository;
 import com.yulcomtechnologies.sharedlibrary.events.EventPublisher;
@@ -35,6 +36,7 @@ public class DocumentRequestService {
     private final FileStorageService fileStorageService;
     private final AttestationGenerator attestationGenerator;
     private final EventPublisher eventPublisher;
+    ApplicationConfigRepository applicationConfigRepository;
 
     public DocumentRequest submitDocumentRequest(MultipartFile attestationCnss, MultipartFile attestationAnpe, String publicContractNumber) throws IOException {
         File cnssAttestation = saveFile(attestationCnss, "Attestation CNSS");
@@ -67,12 +69,20 @@ public class DocumentRequestService {
     }
 
     public Page<DocumentRequestDto> getPaginatedDocumentRequests(Pageable pageable) {
-        return documentRequestRepository.findAll(pageable).map(documentRequestMapper::toDto);
+        return documentRequestRepository.findAll(pageable).map(
+            documentRequest -> documentRequestMapper.toDto(
+                documentRequest,
+                applicationConfigRepository.get()
+            )
+        );
     }
 
     public DocumentRequestDto getDocumentRequest(String id) {
         return documentRequestRepository.findById(Long.parseLong(id))
-            .map(documentRequestMapper::toDto)
+            .map(documentRequest -> documentRequestMapper.toDto(
+                documentRequest,
+                applicationConfigRepository.get()
+            ))
             .orElseThrow(() -> new IllegalArgumentException("Document request not found"));
     }
 

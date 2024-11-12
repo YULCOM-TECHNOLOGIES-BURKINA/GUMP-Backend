@@ -3,13 +3,16 @@ package com.yulcomtechnologies.drtssms.mappers;
 import com.yulcomtechnologies.drtssms.dtos.AttestationDto;
 import com.yulcomtechnologies.drtssms.dtos.DocumentRequestDto;
 import com.yulcomtechnologies.drtssms.dtos.FileDto;
+import com.yulcomtechnologies.drtssms.entities.ApplicationConfig;
 import com.yulcomtechnologies.drtssms.entities.DocumentRequest;
 import com.yulcomtechnologies.drtssms.entities.File;
+import com.yulcomtechnologies.drtssms.repositories.ApplicationConfigRepository;
 import com.yulcomtechnologies.sharedlibrary.services.FileStorageService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 @Service
@@ -17,7 +20,11 @@ import java.util.stream.Collectors;
 public class DocumentRequestMapper {
     private final FileStorageService fileStorageService;
 
-    public DocumentRequestDto toDto(DocumentRequest documentRequest) {
+
+    public DocumentRequestDto toDto(
+        DocumentRequest documentRequest,
+        ApplicationConfig applicationConfig
+    ) {
         DocumentRequestDto dto = new DocumentRequestDto();
         BeanUtils.copyProperties(documentRequest, dto);
         dto.setId(documentRequest.getId().toString());
@@ -27,6 +34,9 @@ public class DocumentRequestMapper {
         dto.setApprovedBy(documentRequest.getApprovedBy());
         dto.setCreatedAt(documentRequest.getCreatedAt());
         dto.setIsPaid(documentRequest.getIsPaid());
+        dto.setIsPastDue(
+            LocalDateTime.now().isAfter(documentRequest.getCreatedAt().plusDays(applicationConfig.getProcessingTimeInDays()))
+        );
 
         if (documentRequest.isApproved()) {
             var attestation = documentRequest.getAttestation();
