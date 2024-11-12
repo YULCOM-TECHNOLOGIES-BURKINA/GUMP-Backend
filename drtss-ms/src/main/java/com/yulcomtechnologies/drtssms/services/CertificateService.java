@@ -124,7 +124,7 @@ public class CertificateService {
      * @param pageSigne
      */
     //Ajouter l'empreinte de la Signature
-    public void addSignatureImgToFile(File pdfFile, File signatureImageFile, float xPosition, float yPosition, float width, float height, int pageSigne,String signatoryName) {
+    public void addSignatureImgToFile(File pdfFile, File signatureImageFile, float xPosition, float yPosition, float width, float height, int pageSigne,String signatoryName ,String titleSignatory) {
         try (PDDocument document = PDDocument.load(pdfFile)) {
 
             PDPage page = document.getPage(pageSigne) ;
@@ -140,6 +140,13 @@ public class CertificateService {
 
             contentStream.newLineAtOffset(xPosition, yPosition-12);
             contentStream.showText(signatoryName.toUpperCase());
+
+            if (titleSignatory!=null){
+             contentStream.newLineAtOffset(xPosition, yPosition-14);
+             contentStream.showText(titleSignatory);
+
+            }
+
             contentStream.endText();
 
             contentStream.close();

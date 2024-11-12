@@ -122,33 +122,40 @@ public class SignatureDocumentService {
      * @return
      */
     @Transactional
-    public ResponseEntity<byte[]> signAttestation(String attestationPath, Long signatoryId, File keyStoreFile, String keyStorePassword, String alias,float x,float y) {
+    public ResponseEntity<byte[]> signAttestation(String attestationPath, Long signatoryId, File keyStoreFile, String keyStorePassword, String alias, float x, float y) {
 
-         UtilisateursDrtss signatory = utilisateursDrtssRepository.findById(signatoryId)
+        UtilisateursDrtss signatory = utilisateursDrtssRepository.findById(signatoryId)
                 .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
 
+
+        if (!signatory.isActif()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(("Utilisateur inactif, signature non autorisée").getBytes());
+        }
+
         try {
-             File attestationFile = loadFileByPath(Path.of(attestationPath));
+            // Charger le fichier d'attestation
+            File attestationFile = loadFileByPath(Path.of(attestationPath));
             if (!attestationFile.exists() || !attestationFile.canRead()) {
                 throw new IllegalArgumentException("Fichier d'attestation introuvable ou non lisible : " + attestationPath);
             }
 
-             File signatoryFileImg = getSignatoryFileImg(signatoryId);
+            // Charger le fichier de signature du signataire
+            File signatoryFileImg = getSignatoryFileImg(signatoryId);
             if (signatoryFileImg == null || !signatoryFileImg.exists()) {
                 throw new IllegalArgumentException("Fichier de signature introuvable pour le signataire ID : " + signatoryId);
             }
 
-            // Définir la Emplacement de la signature
-            SignatureLocationDto signatureLocation = signatureLocation(attestationFile);
+             SignatureLocationDto signatureLocation = signatureLocation(attestationFile);
             if (signatureLocation == null) {
                 throw new IllegalStateException("Emplacement de signature non trouvé dans le fichier PDF");
             }
 
-
-            certificateService.addSignatureImgToFile(attestationFile, signatoryFileImg,
-                    x, y,
+             certificateService.addSignatureImgToFile(
+                    attestationFile, signatoryFileImg, x, y,
                     signatureLocation.getWidth(), signatureLocation.getHeight(),
-                    signatureLocation.getPageSelect(),signatory.getNom()+" "+signatory.getPrenom());
+                    signatureLocation.getPageSelect(), signatory.getNom() + " " + signatory.getPrenom(),signatory.getTitre_honorifique()
+            );
 
             // Certifier le document avec le certificat du signataire
             certificateService.certifyThedocument(attestationFile, keyStoreFile, keyStorePassword, alias);

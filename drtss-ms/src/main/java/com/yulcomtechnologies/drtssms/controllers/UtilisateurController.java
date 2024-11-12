@@ -54,4 +54,8 @@ public class UtilisateurController {
         return utilisateurService.listUtilisateurs(page,size);
     }
 
+    @PostMapping(path = "/update_status")
+    public UtilisateursDrtss update_status(@RequestBody UtilisateursDrtssDto utilisateursDrtssDto){
+        return utilisateurService.update_status(utilisateursDrtssDto.getId());
+    }
 }

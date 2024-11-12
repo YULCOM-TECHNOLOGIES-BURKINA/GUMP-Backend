@@ -23,6 +23,8 @@ public class UtilisateursDrtssDto {
 
     private String matricule;
 
+    private String titre_honorifique;
+
     private String tel;
 
     private boolean actif;
@@ -37,6 +39,7 @@ public class UtilisateursDrtssDto {
                         .matricule(s.getMatricule())
                         .tel(s.getTel())
                         .actif(s.isActif())
+                        .titre_honorifique(s.getTitre_honorifique())
                         .build()
                 )
                 .orElse(null);
@@ -52,6 +55,7 @@ public class UtilisateursDrtssDto {
                     utilisateurs.setPrenom(dto.getPrenom());
                     utilisateurs.setEmail(dto.getEmail());
                     utilisateurs.setMatricule(dto.getMatricule());
+                    utilisateurs.setTitre_honorifique(dto.getTitre_honorifique());
                     utilisateurs.setTel(dto.getTel());
                     utilisateurs.setActif(dto.isActif());
                     return utilisateurs;
