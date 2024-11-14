@@ -57,14 +57,14 @@ public class DocumentRequestServiceTest extends BaseIntegrationTest {
             .createdAt(LocalDateTime.now())
             .requesterId("1")
             .publicContractNumber("1234")
-            .id(1L).status(DocumentRequestStatus.PROCESSING.name()).build();
+            .status(DocumentRequestStatus.PROCESSING.name()).build();
 
         documentRequestRepository.save(documentRequest);
     }
 
 
     @Test
-    void validatesDocumentSuccessfully() throws IOException {
+    void approvesDocumentSuccessfully() throws IOException {
         when(usersFeignClient.getUser(documentRequest.getId().toString())).thenReturn(
             UserDto.builder()
                 .id(1L)
