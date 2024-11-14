@@ -72,7 +72,7 @@ public class DocumentRequest {
     @Column(name = "is_paid")
     private Boolean isPaid;
 
-    @Column(name = "rejection_reason")
+    @Column(name = "rejectionReason")
     private String rejectionReason;
 
     @Column(name = "public_contract_number")
