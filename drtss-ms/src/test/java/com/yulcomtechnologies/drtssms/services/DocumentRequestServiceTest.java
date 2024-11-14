@@ -65,7 +65,7 @@ public class DocumentRequestServiceTest extends BaseIntegrationTest {
 
     @Test
     void validatesDocumentSuccessfully() throws IOException {
-        when(usersFeignClient.getUser("1")).thenReturn(
+        when(usersFeignClient.getUser(documentRequest.getId().toString())).thenReturn(
             UserDto.builder()
                 .id(1L)
                 .email("test@gmail.com")

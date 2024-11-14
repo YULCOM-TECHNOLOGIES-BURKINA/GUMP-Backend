@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5431/gump
+    username: gump
+    password: gump
+
+  application:
+    name: drtss-ms
+  config:
+    import: optional:configserver:http://localhost:8888
+
+keycloak:
+  auth-server-url: https://sso.kulturman.com
+  realm: gump
+
+eureka:
+  client:
+      enabled: false
+server:
+  port: 8082
+  servlet:
+    context-path: /api
+
+app:
+  url: http://localhost:8082/api
