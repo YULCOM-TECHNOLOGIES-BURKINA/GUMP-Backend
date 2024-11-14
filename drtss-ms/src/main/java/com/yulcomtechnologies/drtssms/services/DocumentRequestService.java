@@ -36,7 +36,7 @@ public class DocumentRequestService {
     private final FileStorageService fileStorageService;
     private final AttestationGenerator attestationGenerator;
     private final EventPublisher eventPublisher;
-    ApplicationConfigRepository applicationConfigRepository;
+    private final ApplicationConfigRepository applicationConfigRepository;
 
     public DocumentRequest submitDocumentRequest(MultipartFile attestationCnss, MultipartFile attestationAnpe, String publicContractNumber) throws IOException {
         File cnssAttestation = saveFile(attestationCnss, "Attestation CNSS");

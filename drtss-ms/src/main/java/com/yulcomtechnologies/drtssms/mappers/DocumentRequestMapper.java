@@ -6,6 +6,7 @@ import com.yulcomtechnologies.drtssms.dtos.FileDto;
 import com.yulcomtechnologies.drtssms.entities.ApplicationConfig;
 import com.yulcomtechnologies.drtssms.entities.DocumentRequest;
 import com.yulcomtechnologies.drtssms.entities.File;
+import com.yulcomtechnologies.drtssms.feignClients.UsersFeignClient;
 import com.yulcomtechnologies.drtssms.repositories.ApplicationConfigRepository;
 import com.yulcomtechnologies.sharedlibrary.services.FileStorageService;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class DocumentRequestMapper {
     private final FileStorageService fileStorageService;
+    private final UsersFeignClient usersFeignClient;
 
 
     public DocumentRequestDto toDto(
@@ -34,6 +36,7 @@ public class DocumentRequestMapper {
         dto.setApprovedBy(documentRequest.getApprovedBy());
         dto.setCreatedAt(documentRequest.getCreatedAt());
         dto.setIsPaid(documentRequest.getIsPaid());
+        dto.setCompany(usersFeignClient.getUser(documentRequest.getRequesterId()).getCompany());
         dto.setIsPastDue(
             LocalDateTime.now().isAfter(documentRequest.getCreatedAt().plusDays(applicationConfig.getProcessingTimeInDays()))
         );

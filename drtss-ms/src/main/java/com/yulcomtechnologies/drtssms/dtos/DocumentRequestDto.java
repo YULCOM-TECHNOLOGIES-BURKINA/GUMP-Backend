@@ -19,4 +19,5 @@ public class DocumentRequestDto {
     private AttestationDto attestation;
     private Boolean isPaid;
     private Boolean isPastDue;
+    private CompanyDto company;
 }
