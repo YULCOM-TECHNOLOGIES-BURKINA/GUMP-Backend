@@ -2,6 +2,7 @@ package com.yulcomtechnologies.drtssms.controllers;
 
 import com.yulcomtechnologies.drtssms.BaseIntegrationTest;
 import com.yulcomtechnologies.drtssms.dtos.CompanyDto;
+import com.yulcomtechnologies.drtssms.dtos.PayRequest;
 import com.yulcomtechnologies.drtssms.dtos.UserDto;
 import com.yulcomtechnologies.drtssms.entities.DocumentRequest;
 import com.yulcomtechnologies.drtssms.enums.DocumentRequestStatus;
@@ -17,6 +18,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -76,5 +78,22 @@ public class DocumentRequestControllerTest extends BaseIntegrationTest {
             .andExpect(jsonPath("$.content[1].isPastDue").value(true))
             .andExpect(jsonPath("$.content[1].isPaid").value(true));
 
+    }
+
+    @Test
+    void payForDocumentRequest() throws Exception {
+        mockMvc.perform(
+            post(
+            "/demandes/1/pay"
+            )
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(
+                    new PayRequest(
+                        "DRTSS",
+                        "http://localhost"
+                    )
+                ))
+        ).andExpect(status().isOk())
+        .andDo(print());
     }
 }

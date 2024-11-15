@@ -1,8 +1,6 @@
 package com.yulcomtechnologies.drtssms.controllers;
 
-import com.yulcomtechnologies.drtssms.dtos.ApproveDocumentRequestDto;
-import com.yulcomtechnologies.drtssms.dtos.CreatedResource;
-import com.yulcomtechnologies.drtssms.dtos.DocumentRequestDto;
+import com.yulcomtechnologies.drtssms.dtos.*;
 import com.yulcomtechnologies.drtssms.entities.DocumentRequest;
 import com.yulcomtechnologies.drtssms.enums.DocumentRequestStatus;
 import com.yulcomtechnologies.drtssms.services.DocumentRequestService;
@@ -20,6 +18,15 @@ import java.io.IOException;
 @AllArgsConstructor
 public class DocumentController {
     private final DocumentRequestService documentRequestService;
+
+    @PostMapping("demandes/{id}/pay")
+    public ResponseEntity<PaymentRequestResponse> payForRequest(
+        @PathVariable Long id,
+        @Validated @RequestBody PayRequest payRequest
+        ) {
+
+        return ResponseEntity.ok(documentRequestService.pay(id, payRequest));
+    }
 
     @PostMapping("demandes")
     public ResponseEntity<CreatedResource> submitDocumentRequest(

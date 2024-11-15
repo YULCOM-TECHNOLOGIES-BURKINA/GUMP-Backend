@@ -2,6 +2,8 @@ package com.yulcomtechnologies.drtssms.services;
 
 import com.yulcomtechnologies.drtssms.dtos.ApproveDocumentRequestDto;
 import com.yulcomtechnologies.drtssms.dtos.DocumentRequestDto;
+import com.yulcomtechnologies.drtssms.dtos.PayRequest;
+import com.yulcomtechnologies.drtssms.dtos.PaymentRequestResponse;
 import com.yulcomtechnologies.drtssms.entities.DocumentRequest;
 import com.yulcomtechnologies.drtssms.entities.File;
 import com.yulcomtechnologies.drtssms.enums.DocumentRequestStatus;
@@ -12,6 +14,7 @@ import com.yulcomtechnologies.drtssms.repositories.DocumentRequestRepository;
 import com.yulcomtechnologies.drtssms.repositories.FileRepository;
 import com.yulcomtechnologies.sharedlibrary.events.EventPublisher;
 import com.yulcomtechnologies.sharedlibrary.exceptions.BadRequestException;
+import com.yulcomtechnologies.sharedlibrary.exceptions.ResourceNotFoundException;
 import com.yulcomtechnologies.sharedlibrary.services.FileStorageService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +27,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -132,6 +136,28 @@ public class DocumentRequestService {
 
         documentRequestRepository.save(documentRequest);
         eventPublisher.dispatch(new DocumentRequestChanged(documentRequest.getId()));
+    }
+
+    public PaymentRequestResponse pay(Long id, PayRequest payRequest) {
+        /*var documentRequest = documentRequestRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Document request not found"));*/
+
+        var paymentId = UUID.randomUUID().toString();
+
+
+        var url = Base64.getEncoder().encodeToString(payRequest.getCallbackUrl().getBytes());
+
+        log.info("Payment request received for document request with id {}", id);
+        return new PaymentRequestResponse(
+            String.format(
+                "https://pgw-test.fasoarzeka.bf/AvepayPaymentGatewayUI/avepay-payment/app/validorder?amount=%s&merchantid=%s&securedAccessToken=eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI0UDdJNkI0Uzc5IiwiaWF0IjoxNzI5MDA3NTgyLCJzdWIiOiIyMjYwMDAwMDAzMyIsImlzcyI6ImFyemVrYSIsIlBBWUxPQUQiOiJhY2Nlc3NfdG9rZW4iLCJleHAiOjE3OTIwNzk1ODJ9.N_XttQtoOyacQwylkSWR_we5wo96Ise_3vi6O_IJUIXDqenOmWZ0xtczb_FwD2vsgqCzwEK8oxdQs8w3CheWVg&mappedOrderId=%s&linkBackToCallingWebsite=%s",
+                1500,
+                356,
+                paymentId,
+                url
+            )
+        );
+
     }
 }
 
