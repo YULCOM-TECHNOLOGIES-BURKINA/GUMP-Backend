@@ -22,7 +22,7 @@ spring:
           - id: tresor-ms
             uri: ${TRESOR_MS_URI:http://localhost:8080}
             predicates:
-              - Header=service, tresor-ms
+              - Query=service, tresor-ms
             filters:
               - StripPrefix=1
               - PrefixPath=/api
@@ -30,7 +30,7 @@ spring:
           - id: drtss-ms
             uri: ${DRTSS_MS_URI:http://localhost:8082}
             predicates:
-              - Header=service, drtss-ms
+              - Query=service, drtss-ms
             filters:
               - StripPrefix=1
               - PrefixPath=/api
@@ -38,7 +38,7 @@ spring:
           - id: users-ms
             uri: ${USERS_MS_URI:http://localhost:8081}
             predicates:
-              - Header=service, users-ms
+              - Query=service, users-ms
             filters:
               - StripPrefix=1
               - PrefixPath=/api

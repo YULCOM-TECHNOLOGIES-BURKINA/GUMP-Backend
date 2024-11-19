@@ -146,6 +146,7 @@ public class DocumentRequestService {
 
 
         var url = Base64.getEncoder().encodeToString(payRequest.getCallbackUrl().getBytes());
+        log.info("Encoded URL: {}", url);
 
         log.info("Payment request received for document request with id {}", id);
         return new PaymentRequestResponse(
