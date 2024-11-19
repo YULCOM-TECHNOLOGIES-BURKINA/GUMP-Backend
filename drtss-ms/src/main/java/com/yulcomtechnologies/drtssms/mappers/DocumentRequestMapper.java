@@ -46,7 +46,7 @@ public class DocumentRequestMapper {
 
             dto.setAttestation(
                 new AttestationDto(
-                    fileStorageService.getPath(attestation.getFile()),
+                    fileStorageService.getPath(attestation.getFile()) + "?service=drtss-ms",
                     attestation.getNumber(),
                     attestation.getExpirationDate().toLocalDate()
                 )
@@ -65,7 +65,7 @@ public class DocumentRequestMapper {
     public FileDto fileToDto(File file) {
         FileDto fileDto = new FileDto();
         fileDto.setLabel(file.getLabel());
-        fileDto.setPath(fileStorageService.getPath(file));
+        fileDto.setPath(fileStorageService.getPath(file) + "?service=drtss-ms");
         return fileDto;
     }
 }

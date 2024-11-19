@@ -24,7 +24,7 @@ public class DocumentRequestMapper {
 
             dto.setAttestation(
                 new AttestationDto(
-                    fileStorageService.getPath(attestation.getFile()),
+                    fileStorageService.getPath(attestation.getFile()) + "?service=tresor-ms",
                     attestation.getNumber(),
                     attestation.getExpirationDate().toLocalDate()
                 )

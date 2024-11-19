@@ -4,14 +4,17 @@ import com.yulcomtechnologies.drtssms.BaseIntegrationTest;
 import com.yulcomtechnologies.drtssms.dtos.CompanyDto;
 import com.yulcomtechnologies.drtssms.dtos.PayRequest;
 import com.yulcomtechnologies.drtssms.dtos.UserDto;
+import com.yulcomtechnologies.drtssms.entities.Attestation;
 import com.yulcomtechnologies.drtssms.entities.DocumentRequest;
 import com.yulcomtechnologies.drtssms.enums.DocumentRequestStatus;
 import com.yulcomtechnologies.drtssms.feignClients.UsersFeignClient;
+import com.yulcomtechnologies.drtssms.repositories.AttestationRepository;
 import com.yulcomtechnologies.drtssms.repositories.DocumentRequestRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,16 +26,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class DocumentRequestControllerTest extends BaseIntegrationTest {
+class DocumentRequestControllerTest extends BaseIntegrationTest {
     @Autowired
     DocumentRequestRepository documentRequestRepository;
+
+    @Autowired
+    AttestationRepository attestationRepository;
 
     @MockBean
     UsersFeignClient usersFeignClient;
 
     @Test
     void getDocumentRequests() throws Exception {
-        documentRequestRepository.saveAll(
+        var documents = documentRequestRepository.saveAll(
             List.of(
                 DocumentRequest
                     .builder()
@@ -53,6 +59,16 @@ public class DocumentRequestControllerTest extends BaseIntegrationTest {
                     .build()
             )
         );
+
+        var attestation = attestationRepository.save(
+            Attestation.builder()
+                .attestationAnpeDate(LocalDate.now())
+                .documentRequest(documents.get(0))
+                .attestationAnpeNumber("1234")
+                .build()
+        );
+
+        System.out.println(attestation);
 
         when(usersFeignClient.getUser(any()))
             .thenReturn(UserDto.builder().company(

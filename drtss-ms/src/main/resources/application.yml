@@ -24,4 +24,4 @@ server:
     context-path: /api
 
 app:
-  url: http://localhost:8082/api
+  url: http://localhost:9090/api
