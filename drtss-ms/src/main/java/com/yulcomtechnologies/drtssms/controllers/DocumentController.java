@@ -28,6 +28,23 @@ public class DocumentController {
         return ResponseEntity.ok(documentRequestService.pay(id, payRequest));
     }
 
+    @PostMapping("demandes/{id}/update-payment-status")
+    public ResponseEntity<Void> updatePaymentStatus(
+        @PathVariable Long id,
+        @RequestParam String paymentId
+    ) {
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("demandes/{id}/payment-status")
+    public ResponseEntity<DocumentRequestPaymentStatus> getPaymentStatus(
+        @PathVariable Long id
+    ) {
+        var documentRequest = documentRequestService.getDocumentRequest(id.toString());
+
+        return ResponseEntity.ok(new DocumentRequestPaymentStatus(documentRequest.getIsPaid()));
+    }
+
     @PostMapping("demandes")
     public ResponseEntity<CreatedResource> submitDocumentRequest(
         @RequestParam("attestationCnss") MultipartFile attestationCnss,
