@@ -7,7 +7,6 @@ import com.yulcomtechnologies.drtssms.entities.ApplicationConfig;
 import com.yulcomtechnologies.drtssms.entities.DocumentRequest;
 import com.yulcomtechnologies.drtssms.entities.File;
 import com.yulcomtechnologies.drtssms.feignClients.UsersFeignClient;
-import com.yulcomtechnologies.drtssms.repositories.ApplicationConfigRepository;
 import com.yulcomtechnologies.sharedlibrary.services.FileStorageService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
