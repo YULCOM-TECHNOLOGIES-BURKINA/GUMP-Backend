@@ -33,6 +33,7 @@ public class DocumentController {
         @PathVariable Long id,
         @RequestParam String paymentId
     ) {
+        documentRequestService.updatePaymentStatus(id, paymentId);
         return ResponseEntity.ok().build();
     }
 

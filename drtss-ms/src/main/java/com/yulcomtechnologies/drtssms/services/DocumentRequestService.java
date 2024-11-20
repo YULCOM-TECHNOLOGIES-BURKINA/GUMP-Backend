@@ -49,7 +49,7 @@ public class DocumentRequestService {
         File anpeAttestation = saveFile(attestationAnpe, "Attestation ANPE");
 
         var documentRequest = DocumentRequest.builder()
-            .requesterId("requesterId")
+            .requesterId("5")
             .isPaid(false)
             .createdAt(LocalDateTime.now())
             .publicContractNumber(publicContractNumber)
@@ -159,6 +159,15 @@ public class DocumentRequestService {
             )
         );
 
+    }
+
+    public void updatePaymentStatus(Long id, String paymentId) {
+        var documentRequest = documentRequestRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Document request not found"));
+
+        documentRequest.setIsPaid(true);
+        documentRequestRepository.save(documentRequest);
+        eventPublisher.dispatch(new DocumentRequestChanged(documentRequest.getId()));
     }
 }
 
