@@ -8,10 +8,10 @@ databaseChangeLog:
   - include:
         file: db/changelog/v1/004-add-public-contract-number-to-document-requests.xml
   - include:
-        file: db/changelog/v1/006-create-application-config-table.xml
+        file: db/changelog/v1/005-create-application-config-table.xml
   - include:
-        file: db/changelog/v1/005-create-utilisateurs-drtss-table.xml
+        file: db/changelog/v1/004-create-utilisateurs-drtss-table.xml
   - include:
-        file: db/changelog/v1/007-create-signature_scanner-table.xml
+        file: db/changelog/v1/005-create-signature_scanner-table.xml
   - include:
-        file: db/changelog/v1/008-create-signature_certificat-table.xml
+        file: db/changelog/v1/006-create-signature_certificat-table.xml
