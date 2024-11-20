@@ -65,17 +65,22 @@
       margin-top: 40px;
       font-size: 12px;
     }
-
-    .watermark {
+ .watermark {
       position: absolute;
-      display: none;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) rotate(-45deg);
-      font-size: 48px;
+       left: 50%;
+        top:65%;
+      transform: translate(-50%, -50%) rotate(-50deg);
+      font-size: 40px;
+      font-weight: 700;
       color: rgba(0, 0, 0, 0.1);
+      font-weight: bold;
       white-space: nowrap;
-      pointer-events: none;
+      z-index: -1;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
     }
 
     @media print {
@@ -89,8 +94,7 @@
   </style>
 </head>
 <body>
-<div class="watermark">Agence judiciaire de l'Etat</div>
-
+<div></div>
 <div class="header">
   <div class="ministry-name">MINISTERE DE L'ECONOMIE,<br>DES FINANCES ET DE LA<br>PROSPECTIVE</div>
   <div class="ministry-name">BURKINAFASO<br>Unité - Progrès - Justice</div>
@@ -100,8 +104,13 @@
   <div class="ministry-name">AGENCE JUDICIAIRE DE L'ETAT</div>
 </div>
 
+
 <div class="logo-container">
-  <div class="logo">AJE</div>
+  <div class="logo">
+    <img class="logo"
+         src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Coat_of_arms_of_Burkina_Faso.svg/640px-Coat_of_arms_of_Burkina_Faso.svg.png"
+         alt="AJE">
+  </div>
 </div>
 
 <div class="document-number">

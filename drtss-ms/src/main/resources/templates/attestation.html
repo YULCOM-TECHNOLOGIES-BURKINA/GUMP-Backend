@@ -1,162 +1,202 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="UTF-8"/>
-    <style>
-      .center {
-        text-align: center;
+<head>
+  <meta charset="UTF-8"/>
+  <style>
+    .center {
+      text-align: center;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 30px;
+    }
+
+    .left-header {
+      flex: 1;
+    }
+
+    .center-header {
+      flex: 1;
+      text-align: center;
+    }
+
+    .right-header {
+      flex: 1;
+      text-align: right;
+    }
+
+    .coat-of-arms {
+      width: 100px;
+      height: 100px;
+      border: 1px solid black;
+      margin: 0 auto;
+    }
+
+    .title {
+      text-align: center;
+      margin: 20px 0;
+      font-weight: bold;
+    }
+
+    .contact-info {
+      margin-bottom: 20px;
+      font-size: 0.9em;
+    }
+
+    .main-content {
+      margin: 20px 0;
+    }
+
+    .form-row {
+      margin: 10px 0;
+      border-bottom: 1px solid transparent;
+      min-height: 25px;
+    }
+
+    .footnote {
+      font-style: italic;
+      margin-top: 30px;
+      font-size: 0.9em;
+    }
+
+    .signature-section {
+      text-align: right;
+      margin-top: 40px;
+    }
+
+    #signature-pad {
+      border: 1px solid #000;
+      margin-top: 20px;
+    }
+
+    .signature-controls {
+      margin-top: 10px;
+      text-align: right;
+    }
+
+    .button {
+      padding: 8px 12px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+
+       /* Zone de signature visuelle */
+       .signature-section {
+          position: relative;
+          right: 0%!important;
+          left: 60%!important;
+          bottom: 15%;
+          text-align: center;
+          margin-top: 40px;
+          width: 200px;
       }
 
-      body {
-        font-family: Arial, sans-serif;
-        max-width: 800px;
-        margin: 20px auto;
-        padding: 20px;
-      }
-
-      .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 30px;
-      }
-
-      .left-header {
-        flex: 1;
-      }
-
-      .center-header {
-        flex: 1;
-        text-align: center;
-      }
-
-      .right-header {
-        flex: 1;
-        text-align: right;
-      }
-
-      .coat-of-arms {
-        width: 100px;
-        height: 100px;
-        border: 1px solid black;
-        margin: 0 auto;
-      }
-
-      .title {
-        text-align: center;
-        margin: 20px 0;
-        font-weight: bold;
-      }
-
-      .contact-info {
-        margin-bottom: 20px;
-        font-size: 0.9em;
-      }
-
-      .main-content {
-        margin: 20px 0;
-      }
-
-      .form-row {
-        margin: 10px 0;
-        border-bottom: 1px solid transparent;
-        min-height: 25px;
-      }
-
-      .footnote {
-        font-style: italic;
-        margin-top: 30px;
-        font-size: 0.9em;
-      }
-
-      .signature-section {
-        text-align: right;
-        margin-top: 40px;
-      }
-
-      #signature-pad {
-        border: 1px solid #000;
-        margin-top: 20px;
-      }
-
-      .signature-controls {
-        margin-top: 10px;
-        text-align: right;
-      }
-
-      .button {
-        padding: 8px 12px;
-        margin-left: 10px;
-        cursor: pointer;
-      }
-
-      @media print {
-        .no-print {
-          display: none;
+         .signature-box {
+            width: 200px;
+            height: 90px;
+            margin-top: 5px;
+            text-align: center;
+            line-height: 50px;
+            color: #88888808;
+            font-style: italic;
         }
+
+      .signature-label {
+          font-size: 0.9em;
+          text-decoration: underline;
       }
-    </style>
-    <title></title>
-  </head>
-  <body>
-    <div class="header">
-      <div class="left-header">
-        MINISTERE DU TRAVAIL ET<br/>
-        DE LA SECURITE SOCIALE<br/>
-        ************<br/>
-        REGION DU CENTRE<br/>
-        ************<br/>
-        DIRECTION REGIONALE DU TRAVAIL<br/>
-        ET DE LA SECURITE SOCIALE
-      </div>
-      <div class="center-header">
-        <div class="coat-of-arms">
-          <img
-            style="width: 200px; height: 200px"
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Coat_of_arms_of_Burkina_Faso.svg/640px-Coat_of_arms_of_Burkina_Faso.svg.png" alt="Coat of Arms"/>
-        </div>
-      </div>
-      <div class="right-header">
-        BURKINA FASO<br/>
-        Unité-Progrès-Justice
-      </div>
-    </div>
 
-    <div class="contact-info">
-      01 B.P.: 120 Ouagadougou 01<br/>
-      TEL.: 50 30 68 21 / 50 30 75 47<br/>
-      FAX: 50 33 21 21
+      /* Styles pour l'impression */
+      @media print {
+          .no-print {
+              display: none;
+          }
+      }
+    @media print {
+      .no-print {
+        display: none;
+      }
+    }
+  </style>
+  <title></title>
+</head>
+<body>
+<div class="header">
+  <div class="left-header">
+    MINISTERE DU TRAVAIL ET<br/>
+    DE LA SECURITE SOCIALE<br/>
+    ************<br/>
+    REGION DU CENTRE<br/>
+    ************<br/>
+    DIRECTION REGIONALE DU TRAVAIL<br/>
+    ET DE LA SECURITE SOCIALE
+  </div>
+  <div class="center-header">
+    <div class="coat-of-arms">
+      <img
+              style="width: 200px; height: 200px"
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Coat_of_arms_of_Burkina_Faso.svg/640px-Coat_of_arms_of_Burkina_Faso.svg.png" alt="Coat of Arms"/>
     </div>
+  </div>
+  <div class="right-header">
+    BURKINA FASO<br/>
+    Unité-Progrès-Justice
+  </div>
+</div>
 
-    <div class="title">
-      ATTESTATION<br/>
-      DE SOUMISSION AUX MARCHES PUBLICS
-    </div>
+<div class="contact-info">
+  01 B.P.: 120 Ouagadougou 01<br/>
+  TEL.: 50 30 68 21 / 50 30 75 47<br/>
+  FAX: 50 33 21 21
+</div>
 
-    <div class="main-content">
-      <div class="form-row center">N°<span th:text="${attestationNumber}">_____________</span>/MTSS/RC/DRTSS</div>
-      <div class="form-row center" style="margin-bottom: 30px;">(Valable pour trois mois)</div>
-      <div class="form-row">Le Directeur Régional du Travail et la Sécurité Sociale du <span th:text="${region}">____________</span>,
-      </div>
-      <div class="form-row">VU L'ATTESTATION N° <span th:text="${anpeNumber}">____________</span>/ANPE/DG du <span
-        th:text="${anpeDate}">____________</span></div>
-      <div class="form-row">VU L'ATTESTATION N° <span th:text="${cnssNumber}">____________</span>/CNSS/DG du <span
-        th:text="${cnssDate}">____________</span></div>
-      <div class="form-row">APRES VERIFICATION DE LA SITUATION DE L'ENTREPRISE en matière de législation du travail.</div>
-      <div class="form-row">Atteste que l'entreprise : <span th:text="${companyName}">________________________</span></div>
-      <div class="form-row">Localisée à <span th:text="${location}">____________</span> Adresse <span th:text="${address}">____________</span>
-      </div>
-      <div class="form-row">B.P <span th:text="${bp}">____________</span> Tel <span
-        th:text="${telephone}">____________</span></div>
-      <div class="form-row">est en règle vis-à-vis de ses obligations.</div>
-    </div>
+<div class="title">
+  ATTESTATION<br/>
+  DE SOUMISSION AUX MARCHES PUBLICS
+</div>
 
-    <div class="main-content">
-      En foi de quoi, la présente attestation lui est délivrée pour servir et valoir ce que de droit.
-    </div>
+<div class="main-content">
+  <div class="form-row center">N°<span th:text="${attestationNumber}">_____________</span>/MTSS/RC/DRTSS</div>
+  <div class="form-row center" style="margin-bottom: 30px;">(Valable pour trois mois)</div>
+  <div class="form-row">Le Directeur Régional du Travail et la Sécurité Sociale du <span th:text="${region}">____________</span>,
+  </div>
+  <div class="form-row">VU L'ATTESTATION N° <span th:text="${anpeNumber}">____________</span>/ANPE/DG du <span
+          th:text="${anpeDate}">____________</span></div>
+  <div class="form-row">VU L'ATTESTATION N° <span th:text="${cnssNumber}">____________</span>/CNSS/DG du <span
+          th:text="${cnssDate}">____________</span></div>
+  <div class="form-row">APRES VERIFICATION DE LA SITUATION DE L'ENTREPRISE en matière de législation du travail.</div>
+  <div class="form-row">Atteste que l'entreprise : <span th:text="${companyName}">________________________</span></div>
+  <div class="form-row">Localisée à <span th:text="${location}">____________</span> Adresse <span th:text="${address}">____________</span>
+  </div>
+  <div class="form-row">B.P <span th:text="${bp}">____________</span> Tel <span
+          th:text="${telephone}">____________</span></div>
+  <div class="form-row">est en règle vis-à-vis de ses obligations.</div>
+</div>
 
-    <div class="footnote">
-      NB: la photocopie de cette attestation est sans valeur
-    </div>
-  </body>
+<div class="main-content">
+  En foi de quoi, la présente attestation lui est délivrée pour servir et valoir ce que de droit.
+</div>
+
+<div class="footnote">
+  NB: la photocopie de cette attestation est sans valeur
+</div>
+<!-- Section de signature -->
+<div class="signature-section" >
+  <div class="signature-label"><strong>DIRECTEUR REGIONALE</strong></div>
+  <div class="signature-box">
+    <span> </span>
+  </div>
+</div>
+
+</body>
 </html>

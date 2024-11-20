@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class FileDto {
+
     private String label;
     private String path;
 }

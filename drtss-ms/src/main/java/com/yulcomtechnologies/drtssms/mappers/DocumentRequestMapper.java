@@ -45,9 +45,9 @@ public class DocumentRequestMapper {
 
             dto.setAttestation(
                 new AttestationDto(
-                    fileStorageService.getPath(attestation.getFile()),
+                        fileStorageService.getPath(attestation.getFile()),
                     attestation.getNumber(),
-                    attestation.getExpirationDate().toLocalDate()
+                    attestation.getExpirationDate().toLocalDate(), attestation.getFile().getPath()
                 )
             );
         }
@@ -63,7 +63,7 @@ public class DocumentRequestMapper {
 
     public FileDto fileToDto(File file) {
         FileDto fileDto = new FileDto();
-        fileDto.setLabel(file.getLabel());
+         fileDto.setLabel(file.getLabel());
         fileDto.setPath(fileStorageService.getPath(file));
         return fileDto;
     }

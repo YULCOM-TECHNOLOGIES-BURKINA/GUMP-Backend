@@ -4,6 +4,9 @@ spring:
     url: jdbc:postgresql://localhost:5431/gump
     username: gump
     password: gump
+  servlet:
+    multipart:
+      max-file-size: 10MB
 
   application:
     name: drtss-ms
@@ -24,4 +27,4 @@ server:
     context-path: /api
 
 app:
-  url: http://localhost:9090/api
+  url: http://localhost:8082/api
