@@ -17,6 +17,19 @@ spring:
           issuer-uri: ${keycloak.auth-server-url}/realms/${keycloak.realm}
   cloud:
     gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
       mvc:
         routes:
           - id: tresor-ms
