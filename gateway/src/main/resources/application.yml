@@ -18,9 +18,10 @@ spring:
   cloud:
     gateway:
       globalcors:
+        add-to-simple-url-handler-mapping: true
         corsConfigurations:
           '[/**]':
-            allowedOrigins: "*"
+            allowedOrigins: ""
             allowedMethods:
               - GET
               - POST
@@ -39,7 +40,7 @@ spring:
             filters:
               - StripPrefix=1
               - PrefixPath=/api
-              - AuthenticationFilter
+              #- AuthenticationFilter
 
           - id: drtss-ms
             uri: ${DRTSS_MS_URI:http://localhost:8082}
@@ -48,7 +49,19 @@ spring:
             filters:
               - StripPrefix=1
               - PrefixPath=/api
-              - AuthenticationFilter
+              #- AuthenticationFilter
+            metadata:
+              cors:
+                allowedOrigins: ""
+                allowedMethods:
+                  - GET
+                  - POST
+                  - PUT
+                  - DELETE
+                  - OPTIONS
+                allowedHeaders:
+                  - "*"
+                allowCredentials: true
 
           - id: users-ms
             uri: ${USERS_MS_URI:http://localhost:8081}
@@ -57,7 +70,7 @@ spring:
             filters:
               - StripPrefix=1
               - PrefixPath=/api
-              - AuthenticationFilter
+              #- AuthenticationFilter
   application:
     name: gateway
   config:
