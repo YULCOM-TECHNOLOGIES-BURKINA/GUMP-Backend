@@ -40,7 +40,6 @@ spring:
             filters:
               - StripPrefix=1
               - PrefixPath=/api
-              #- AuthenticationFilter
 
           - id: drtss-ms
             uri: ${DRTSS_MS_URI:http://localhost:8082}
@@ -49,7 +48,6 @@ spring:
             filters:
               - StripPrefix=1
               - PrefixPath=/api
-              #- AuthenticationFilter
             metadata:
               cors:
                 allowedOrigins: ""
@@ -70,7 +68,6 @@ spring:
             filters:
               - StripPrefix=1
               - PrefixPath=/api
-              #- AuthenticationFilter
   application:
     name: gateway
   config:
