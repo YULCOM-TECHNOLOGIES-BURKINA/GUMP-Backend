@@ -10,6 +10,8 @@ keycloak:
   realm: gump
 
 spring:
+  main:
+    web-application-type: reactive
   security:
     oauth2:
       resourceserver:
