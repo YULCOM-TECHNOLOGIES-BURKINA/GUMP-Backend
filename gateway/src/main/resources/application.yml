@@ -6,10 +6,12 @@ eureka:
     fetchRegistry: false
 
 keycloak:
-    auth-server-url: http://localhost:9080
-    realm: gump
+  auth-server-url: https://sso.kulturman.com
+  realm: gump
 
 spring:
+  main:
+    web-application-type: reactive
   security:
     oauth2:
       resourceserver:
@@ -31,45 +33,44 @@ spring:
             allowedHeaders:
               - "*"
             allowCredentials: true
-      mvc:
-        routes:
-          - id: tresor-ms
-            uri: ${TRESOR_MS_URI:http://localhost:8080}
-            predicates:
-              - Query=service, tresor-ms
-            filters:
-              - StripPrefix=1
-              - PrefixPath=/api
+      routes:
+        - id: tresor-ms
+          uri: ${TRESOR_MS_URI:http://localhost:8080}
+          predicates:
+            - Query=service, tresor-ms
+          filters:
+            - StripPrefix=1
+            - PrefixPath=/api
 
-          - id: drtss-ms
-            uri: ${DRTSS_MS_URI:http://localhost:8082}
-            predicates:
-              - Query=service, drtss-ms
-            filters:
-              - StripPrefix=1
-              - PrefixPath=/api
-            metadata:
-              cors:
-                allowedOrigins: ""
-                allowedMethods:
-                  - GET
-                  - POST
-                  - PUT
-                  - DELETE
-                  - OPTIONS
-                allowedHeaders:
-                  - "*"
-                allowCredentials: true
+        - id: drtss-ms
+          uri: ${DRTSS_MS_URI:http://localhost:8082}
+          predicates:
+            - Query=service, drtss-ms
+          filters:
+            - StripPrefix=1
+            - PrefixPath=/api
+          metadata:
+            cors:
+              allowedOrigins: ""
+              allowedMethods:
+                - GET
+                - POST
+                - PUT
+                - DELETE
+                - OPTIONS
+              allowedHeaders:
+                - "*"
+              allowCredentials: true
 
-          - id: users-ms
-            uri: ${USERS_MS_URI:http://localhost:8081}
-            predicates:
-              - Query=service, users-ms
-            filters:
-              - StripPrefix=1
-              - PrefixPath=/api
+        - id: users-ms
+          uri: ${USERS_MS_URI:http://localhost:8081}
+          predicates:
+            - Query=service, users-ms
+          filters:
+            - StripPrefix=1
+            - PrefixPath=/api
   application:
-    name: gateway
+    name: reactive-gateway
   config:
     import: optional:configserver:http://localhost:8888
 server:
