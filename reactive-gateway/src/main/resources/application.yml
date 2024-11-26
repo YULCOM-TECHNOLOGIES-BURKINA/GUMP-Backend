@@ -6,7 +6,7 @@ eureka:
     fetchRegistry: false
 
 keycloak:
-  auth-server-url: http://localhost:9080
+  auth-server-url: https://sso.kulturman.com
   realm: gump
 
 spring:
