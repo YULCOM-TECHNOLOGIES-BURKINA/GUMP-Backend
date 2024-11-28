@@ -1,4 +1,4 @@
-package com.yulcomtechnologies.reactivegateway.config.security;
+package com.yulcomtechnologies.gateway.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -26,8 +26,9 @@ public class SecurityConfig {
         return serverHttpSecurity.csrf(ServerHttpSecurity.CsrfSpec::disable)
             .authorizeExchange(exchange -> exchange.pathMatchers("/eureka/**")
                 .permitAll()
-                .anyExchange().authenticated()
-            ).oauth2ResourceServer((oauth) -> oauth
+                .anyExchange().permitAll()
+            )
+                .oauth2ResourceServer((oauth) -> oauth
                 .jwt(Customizer.withDefaults()))
             .build();
     }

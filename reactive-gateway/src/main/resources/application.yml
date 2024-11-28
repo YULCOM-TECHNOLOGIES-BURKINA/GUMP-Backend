@@ -1,0 +1,71 @@
+server:
+  port: ${PORT:9090}
+
+keycloak:
+  auth-server-url: https://sso.kulturman.com
+  realm: gump
+        
+## Classic Eureka configuration
+eureka:
+  instance:
+    preferIpAddress: true
+    hostname: ${HOSTNAME:localhost}
+    
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${keycloak.auth-server-url}/realms/${keycloak.realm}
+  application:
+    name: gateway-acl
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      globalcors: ## CORS Configuration
+        add-to-simple-url-handler-mapping: true
+        cors-configurations:
+          '[/**]': ## For all routes
+            allowedOrigins: "*" # With '*' we allow all origins. We can restrict by indicating domains or ip + port, e.g. http://localhost:3000 (where our front is, or a Vercel domain)
+            allowedHeaders: "*" ## All headers allowed
+            allowedMethods:
+                - GET
+                - POST
+                - PUT
+                - DELETE
+                - OPTIONS
+      routes:
+        - id: tresor-ms
+          uri: ${TRESOR_MS_URI:http://localhost:8080}
+          predicates:
+            - Query=service, tresor-ms
+          filters:
+            - StripPrefix=1
+            - PrefixPath=/api
+
+        - id: drtss-ms
+          uri: ${DRTSS_MS_URI:http://localhost:8082}
+          predicates:
+            - Query=service, drtss-ms
+          filters:
+            - StripPrefix=1
+            - PrefixPath=/api
+
+        - id: users-ms
+          uri: ${USERS_MS_URI:http://localhost:8081}
+          predicates:
+            - Query=service, users-ms
+          filters:
+            - StripPrefix=1
+            - PrefixPath=/api

@@ -1,4 +1,4 @@
-package com.yulcomtechnologies.reactivegateway;
+package com.yulcomtechnologies.gateway.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Component
 public class UserExtractionFilter implements GlobalFilter {
-    private final ObjectMapper objectMapper = new ObjectMapper(); // For JSON parsing
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
