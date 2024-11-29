@@ -33,3 +33,6 @@ jwt:
     converter:
       resource-id: gump
       principle-attribute: preferred_username
+
+app:
+  url: http://localhost:8081/api

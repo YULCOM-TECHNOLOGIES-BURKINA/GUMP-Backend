@@ -104,6 +104,39 @@ public class KeycloakSsoService implements SsoProvider {
         return userId;
     }
 
+    @Override
+    public void activateUser(String ssoUserId) {
+        var headers = getHeaders();
+        System.out.println(getAdminToken().getBody().accessToken());
+        headers.set("Authorization", "Bearer " + Objects.requireNonNull(getAdminToken().getBody()).accessToken());
+        HttpEntity<String> request = new HttpEntity<>(
+            "{\"enabled\": true}",
+            headers
+        );
+
+        var url = String.format("%s/admin/realms/%s/users/%s", keycloakServerUrl, realm, ssoUserId);
+        System.out.println(url);
+
+        restTemplate.exchange(
+            url,
+            HttpMethod.PUT, request, String.class
+        );
+    }
+
+    @Override
+    public void deleteUser(String keycloakUserId) {
+        var headers = getHeaders();
+        headers.set("Authorization", "Bearer " + Objects.requireNonNull(getAdminToken().getBody()).accessToken());
+        HttpEntity<String> request = new HttpEntity<>(headers);
+
+        var url = String.format("%s/admin/realms/%s/users/%s", keycloakServerUrl, realm, keycloakUserId);
+
+        restTemplate.exchange(
+            url,
+            HttpMethod.DELETE, request, String.class
+        );
+    }
+
     public RoleInformation getRole(String role) {
         var headers = getHeaders();
         headers.set("Authorization", "Bearer " + Objects.requireNonNull(getAdminToken().getBody()).accessToken());
@@ -141,7 +174,6 @@ public class KeycloakSsoService implements SsoProvider {
             throw new RuntimeException(e);
         }
         var url = String.format("%s/admin/realms/%s/users/%s/role-mappings/clients/%s", keycloakServerUrl, realm, userId, clientId);
-        System.out.println(url);
         var response = restTemplate.exchange(url, HttpMethod.POST, request, String.class);
         System.out.println(response.getBody());
     }

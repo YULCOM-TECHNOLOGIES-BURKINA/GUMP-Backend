@@ -22,8 +22,7 @@ public class ScrapingCorporationInfosExtractorTest {
                 "01 BP 77 OUAGA 01",
                 "70800839",
                 "",
-                null,
-                "BFOUA2016B4661"
+                null
             ),
             result.get()
         );

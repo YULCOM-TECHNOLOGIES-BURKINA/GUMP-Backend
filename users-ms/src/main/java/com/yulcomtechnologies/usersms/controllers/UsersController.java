@@ -3,6 +3,7 @@ package com.yulcomtechnologies.usersms.controllers;
 import com.yulcomtechnologies.usersms.dtos.CreateUserRequest;
 import com.yulcomtechnologies.usersms.dtos.UserDto;
 import com.yulcomtechnologies.usersms.enums.UserType;
+import com.yulcomtechnologies.usersms.services.AuthService;
 import com.yulcomtechnologies.usersms.services.CorporationData;
 import com.yulcomtechnologies.usersms.services.CorporationInfosExtractor;
 import com.yulcomtechnologies.usersms.services.UserService;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class UsersController {
     private final CorporationInfosExtractor corporationInfosExtractor;
     private final UserService userService;
+    private final AuthService authService;
 
     @GetMapping("get-ifu/{ifu}")
     public ResponseEntity<CorporationData> getUsers(
@@ -41,6 +43,7 @@ public class UsersController {
     @GetMapping("users")
     public ResponseEntity<Page<UserDto>> getUsers(
         Pageable pageable,
+        @RequestParam(required = false) Boolean isActivated,
         @RequestParam(required = false) UserType userType
     ) {
         return ResponseEntity.ok(userService.getUsers(pageable, userType));
@@ -51,5 +54,13 @@ public class UsersController {
         @PathVariable Long id
     ) {
         return ResponseEntity.ok(userService.getUser(id));
+    }
+
+    @PostMapping("users/{id}/approve")
+    public ResponseEntity<Void> approvePendingAccount(
+        @PathVariable Long id
+    ) {
+        authService.validatePendingUserAccount(id);
+        return ResponseEntity.ok().build();
     }
 }

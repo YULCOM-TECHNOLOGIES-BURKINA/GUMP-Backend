@@ -7,3 +7,6 @@ databaseChangeLog:
 
   - include:
       file: db/changelog/v1/003-add-cnss-number-to-users-table.xml
+
+  - include:
+      file: db/changelog/v1/004-update-users-and-company.xml

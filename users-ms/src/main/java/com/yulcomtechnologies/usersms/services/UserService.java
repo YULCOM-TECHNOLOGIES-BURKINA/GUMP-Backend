@@ -41,6 +41,7 @@ public class UserService {
         var user = User.builder()
             .email(createUserRequest.getEmail())
             .keycloakUserId(ssoUserId)
+            .isActive(true)
             .forename(createUserRequest.getForename())
             .lastname(createUserRequest.getLastname())
             .region(createUserRequest.getRegion())

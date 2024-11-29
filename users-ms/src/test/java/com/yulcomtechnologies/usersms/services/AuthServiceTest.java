@@ -1,20 +1,26 @@
 package com.yulcomtechnologies.usersms.services;
 
+import com.yulcomtechnologies.sharedlibrary.events.EventPublisher;
 import com.yulcomtechnologies.usersms.dtos.RegisterRequest;
 import com.yulcomtechnologies.usersms.entities.Company;
 import com.yulcomtechnologies.usersms.entities.User;
 import com.yulcomtechnologies.usersms.enums.UserRole;
 import com.yulcomtechnologies.usersms.enums.UserType;
+import com.yulcomtechnologies.usersms.events.AccountStateChanged;
 import com.yulcomtechnologies.usersms.repositories.CompanyRepository;
 import com.yulcomtechnologies.usersms.repositories.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import static org.mockito.Mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class AuthServiceTest {
@@ -33,6 +39,9 @@ public class AuthServiceTest {
     @Mock
     UserRepository userRepository;
 
+    @Mock
+    EventPublisher eventPublisher;
+
 
     @Test
     void registersSuccessfully() throws Exception {
@@ -49,26 +58,14 @@ public class AuthServiceTest {
             "Ouaga",
             "1234",
             "mail@test.com",
-            null,
-            "BFOUA2016B4661"
+            null
         );
 
         when(corporationInfosExtractor.extractCorporationInfos(registrationRequest.ifuNumber)).thenReturn(
             Optional.of(corporationData)
         );
 
-        when(ssoProvider.createUser(new CreateUserCommand(
-            registrationRequest.ifuNumber,
-            registrationRequest.password,
-            registrationRequest.email,
-            registrationRequest.ifuNumber,
-            registrationRequest.ifuNumber,
-            true,
-            true,
-            UserRole.USER,
-            UserType.USER
-        ))).thenReturn("123456");
-
+        when(ssoProvider.createUser(any())).thenReturn("OMEGA_LAMBDA_7_XL_9");
 
         authService.register(registrationRequest);
 
@@ -88,13 +85,47 @@ public class AuthServiceTest {
           User.builder()
               .role(UserRole.USER)
               .userType(UserType.USER)
+              .isActive(false)
               .cnssNumber(registrationRequest.cnssNumber)
               .email(registrationRequest.email)
               .username(registrationRequest.ifuNumber)
-              .keycloakUserId("123456")
+              .keycloakUserId("OMEGA_LAMBDA_7_XL_9")
               .company(company)
               .build()
         );
 
+    }
+
+    @Test
+    void validatesPendingUserAccount() throws Exception {
+        var userId = 1L;
+        var user = User.builder().id(userId).email("johndo@gmail.com").keycloakUserId("OMEGA_LAMBDA_7_XL_9").isActive(false).build();
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        authService.validatePendingUserAccount(userId);
+
+        assertTrue(user.getIsActive());
+
+        verify(userRepository).save(user);
+        verify(ssoProvider).activateUser("OMEGA_LAMBDA_7_XL_9");
+
+        verify(eventPublisher).dispatch(new AccountStateChanged(user.getId()));
+
+    }
+
+    @Test
+    void rejectAccountCreation() {
+        var userId = 1L;
+        var user = User.builder().id(userId)
+            .company(Company.builder().id(1L).build())
+            .email("johndo@gmail.com").keycloakUserId("OMEGA_LAMBDA_7_XL_9").isActive(false).build();
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        authService.rejectAccountCreation(userId);
+
+        verify(userRepository).delete(user);
+        verify(companyRepository).delete(user.getCompany());
+
+        verify(eventPublisher).dispatch(new AccountStateChanged(user.getId()));
     }
 }
