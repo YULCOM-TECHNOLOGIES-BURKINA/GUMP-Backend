@@ -49,7 +49,8 @@ public class AuthServiceTest {
             "Ouaga",
             "1234",
             "mail@test.com",
-            null
+            null,
+            "BFOUA2016B4661"
         );
 
         when(corporationInfosExtractor.extractCorporationInfos(registrationRequest.ifuNumber)).thenReturn(
