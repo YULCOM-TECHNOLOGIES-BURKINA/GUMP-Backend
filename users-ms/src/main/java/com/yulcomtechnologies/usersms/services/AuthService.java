@@ -61,7 +61,7 @@ public class AuthService {
                 registerRequest.getIfuNumber(),
                 registerRequest.getIfuNumber(),
                 true,
-                true,
+                false,
                 UserRole.USER,
                 UserType.USER
             )
