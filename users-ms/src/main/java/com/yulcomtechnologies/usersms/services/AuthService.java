@@ -88,6 +88,7 @@ public class AuthService {
         var corporation = Company.builder()
             .address(corporationData.address())
             .email(corporationData.email())
+            .rccm(corporationData.rccmNumber())
             .ifu(registerRequest.getIfuNumber())
             .name(corporationData.name())
             .phone(corporationData.phoneNumber())
