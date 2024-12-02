@@ -68,7 +68,6 @@ class DocumentRequestControllerTest extends BaseIntegrationTest {
                 .build()
         );
 
-        System.out.println(attestation);
 
         when(usersFeignClient.getUser(any()))
             .thenReturn(UserDto.builder().company(
@@ -79,7 +78,7 @@ class DocumentRequestControllerTest extends BaseIntegrationTest {
                 )
             ).build());
 
-        mockMvc.perform(get("/demandes"))
+        mockMvc.perform(get("/demandes").header("X-User-Id", "5"))
             .andExpect(status().isOk())
             .andDo(print())
             .andExpect(jsonPath("$.content[0].requesterId").value("5"))
