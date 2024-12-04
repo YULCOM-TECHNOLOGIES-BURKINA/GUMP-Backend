@@ -35,7 +35,7 @@ services:
         - SPRING_MAIL_PORT=1025
         - SPRING_MAIL_USERNAME=admin
         - SPRING_MAIL_PASSWORD=admin
-        
+
   justice:
       image: ghcr.io/yulcom-technologies-burkina/gump-justice-ms:$COMMIT_SHA
       container_name: gump-justice-backend
@@ -50,7 +50,7 @@ services:
       ports:
         - 8085:8085
       environment:
-        - SPRING_DATASOURCE_URL=jdbc:postgresql://justice-database:5437/gump
+        - SPRING_DATASOURCE_URL=jdbc:postgresql://justice-database:5432/gump
         - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
 
   users:
