@@ -1,5 +1,6 @@
 package com.yulcomtechnologies.usersms.services;
 
+import com.yulcomtechnologies.sharedlibrary.exceptions.ResourceNotFoundException;
 import com.yulcomtechnologies.usersms.dtos.CreateUserRequest;
 import com.yulcomtechnologies.usersms.dtos.UserDto;
 import com.yulcomtechnologies.usersms.entities.User;
@@ -62,6 +63,14 @@ public class UserService {
     public UserDto getUser(Long id) {
         var user = userRepository.findById(id).orElseThrow(
             () -> new RuntimeException("User not found")
+        );
+
+        return userMapper.toUserDto(user);
+    }
+
+    public UserDto findUser(String usernameOrSsoId) {
+        var user = userRepository.findByUsernameOrKeycloakUserId(usernameOrSsoId).orElseThrow(
+            () -> new ResourceNotFoundException("User not found")
         );
 
         return userMapper.toUserDto(user);

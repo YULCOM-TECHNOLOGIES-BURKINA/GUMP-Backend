@@ -58,7 +58,8 @@ public class AuthServiceTest {
             "Ouaga",
             "1234",
             "mail@test.com",
-            null
+            null,
+            "BFOUA2016B4661"
         );
 
         when(corporationInfosExtractor.extractCorporationInfos(registrationRequest.ifuNumber)).thenReturn(
@@ -69,13 +70,14 @@ public class AuthServiceTest {
 
         authService.register(registrationRequest);
 
-        var company =  new Company(
-            registrationRequest.ifuNumber,
-            corporationData.name(),
-            corporationData.address(),
-            corporationData.email(),
-            corporationData.phoneNumber()
-        );
+        var company = Company.builder()
+            .ifu(registrationRequest.ifuNumber)
+            .name(corporationData.name())
+            .address(corporationData.address())
+            .email(corporationData.email())
+            .phone(corporationData.phoneNumber())
+            .rccm("BFOUA2016B4661")
+            .build();
 
         verify(companyRepository).save(
            company

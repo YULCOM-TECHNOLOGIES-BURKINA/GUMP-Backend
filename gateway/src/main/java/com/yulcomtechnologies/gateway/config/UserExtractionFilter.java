@@ -42,7 +42,7 @@ public class UserExtractionFilter implements GlobalFilter {
                     // Add user data as headers to the downstream request
                     ServerHttpRequest modifiedRequest = request.mutate()
                         .header("X-User-Id", userId)
-                        .header("X-User-Roles", roles != null ? roles : "N/A")
+                        .header("X-User-Role", roles != null ? roles : "N/A")
                         .build();
 
                     return chain.filter(exchange.mutate().request(modifiedRequest).build());

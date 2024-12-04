@@ -56,6 +56,13 @@ public class UsersController {
         return ResponseEntity.ok(userService.getUser(id));
     }
 
+    @GetMapping("users/{usernameOrSsoId}/find")
+    public ResponseEntity<UserDto> findUser(
+        @PathVariable String usernameOrSsoId
+    ) {
+        return ResponseEntity.ok(userService.findUser(usernameOrSsoId));
+    }
+
     @PostMapping("users/{id}/approve")
     public ResponseEntity<Void> approvePendingAccount(
         @PathVariable Long id
