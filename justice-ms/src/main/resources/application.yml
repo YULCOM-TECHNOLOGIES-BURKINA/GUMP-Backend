@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5437/gump
+    username: gump
+    password: gump
+  servlet:
+    multipart:
+      max-file-size: 10MB
+
+  application:
+    name: justice-ms
+  config:
+    import: optional:configserver:http://localhost:8888
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+server:
+  port: 8085
+  servlet:
+    context-path: /api
+
+app:
+  url: http://localhost:8085/api
