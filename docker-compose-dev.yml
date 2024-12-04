@@ -38,7 +38,7 @@ services:
         
   justice:
       image: ghcr.io/yulcom-technologies-burkina/gump-justice-ms:$COMMIT_SHA
-      container_name: gump-notification
+      container_name: gump-justice-backend
       volumes:
         - ./uploads:/uploads
       restart: on-failure
