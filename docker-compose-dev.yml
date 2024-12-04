@@ -105,6 +105,24 @@ services:
     ports:
       - 5429:5432
 
+  justice-database:
+    image: postgres:16.4
+    networks:
+      - gump-network
+    volumes:
+      - justice-data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=gump
+      - POSTGRES_PASSWORD=gump
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - 5437:5432
+
   tresor-database:
     image: postgres:16.4
     networks:
@@ -218,6 +236,7 @@ volumes:
   users-data:
   keycloak_data:
   keycloak-db-data:
+  justice-data:
 
 networks:
   gump-network:
