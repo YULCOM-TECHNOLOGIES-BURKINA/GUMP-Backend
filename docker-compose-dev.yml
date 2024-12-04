@@ -244,6 +244,7 @@ services:
       - KEYCLOAK_REALM=gump
       - TRESOR_MS_URI=http://tresor:8080
       - DRTSS_MS_URI=http://drtss:8082
+      - JUSTICE_MS_URI=http://justice:8085
       - USERS_MS_URI=http://users:8081
     restart: on-failure
 
