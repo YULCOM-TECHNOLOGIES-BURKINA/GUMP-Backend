@@ -6,6 +6,7 @@ import com.yulcomtechnologies.justicems.services.DocumentRequestService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,7 +19,7 @@ import java.time.LocalDate;
 public class DocumentRequestController {
     private final DocumentRequestService documentRequestService;
 
-    @PostMapping(path = "demandes")
+    @PostMapping(path = "demandes", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Void> createDocumentRequest(
         @RequestParam(value = "extraitRccm", required = false) MultipartFile extraitRccm,
         @RequestParam(value = "statutEntreprise", required = false) MultipartFile statutEntreprise,
