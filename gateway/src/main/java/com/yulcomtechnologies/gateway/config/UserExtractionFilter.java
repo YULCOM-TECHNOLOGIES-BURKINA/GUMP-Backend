@@ -31,13 +31,14 @@ public class UserExtractionFilter implements GlobalFilter {
                 if (tokenParts.length >= 2) {
                     String payload = new String(Base64.getUrlDecoder().decode(tokenParts[1]));
                     Map<String, Object> claims = objectMapper.readValue(payload, Map.class);
-                    System.out.println(claims);
 
                     // Extract claims (adjust keys based on your token structure)
                     String userId = claims.get("sub").toString(); // Subject (user ID)
                     String roles = claims.get("realm_access") != null
                         ? claims.get("realm_access").toString()
                         : null;
+
+                    System.out.println(claims.get("realm_access"));
 
                     // Add user data as headers to the downstream request
                     ServerHttpRequest modifiedRequest = request.mutate()
