@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 
 @RestController
@@ -18,10 +19,11 @@ public class DocumentRequestController {
 
     @PostMapping(path = "demandes")
     public ResponseEntity<Void> createDocumentRequest(
-        @RequestParam(value = "attestationCnss", required = false) MultipartFile extraitRccm,
-        @RequestParam(value = "attestationAnpe", required = false) MultipartFile statutEntreprise,
+        @RequestParam(value = "extraitRccm", required = false) MultipartFile extraitRccm,
+        @RequestParam(value = "statutEntreprise", required = false) MultipartFile statutEntreprise,
         @RequestParam LocalDate immatriculationDate
-    ) {
+    ) throws IOException {
+        documentRequestService.submitDocumentRequest(extraitRccm, statutEntreprise, immatriculationDate);
         return ResponseEntity.ok().build();
     }
 
