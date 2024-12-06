@@ -4,13 +4,13 @@ server:
 keycloak:
   auth-server-url: https://sso.kulturman.com
   realm: gump
-        
+
 ## Classic Eureka configuration
 eureka:
   instance:
     preferIpAddress: true
     hostname: ${HOSTNAME:localhost}
-    
+
   client:
     registerWithEureka: true
     fetchRegistry: true
@@ -66,6 +66,14 @@ spring:
           uri: ${USERS_MS_URI:http://localhost:8081}
           predicates:
             - Query=service, users-ms
+          filters:
+            - StripPrefix=1
+            - PrefixPath=/api
+
+        - id: users-ms
+          uri: ${JUSTICE_MS_URI:http://localhost:8085}
+          predicates:
+            - Query=service, justice-ms
           filters:
             - StripPrefix=1
             - PrefixPath=/api
