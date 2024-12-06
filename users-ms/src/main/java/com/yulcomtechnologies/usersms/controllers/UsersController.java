@@ -70,4 +70,12 @@ public class UsersController {
         authService.validatePendingUserAccount(id);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("users/{id}/reject")
+    public ResponseEntity<Void> rejectPendingAccount(
+        @PathVariable Long id
+    ) {
+        authService.rejectAccountCreation(id);
+        return ResponseEntity.ok().build();
+    }
 }
