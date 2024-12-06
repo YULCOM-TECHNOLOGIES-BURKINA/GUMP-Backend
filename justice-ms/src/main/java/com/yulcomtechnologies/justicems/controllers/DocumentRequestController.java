@@ -1,6 +1,7 @@
 package com.yulcomtechnologies.justicems.controllers;
 
 import com.yulcomtechnologies.justicems.dtos.DocumentRequestDto;
+import com.yulcomtechnologies.justicems.enums.TypeDemandeEnum;
 import com.yulcomtechnologies.justicems.services.DocumentRequestService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,9 +22,10 @@ public class DocumentRequestController {
     public ResponseEntity<Void> createDocumentRequest(
         @RequestParam(value = "extraitRccm", required = false) MultipartFile extraitRccm,
         @RequestParam(value = "statutEntreprise", required = false) MultipartFile statutEntreprise,
-        @RequestParam LocalDate immatriculationDate
+        @RequestParam LocalDate immatriculationDate,
+        @RequestParam TypeDemandeEnum typeDemande
     ) throws IOException {
-        documentRequestService.submitDocumentRequest(extraitRccm, statutEntreprise, immatriculationDate);
+        documentRequestService.submitDocumentRequest(extraitRccm, statutEntreprise, immatriculationDate, typeDemande);
         return ResponseEntity.ok().build();
     }
 

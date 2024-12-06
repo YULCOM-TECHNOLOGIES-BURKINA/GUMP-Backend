@@ -4,6 +4,7 @@ import com.yulcomtechnologies.feignClients.UserMsFeignClient;
 import com.yulcomtechnologies.justicems.dtos.DocumentRequestDto;
 import com.yulcomtechnologies.justicems.entities.DocumentRequest;
 import com.yulcomtechnologies.justicems.entities.File;
+import com.yulcomtechnologies.justicems.enums.TypeDemandeEnum;
 import com.yulcomtechnologies.justicems.mappers.DocumentRequestMapper;
 import com.yulcomtechnologies.justicems.repositories.DocumentRequestRepository;
 import com.yulcomtechnologies.justicems.repositories.FileRepository;
@@ -40,7 +41,7 @@ public class DocumentRequestService {
     private final AuthenticatedUserService authenticatedUserService;
     private final UserMsFeignClient userMsFeignClient;
 
-    public DocumentRequest submitDocumentRequest(MultipartFile extraitRccm, MultipartFile statutEntreprise, LocalDate immatriculationDate) throws IOException {
+    public DocumentRequest submitDocumentRequest(MultipartFile extraitRccm, MultipartFile statutEntreprise, LocalDate immatriculationDate, TypeDemandeEnum typeDemande) throws IOException {
         File extraitRccmDocument = saveFile(extraitRccm, "Recepissé RCCM");
         File statutEntrepriseDocument = saveFile(statutEntreprise, "Statut Entreprise");
 

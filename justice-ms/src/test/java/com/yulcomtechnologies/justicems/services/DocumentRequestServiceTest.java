@@ -4,6 +4,7 @@ import com.yulcomtechnologies.feignClients.UserMsFeignClient;
 import com.yulcomtechnologies.feignClients.dtos.CompanyDto;
 import com.yulcomtechnologies.feignClients.dtos.UserDto;
 import com.yulcomtechnologies.justicems.entities.DocumentRequest;
+import com.yulcomtechnologies.justicems.enums.TypeDemandeEnum;
 import com.yulcomtechnologies.justicems.repositories.DocumentRequestRepository;
 import com.yulcomtechnologies.justicems.repositories.FileRepository;
 import com.yulcomtechnologies.sharedlibrary.auth.AuthenticatedUserData;
@@ -60,7 +61,8 @@ class DocumentRequestServiceTest {
         documentRequestService.submitDocumentRequest(
             new MockMultipartFile("extraitRccm", "extraitRccm".getBytes()),
             new MockMultipartFile("statutEntreprise", "statutEntreprise".getBytes()),
-            LocalDate.of(2021, 9, 1)
+            LocalDate.of(2021, 9, 1),
+            TypeDemandeEnum.EXTRAIT_RCCM
         );
 
         verify(documentRequestRepository).save(documentRequestArgumentCaptor.capture());
