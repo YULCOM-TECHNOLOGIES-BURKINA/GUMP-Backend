@@ -42,6 +42,8 @@ public class DocumentRequestService {
     private final UserMsFeignClient userMsFeignClient;
 
     public DocumentRequest submitDocumentRequest(MultipartFile extraitRccm, MultipartFile statutEntreprise, LocalDate immatriculationDate, TypeDemandeEnum typeDemande) throws IOException {
+        //Call e-service here
+
         File extraitRccmDocument = saveFile(extraitRccm, "Recepissé RCCM");
         File statutEntrepriseDocument = saveFile(statutEntreprise, "Statut Entreprise");
 
@@ -50,6 +52,7 @@ public class DocumentRequestService {
 
         var documentRequest = DocumentRequest.builder()
             .requesterId(currentUser.getKeycloakUserId())
+            .isPaid(false)
             .createdAt(LocalDateTime.now())
             .status("PENDING").build();
 
@@ -63,6 +66,7 @@ public class DocumentRequestService {
             files.add(statutEntrepriseDocument);
         }
         documentRequest.setFiles(files);
+        documentRequest.setType(typeDemande.name());
         documentRequest.setCompanyName(currentUserInfo.getCompany().getName());
         documentRequest.setRccm(currentUserInfo.getCompany().getRccm());
 
@@ -117,8 +121,7 @@ public class DocumentRequestService {
     public Page<DocumentRequestDto> getPaginatedDocumentRequests(Pageable pageable) {
         var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
 
-        System.out.println(currentUser);
-        return documentRequestRepository.findAll(pageable).map(
+        return documentRequestRepository.findAllByRequesterId(currentUser.getKeycloakUserId(), pageable).map(
             documentRequestMapper::toDto
         );
     }

@@ -3,6 +3,7 @@ package com.yulcomtechnologies.justicems.entities;
 import com.yulcomtechnologies.sharedlibrary.services.FileInterface;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Table(name = "files")
 @Data
+@Builder
 public class File implements FileInterface {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

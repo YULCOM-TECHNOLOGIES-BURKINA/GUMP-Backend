@@ -33,6 +33,12 @@ public class DocumentRequest {
     @Column(name = "number", length = 255)
     private String number;
 
+    @Column(name = "type", length = 255)
+    private String type;
+
+    @Column(name = "is_paid")
+    private Boolean isPaid;
+
     @Column(name = "status", length = 50, nullable = false)
     private String status = "PENDING";
 

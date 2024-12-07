@@ -20,29 +20,23 @@ public class DocumentRequestMapper {
     public DocumentRequestDto toDto(
         DocumentRequest documentRequest
     ) {
+        System.out.println(documentRequest);
         DocumentRequestDto dto = new DocumentRequestDto();
         BeanUtils.copyProperties(documentRequest, dto);
-        //dto.setId(documentRequest.getId().toString());
-        //dto.setRequesterId(documentRequest.getRequesterId());
-        //dto.setStatus(documentRequest.getStatus());
+        dto.setId(documentRequest.getId().toString());
+        dto.setIsPaid(documentRequest.getIsPaid());
 
-        /*if (documentRequest.isApproved()) {
-            var attestation = documentRequest.getAttestation();
-
-            dto.setAttestation(
-                new AttestationDto(
-                        fileStorageService.getPath(attestation.getFile()),
-                    attestation.getNumber(),
-                    attestation.getExpirationDate().toLocalDate(), attestation.getFile().getPath()
-                )
+        if (documentRequest.getGeneratedDocument() != null) {
+            dto.setGeneratedDocument(
+                fileToDto(documentRequest.getGeneratedDocument())
             );
-        }*/
+        }
 
-        /*if (documentRequest.getFiles() != null) {
+        if (documentRequest.getFiles() != null) {
             dto.setFiles(documentRequest.getFiles().stream()
                 .map(this::fileToDto)
                 .collect(Collectors.toSet()));
-        }*/
+        }
 
         return dto;
     }

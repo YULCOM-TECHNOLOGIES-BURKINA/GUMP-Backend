@@ -1,5 +1,6 @@
 package com.yulcomtechnologies.justicems.controllers;
 
+import com.yulcomtechnologies.justicems.dtos.CreatedResource;
 import com.yulcomtechnologies.justicems.dtos.DocumentRequestDto;
 import com.yulcomtechnologies.justicems.enums.TypeDemandeEnum;
 import com.yulcomtechnologies.justicems.services.DocumentRequestService;
@@ -20,14 +21,15 @@ public class DocumentRequestController {
     private final DocumentRequestService documentRequestService;
 
     @PostMapping(path = "demandes", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<Void> createDocumentRequest(
+    public ResponseEntity<CreatedResource> createDocumentRequest(
         @RequestParam(value = "extraitRccm", required = false) MultipartFile extraitRccm,
         @RequestParam(value = "statutEntreprise", required = false) MultipartFile statutEntreprise,
         @RequestParam LocalDate immatriculationDate,
         @RequestParam TypeDemandeEnum typeDemande
     ) throws IOException {
-        documentRequestService.submitDocumentRequest(extraitRccm, statutEntreprise, immatriculationDate, typeDemande);
-        return ResponseEntity.ok().build();
+        var documentRequest = documentRequestService.submitDocumentRequest(extraitRccm, statutEntreprise, immatriculationDate, typeDemande);
+
+        return ResponseEntity.ok(new CreatedResource(documentRequest.getId().toString()));
     }
 
     @GetMapping("demandes")

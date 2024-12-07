@@ -13,7 +13,10 @@ public class DocumentRequestDto {
     private String rejectionReason;
     private LocalDateTime createdAt;
     private Set<FileDto> files;
+    private FileDto generatedDocument;
     private Boolean isPaid;
-    private Boolean isPastDue;
-    private CompanyDto company;
+    private String rccm;
+    private String companyName;
+    private String number;
+    private String type;
 }
