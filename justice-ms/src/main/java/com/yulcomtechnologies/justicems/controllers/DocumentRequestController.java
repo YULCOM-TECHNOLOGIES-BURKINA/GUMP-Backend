@@ -20,7 +20,7 @@ import java.time.LocalDate;
 public class DocumentRequestController {
     private final DocumentRequestService documentRequestService;
 
-    @PostMapping(path = "demandes", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(path = "demandes"/*, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}*/)
     public ResponseEntity<CreatedResource> createDocumentRequest(
         @RequestParam(value = "extraitRccm", required = false) MultipartFile extraitRccm,
         @RequestParam(value = "statutEntreprise", required = false) MultipartFile statutEntreprise,

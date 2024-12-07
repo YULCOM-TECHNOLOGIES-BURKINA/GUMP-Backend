@@ -76,6 +76,7 @@ class DocumentRequestControllerTest extends BaseIntegrationTest {
             .header("X-User-Id", "5")
         )
         .andExpect(status().isOk())
+        .andDo(print())
         .andReturn().getResponse().getContentAsString();
 
         var createdResourceId = Long.valueOf(objectMapper.readValue(response, CreatedResource.class).id());
