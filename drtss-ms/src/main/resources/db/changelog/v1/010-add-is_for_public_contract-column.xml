@@ -8,9 +8,9 @@
 
   <changeSet id="010" author="claver">
     <sql>
-      ALTER TABLE demandes ADD COLUMN is_for_public_contract BOOLEAN DEFAULT TRUE;
-      UPDATE demandes SET is_for_public_contract = TRUE WHERE is_for_public_contract IS NULL;
-      ALTER TABLE "document_requests" ALTER COLUMN "public_contract_number" NULL;
+      ALTER TABLE "document_requests" ADD COLUMN is_for_public_contract BOOLEAN DEFAULT TRUE;
+      UPDATE "document_requests" SET is_for_public_contract = TRUE WHERE is_for_public_contract IS NULL;
+      ALTER TABLE "document_requests" ALTER COLUMN "public_contract_number" SET DEFAULT NULL;
     </sql>
   </changeSet>
 </databaseChangeLog>
