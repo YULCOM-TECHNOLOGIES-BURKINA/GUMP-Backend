@@ -24,6 +24,9 @@ public class DocumentRequest {
 
     private String status;
 
+    @Column(name = "is_for_public_contract", nullable = false)
+    private Boolean isForPublicContract;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "request_type", nullable = false)
     private RequestType requestType;
@@ -62,6 +65,9 @@ public class DocumentRequest {
 
     @Column(name = "organization_phone")
     private String organizationPhone;
+
+    @Column(name = "public_contract_number")
+    private String publicContractNumber;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();

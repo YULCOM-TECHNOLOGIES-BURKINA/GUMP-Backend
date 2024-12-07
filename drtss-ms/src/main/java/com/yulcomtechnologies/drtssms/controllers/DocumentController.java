@@ -50,13 +50,15 @@ public class DocumentController {
     public ResponseEntity<CreatedResource> submitDocumentRequest(
         @RequestParam("attestationCnss") MultipartFile attestationCnss,
         @RequestParam("attestationAnpe") MultipartFile attestationAnpe,
-        @RequestParam("publicContractNumber") String publicContractNumber
+        @RequestParam("publicContractNumber") String publicContractNumber,
+        @RequestParam(value = "isForPublicContract", required = false, defaultValue = "false") Boolean isForPublicContract
     ) throws IOException {
 
         DocumentRequest documentRequest = documentRequestService.submitDocumentRequest(
             attestationCnss,
             attestationAnpe,
-            publicContractNumber
+            publicContractNumber,
+            isForPublicContract
         );
 
         return ResponseEntity.ok(new CreatedResource(documentRequest.getId().toString()));
