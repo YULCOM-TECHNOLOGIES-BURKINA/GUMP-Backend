@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -22,9 +21,10 @@ public class DocumentRequestService {
     private DocumentRequestMapper documentRequestMapper;
     private final AttestationGenerator attestationGenerator;
 
-    public DocumentRequest submitDocumentRequest(DocumentRequestDto documentRequestDto) {
+    public DocumentRequest submitDocumentRequest(DocumentRequestDto documentRequestDto, Boolean isForPublicContract) {
         var documentRequest = new DocumentRequest();
         BeanUtils.copyProperties(documentRequestDto, documentRequest);
+        documentRequest.setIsForPublicContract(isForPublicContract);
         documentRequest.setStatus(DocumentRequestStatus.PENDING.toString());
 
         return repository.save(documentRequest);

@@ -46,7 +46,7 @@ public class DocumentRequestService {
     private final ApplicationConfigRepository applicationConfigRepository;
     private final AuthenticatedUserService authenticatedUserService;
 
-    public DocumentRequest submitDocumentRequest(MultipartFile attestationCnss, MultipartFile attestationAnpe, String publicContractNumber) throws IOException {
+    public DocumentRequest submitDocumentRequest(MultipartFile attestationCnss, MultipartFile attestationAnpe, String publicContractNumber, Boolean isForPublicContract) throws IOException {
         File cnssAttestation = saveFile(attestationCnss, "Attestation CNSS");
         File anpeAttestation = saveFile(attestationAnpe, "Attestation ANPE");
         var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
@@ -54,6 +54,7 @@ public class DocumentRequestService {
         var documentRequest = DocumentRequest.builder()
             .requesterId(currentUser.getKeycloakUserId())
             .isPaid(false)
+            .isForPublicContract(isForPublicContract)
             .createdAt(LocalDateTime.now())
             .publicContractNumber(publicContractNumber)
             .status(DocumentRequestStatus.PENDING.name()).build();

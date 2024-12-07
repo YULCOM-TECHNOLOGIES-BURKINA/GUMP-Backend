@@ -15,3 +15,9 @@ databaseChangeLog:
         file: db/changelog/v1/007-create-signature_scanner-table.xml
   - include:
         file: db/changelog/v1/008-create-signature_certificat-table.xml
+
+  - include:
+        file: db/changelog/v1/009-add-region-to-demandes-table.xml
+
+  - include:
+        file: db/changelog/v1/010-add-is_for_public_contract-column.xml
