@@ -27,7 +27,7 @@ public class DocumentRequestStatusChangedListener {
         var documentRequest = documentRequestRepository.findById(event.getDocumentRequestId()).orElseThrow();
         log.info("Document request status: " + documentRequest.getStatus());
 
-        var user = usersFeignClient.getUser(documentRequest.getRequesterId());
+        var user = usersFeignClient.getUsernameOrKeycloakId(documentRequest.getRequesterId());
         log.info("User: " + user);
 
         var emailData = getEmailData(documentRequest);

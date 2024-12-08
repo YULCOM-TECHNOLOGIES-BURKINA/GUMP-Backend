@@ -43,7 +43,7 @@ class DocumentRequestChangedListenerTest {
             )
         );
 
-        when(usersFeignClient.getUser("1")).thenReturn(
+        when(usersFeignClient.getUsernameOrKeycloakId("1")).thenReturn(
             UserDto.builder()
                 .email("test@email.com").build()
         );
@@ -74,7 +74,7 @@ class DocumentRequestChangedListenerTest {
             )
         );
 
-        when(usersFeignClient.getUser("1")).thenReturn(
+        when(usersFeignClient.getUsernameOrKeycloakId("1")).thenReturn(
             UserDto.builder()
                 .email("test@email.com").build()
         );

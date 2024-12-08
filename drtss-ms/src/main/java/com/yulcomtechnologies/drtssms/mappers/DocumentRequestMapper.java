@@ -35,7 +35,7 @@ public class DocumentRequestMapper {
         dto.setApprovedBy(documentRequest.getApprovedBy());
         dto.setCreatedAt(documentRequest.getCreatedAt());
         dto.setIsPaid(documentRequest.getIsPaid());
-        dto.setCompany(usersFeignClient.getUser(documentRequest.getRequesterId()).getCompany());
+        dto.setCompany(usersFeignClient.getUsernameOrKeycloakId(documentRequest.getRequesterId()).getCompany());
         dto.setIsPastDue(
             LocalDateTime.now().isAfter(documentRequest.getCreatedAt().plusDays(applicationConfig.getProcessingTimeInDays()))
         );
