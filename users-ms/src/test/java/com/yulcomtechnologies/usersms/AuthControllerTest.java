@@ -29,7 +29,7 @@ public class AuthControllerTest extends BaseIntegrationTest {
 
     @Test
     void registersSuccessfully() throws Exception {
-        when(ssoProvider.createUser(any())).thenReturn("12345678");
+       when(ssoProvider.createUser(any())).thenReturn("12345678");
 
         mockMvc
             .perform(

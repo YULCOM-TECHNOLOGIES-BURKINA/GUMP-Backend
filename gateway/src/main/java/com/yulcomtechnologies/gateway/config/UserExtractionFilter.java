@@ -35,11 +35,8 @@ public class UserExtractionFilter implements GlobalFilter {
 
                     // Extract claims (adjust keys based on your token structure)
                     String userId = claims.get("sub").toString(); // Subject (user ID)
-                    /*String roles = claims.get("realm_access") != null
-                        ? claims.get("realm_access").toString()
-                        : null;*/
 
-                    Map<Object, Object> map = (Map<Object, Object>) claims.get("realm_access");
+                    Map<Object, Object> map = (Map<Object, Object>) ((Map<Object, Object>) claims.get("resource_access")).get("gump");
                     var roles = (ArrayList<String>) map.get("roles");
                     var role = roles.get(roles.size() - 1);
 

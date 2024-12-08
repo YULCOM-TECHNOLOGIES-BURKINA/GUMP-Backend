@@ -63,7 +63,6 @@ public class KeycloakSsoService implements SsoProvider {
     }
 
     public String createUser(CreateUserCommand createUserCommand) {
-        System.out.println(createUserCommand);
         var keycloakRegisterDto = new KeycloakCreateUserDto();
         var adminToken = getAdminToken().getBody();
 
@@ -79,6 +78,14 @@ public class KeycloakSsoService implements SsoProvider {
           )
         );
 
+        keycloakRegisterDto.setAttributes(
+            Map.of(
+                "userType", createUserCommand.userType().name(),
+                "userRole", createUserCommand.role().name()
+            )
+        );
+
+        System.out.println(keycloakRegisterDto);
         var headers = getHeaders();
         headers.set("Authorization", "Bearer " + adminToken.accessToken());
         HttpEntity<String> request = null;
