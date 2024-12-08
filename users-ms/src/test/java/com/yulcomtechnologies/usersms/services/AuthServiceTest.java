@@ -1,6 +1,7 @@
 package com.yulcomtechnologies.usersms.services;
 
 import com.yulcomtechnologies.sharedlibrary.events.EventPublisher;
+import com.yulcomtechnologies.sharedlibrary.services.FileStorageService;
 import com.yulcomtechnologies.usersms.dtos.RegisterRequest;
 import com.yulcomtechnologies.usersms.entities.Company;
 import com.yulcomtechnologies.usersms.entities.User;
@@ -8,12 +9,14 @@ import com.yulcomtechnologies.usersms.enums.UserRole;
 import com.yulcomtechnologies.usersms.enums.UserType;
 import com.yulcomtechnologies.usersms.events.AccountStateChanged;
 import com.yulcomtechnologies.usersms.repositories.CompanyRepository;
+import com.yulcomtechnologies.usersms.repositories.FileRepository;
 import com.yulcomtechnologies.usersms.repositories.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
 
 import java.util.Optional;
 
@@ -42,6 +45,12 @@ public class AuthServiceTest {
     @Mock
     EventPublisher eventPublisher;
 
+    @Mock
+    FileRepository fileRepository;
+
+    @Mock
+    FileStorageService fileStorageService;
+
 
     @Test
     void registersSuccessfully() throws Exception {
@@ -50,7 +59,8 @@ public class AuthServiceTest {
             "password",
             "password",
             "lupin.arsene@gmail.com",
-            "1234"
+            "1234",
+            "CENTRE"
         );
 
         var corporationData = new CorporationData(
@@ -68,7 +78,9 @@ public class AuthServiceTest {
 
         when(ssoProvider.createUser(any())).thenReturn("OMEGA_LAMBDA_7_XL_9");
 
-        authService.register(registrationRequest);
+        authService.register(registrationRequest, new MockMultipartFile(
+            "cnibFile", "testfile.pdf".getBytes()), new MockMultipartFile("statutFile", "testfile.pdf".getBytes()
+        ));
 
         var company = Company.builder()
             .ifu(registrationRequest.ifuNumber)
@@ -88,6 +100,7 @@ public class AuthServiceTest {
               .role(UserRole.USER)
               .userType(UserType.USER)
               .isActive(false)
+              .region(registrationRequest.region)
               .cnssNumber(registrationRequest.cnssNumber)
               .email(registrationRequest.email)
               .username(registrationRequest.ifuNumber)

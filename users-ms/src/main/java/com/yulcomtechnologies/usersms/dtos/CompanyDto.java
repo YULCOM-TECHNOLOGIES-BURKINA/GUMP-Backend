@@ -8,4 +8,6 @@ public class CompanyDto {
     private String ifu;
     private String address;
     private String rccm;
+    private String statutDocumentPath;
+    private String cnibDocumentPath;
 }

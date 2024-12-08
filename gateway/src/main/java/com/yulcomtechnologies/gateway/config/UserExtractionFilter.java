@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Map;
 
@@ -21,7 +22,6 @@ public class UserExtractionFilter implements GlobalFilter {
 
         // Extract token from the Authorization header
         String authHeader = request.getHeaders().getFirst("Authorization");
-        System.out.println("authHeader: " + authHeader);
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
 
@@ -34,16 +34,15 @@ public class UserExtractionFilter implements GlobalFilter {
 
                     // Extract claims (adjust keys based on your token structure)
                     String userId = claims.get("sub").toString(); // Subject (user ID)
-                    String roles = claims.get("realm_access") != null
-                        ? claims.get("realm_access").toString()
-                        : null;
 
-                    System.out.println(claims.get("realm_access"));
+                    Map<Object, Object> map = (Map<Object, Object>) ((Map<Object, Object>) claims.get("resource_access")).get("gump");
+                    var roles = (ArrayList<String>) map.get("roles");
+                    var role = roles.get(roles.size() - 1);
 
                     // Add user data as headers to the downstream request
                     ServerHttpRequest modifiedRequest = request.mutate()
                         .header("X-User-Id", userId)
-                        .header("X-User-Role", roles != null ? roles : "N/A")
+                        .header("X-User-Role", role)
                         .build();
 
                     return chain.filter(exchange.mutate().request(modifiedRequest).build());

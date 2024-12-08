@@ -1,6 +1,7 @@
 package com.yulcomtechnologies.usersms.services;
 
 import com.yulcomtechnologies.sharedlibrary.exceptions.ResourceNotFoundException;
+import com.yulcomtechnologies.sharedlibrary.services.FileStorageService;
 import com.yulcomtechnologies.usersms.dtos.CreateUserRequest;
 import com.yulcomtechnologies.usersms.dtos.UserDto;
 import com.yulcomtechnologies.usersms.entities.User;
@@ -21,6 +22,7 @@ public class UserService {
     private final SsoProvider ssoProvider;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final FileStorageService fileStorageService;
 
 
     @Transactional
@@ -57,7 +59,7 @@ public class UserService {
     public Page<UserDto> getUsers(Pageable pageable, UserType userType) {
         var users =
             userType == null ? userRepository.findAll(pageable): userRepository.findAllByUserType(pageable, userType);
-        return users.map(userMapper::toUserDto);
+        return users.map(this::mapUser);
     }
 
     public UserDto getUser(Long id) {
@@ -65,7 +67,7 @@ public class UserService {
             () -> new RuntimeException("User not found")
         );
 
-        return userMapper.toUserDto(user);
+        return mapUser(user);
     }
 
     public UserDto findUser(String usernameOrSsoId) {
@@ -73,6 +75,30 @@ public class UserService {
             () -> new ResourceNotFoundException("User not found")
         );
 
-        return userMapper.toUserDto(user);
+        return mapUser(user);
+    }
+
+    public Page<UserDto> getInactiveUsers(Pageable pageable) {
+        var users = userRepository.findAllByIsActiveFalse(pageable);
+        return users.map(this::mapUser);
+    }
+
+    private UserDto mapUser(User user) {
+        var userDto = userMapper.toUserDto(user);
+        var company = user.getCompany();
+
+        if (company != null) {
+            if (company.getEnterpriseStatut() != null) {
+                userDto.getCompany().setStatutDocumentPath(
+                    fileStorageService.getPath(company.getEnterpriseStatut())
+                );
+            }
+
+            if (company.getIdDocument() != null) {
+                userDto.getCompany().setCnibDocumentPath(fileStorageService.getPath(company.getIdDocument()));
+            }
+        }
+
+        return userDto;
     }
 }

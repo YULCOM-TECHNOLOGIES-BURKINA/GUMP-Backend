@@ -22,6 +22,8 @@ public class DocumentRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String region;
+
     @Column(name = "requester_id", nullable = false)
     private String requesterId;  // Keycloak user ID of the requester
 

@@ -29,4 +29,8 @@ public class RegisterRequest {
     @NotNull
     @Email
     public String email;
+
+    @NotNull
+    @NotBlank
+    public String region;
 }

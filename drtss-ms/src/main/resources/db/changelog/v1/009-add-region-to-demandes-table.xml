@@ -8,9 +8,9 @@
 
   <changeSet id="008" author="mandson">
     <sql>
-      ALTER TABLE demandes ADD COLUMN region VARCHAR(255) NULL;
-      UPDATE demandes SET region = 'CENTRE' WHERE region IS NULL;
-      ALTER TABLE demandes ALTER COLUMN region SET NOT NULL;
+      ALTER TABLE "document_requests" ADD COLUMN "region" VARCHAR(255) DEFAULT NULL;
+      UPDATE "document_requests" SET "region" = 'CENTRE' WHERE region IS NULL;
+      ALTER TABLE "document_requests" ALTER COLUMN "region" SET NOT NULL;
     </sql>
   </changeSet>
 </databaseChangeLog>

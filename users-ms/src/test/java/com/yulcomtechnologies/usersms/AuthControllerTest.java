@@ -9,11 +9,12 @@ import com.yulcomtechnologies.usersms.services.SsoProvider;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mock.web.MockMultipartFile;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -29,21 +30,24 @@ public class AuthControllerTest extends BaseIntegrationTest {
 
     @Test
     void registersSuccessfully() throws Exception {
-        when(ssoProvider.createUser(any())).thenReturn("12345678");
+       when(ssoProvider.createUser(any())).thenReturn("12345678");
 
         mockMvc
             .perform(
-                post("/auth/register")
-                    .content(objectMapper.writeValueAsString(
-                        new RegisterRequest(
+                multipart("/auth/register")
+                    .file("cnibFile", "testfile.pdf".getBytes())
+                    .file("statutFile", "testfile.pdf".getBytes())
+                    .file(new MockMultipartFile("registerRequest", "",
+                        "application/json",
+                        objectMapper.writeValueAsBytes(new RegisterRequest(
                             "00077218Y",
                             "12345678",
                             "12345678",
                             "12345678",
-                            "arnaud.bakyono@gmail.com"
-                        )
-                    ))
-                    .contentType("application/json")
+                            "arnaud.bakyono@gmail.com",
+                            "CENTRE"
+                        )))
+                    )
             )
             .andDo(print())
             .andExpect(status().isOk());
@@ -55,5 +59,7 @@ public class AuthControllerTest extends BaseIntegrationTest {
         assertEquals("arnaud.bakyono@gmail.com", user.getEmail());
         assertEquals(UserType.USER, user.getUserType());
         assertEquals(UserRole.USER, user.getRole());
+        assertNotNull(user.getCompany().getIdDocument());
+        assertNotNull(user.getCompany().getEnterpriseStatut());
     }
 }
