@@ -38,7 +38,7 @@ import java.util.Map;
      * @param id
      * @return
      */
-    @GetMapping(path = "/demande/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/demandes/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public DocumentRequestDto getAsf(@PathVariable Long id) {
         return asfService.findById(id);
     }
@@ -49,7 +49,7 @@ import java.util.Map;
      * @param params
      * @return
      */
-    @PostMapping(path = "/demande", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/demandes", produces = MediaType.APPLICATION_JSON_VALUE)
     public Object demandeAsf(@RequestBody Map<String, String> params) {
         List<BasicNameValuePair> formData = new ArrayList<>();
         formData.add(new BasicNameValuePair("form[ifu]", params.get("ifu")));
