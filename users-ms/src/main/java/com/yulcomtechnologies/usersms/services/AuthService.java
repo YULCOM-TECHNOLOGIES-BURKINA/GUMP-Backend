@@ -87,6 +87,7 @@ public class AuthService {
             .email(registerRequest.getEmail())
             .role(UserRole.USER)
             .isActive(false)
+            .region(registerRequest.region)
             .username(registerRequest.getIfuNumber())
             .cnssNumber(registerRequest.getCnssNumber())
             .keycloakUserId(ssoId)

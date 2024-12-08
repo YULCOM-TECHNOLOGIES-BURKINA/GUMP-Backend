@@ -83,6 +83,7 @@ public class DocumentRequestService {
 
     public Page<DocumentRequestDto> getPaginatedDocumentRequests(Pageable pageable) {
         var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
+        System.out.println(currentUser);
         var role = UserRole.valueOf(currentUser.getRole());
         var userData = usersFeignClient.getUsernameOrKeycloakId(currentUser.getKeycloakUserId());
 
@@ -113,12 +114,8 @@ public class DocumentRequestService {
             );
         }
 
-        return documentRequestRepository.findAll(pageable).map(
-            documentRequest -> documentRequestMapper.toDto(
-                documentRequest,
-                applicationConfigRepository.get()
-            )
-        );
+        //Later throw 401
+        throw new BadRequestException("Vous ne pouvez pas accéder à cette ressource");
     }
 
     public DocumentRequestDto getDocumentRequest(String id) {

@@ -82,7 +82,10 @@ class DocumentRequestControllerTest extends BaseIntegrationTest {
                 )
             ).build());
 
-        mockMvc.perform(get("/demandes").header("X-User-Id", "5"))
+        mockMvc.perform(get("/demandes")
+                .header("X-User-Id", "5")
+                .header( "X-User-Role", "USER")
+            )
             .andExpect(status().isOk())
             .andDo(print())
             .andExpect(jsonPath("$.content[0].requesterId").value("5"))
@@ -91,11 +94,7 @@ class DocumentRequestControllerTest extends BaseIntegrationTest {
 
             .andExpect(jsonPath("$.content[0].company.name").value("Yulcom"))
             .andExpect(jsonPath("$.content[0].company.ifu").value("YulcomIFU"))
-            .andExpect(jsonPath("$.content[0].company.address").value("YulcomAddress"))
-
-            .andExpect(jsonPath("$.content[1].requesterId").value("7"))
-            .andExpect(jsonPath("$.content[1].isPastDue").value(true))
-            .andExpect(jsonPath("$.content[1].isPaid").value(true));
+            .andExpect(jsonPath("$.content[0].company.address").value("YulcomAddress"));
 
     }
 
