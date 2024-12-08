@@ -1,17 +1,17 @@
 package com.yulcomtechnologies.asfms.mappers;
 import com.yulcomtechnologies.asfms.dtos.DocumentRequestDto;
 import com.yulcomtechnologies.asfms.entities.DocumentRequest;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 @Service
-@NoArgsConstructor
+
 public class DocumentRequestMapper {
+    public DocumentRequestMapper() {
+    }
 
-
-   public DocumentRequest documentRequestToEntity(DocumentRequestDto documentRequestDto) {
+    public DocumentRequest documentRequestToEntity(DocumentRequestDto documentRequestDto) {
         DocumentRequest documentRequestEntity = new DocumentRequest(
                 documentRequestDto.getId(),
                 documentRequestDto.getStatut_demande(),
