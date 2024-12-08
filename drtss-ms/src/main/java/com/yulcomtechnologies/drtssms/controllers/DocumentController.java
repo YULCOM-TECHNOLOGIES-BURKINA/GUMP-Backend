@@ -4,6 +4,7 @@ import com.yulcomtechnologies.drtssms.dtos.*;
 import com.yulcomtechnologies.drtssms.entities.DocumentRequest;
 import com.yulcomtechnologies.drtssms.enums.DocumentRequestStatus;
 import com.yulcomtechnologies.drtssms.services.DocumentRequestService;
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -51,6 +52,8 @@ public class DocumentController {
         @RequestParam("attestationCnss") MultipartFile attestationCnss,
         @RequestParam("attestationAnpe") MultipartFile attestationAnpe,
         @RequestParam("publicContractNumber") String publicContractNumber,
+        @RequestParam(value = "contractPurpose", required = false) String contractPurpose,
+        @RequestParam(value = "contractingOrganizationName", required = false) String contractingOrganizationName,
         @RequestParam(value = "isForPublicContract", required = false, defaultValue = "false") Boolean isForPublicContract
     ) throws IOException {
 
@@ -58,7 +61,9 @@ public class DocumentController {
             attestationCnss,
             attestationAnpe,
             publicContractNumber,
-            isForPublicContract
+            isForPublicContract,
+            contractPurpose,
+            contractingOrganizationName
         );
 
         return ResponseEntity.ok(new CreatedResource(documentRequest.getId().toString()));
