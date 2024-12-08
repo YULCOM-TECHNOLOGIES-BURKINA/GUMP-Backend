@@ -36,6 +36,23 @@ services:
         - SPRING_MAIL_USERNAME=admin
         - SPRING_MAIL_PASSWORD=admin
 
+  justice:
+      image: ghcr.io/yulcom-technologies-burkina/gump-justice-ms:$COMMIT_SHA
+      container_name: gump-justice-backend
+      volumes:
+        - ./uploads:/uploads
+      restart: on-failure
+      depends_on:
+        - eureka-server
+        - justice-database
+      networks:
+        - gump-network
+      ports:
+        - 8085:8085
+      environment:
+        - SPRING_DATASOURCE_URL=jdbc:postgresql://justice-database:5432/gump
+        - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+
   users:
     image: ghcr.io/yulcom-technologies-burkina/gump-users-ms:$COMMIT_SHA
     container_name: gump-users-backend
@@ -104,6 +121,24 @@ services:
       retries: 10
     ports:
       - 5429:5432
+
+  justice-database:
+    image: postgres:16.4
+    networks:
+      - gump-network
+    volumes:
+      - justice-data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=gump
+      - POSTGRES_PASSWORD=gump
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - 5437:5432
 
   tresor-database:
     image: postgres:16.4
@@ -209,6 +244,7 @@ services:
       - KEYCLOAK_REALM=gump
       - TRESOR_MS_URI=http://tresor:8080
       - DRTSS_MS_URI=http://drtss:8082
+      - JUSTICE_MS_URI=http://justice:8085
       - USERS_MS_URI=http://users:8081
     restart: on-failure
 
@@ -218,6 +254,7 @@ volumes:
   users-data:
   keycloak_data:
   keycloak-db-data:
+  justice-data:
 
 networks:
   gump-network:

@@ -1,4 +1,4 @@
-package com.yulcomtechnologies.gateway.config;
+package com.yulcomtechnologies.justicems.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

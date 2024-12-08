@@ -15,4 +15,5 @@ public class KeycloakCreateUserDto {
     public Boolean emailVerified;
     public Boolean enabled;
     public List<Map<String, Object>> credentials = new ArrayList<>();
+    public Map<String, Object> attributes;
 }

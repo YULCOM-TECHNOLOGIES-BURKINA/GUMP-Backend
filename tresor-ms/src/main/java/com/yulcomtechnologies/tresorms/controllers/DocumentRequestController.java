@@ -22,10 +22,12 @@ public class DocumentRequestController {
 
     @PostMapping("demandes")
     public ResponseEntity<CreatedResource> submitDocumentRequest(
-        @RequestBody @Validated DocumentRequestDto documentRequestDto
-        ) {
+        @RequestBody @Validated DocumentRequestDto documentRequestDto,
+        @RequestParam(value = "publicContractNumber", required = false) String publicContractNumber,
+        @RequestParam(value = "isForPublicContract", required = false, defaultValue = "false") Boolean isForPublicContract
+    ) {
 
-        DocumentRequest documentRequest = documentRequestService.submitDocumentRequest(documentRequestDto);
+        DocumentRequest documentRequest = documentRequestService.submitDocumentRequest(documentRequestDto, isForPublicContract);
 
         return ResponseEntity.ok(new CreatedResource(documentRequest.getId().toString()));
     }

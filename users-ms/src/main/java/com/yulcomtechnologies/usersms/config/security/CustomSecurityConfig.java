@@ -14,12 +14,12 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
-@Configuration
+/*@Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@RequiredArgsConstructor
-public class SecurityConfig {
-    @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}") String issuerUri;
+@RequiredArgsConstructor*/
+public class CustomSecurityConfig {
+    /*@Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}") String issuerUri;
 
     private final JwtAuthConverter jwtAuthConverter;
 
@@ -60,6 +60,6 @@ public class SecurityConfig {
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
 
         return jwtAuthenticationConverter;
-    }
+    }*/
 }
 

@@ -44,6 +44,8 @@ class DocumentRequestControllerTest extends BaseIntegrationTest {
                     .builder()
                     .requesterId("5")
                     .isPaid(false)
+                    .isForPublicContract(true)
+                    .region("CENTRE")
                     .createdAt(LocalDateTime.now())
                     .status(DocumentRequestStatus.PENDING.name())
                     .publicContractNumber("1234")
@@ -52,6 +54,8 @@ class DocumentRequestControllerTest extends BaseIntegrationTest {
                 DocumentRequest
                     .builder()
                     .requesterId("7")
+                    .region("CENTRE")
+                    .isForPublicContract(true)
                     .isPaid(true)
                     .createdAt(LocalDateTime.now().minusDays(100))
                     .status(DocumentRequestStatus.PENDING.name())
@@ -68,7 +72,6 @@ class DocumentRequestControllerTest extends BaseIntegrationTest {
                 .build()
         );
 
-        System.out.println(attestation);
 
         when(usersFeignClient.getUser(any()))
             .thenReturn(UserDto.builder().company(
@@ -79,7 +82,7 @@ class DocumentRequestControllerTest extends BaseIntegrationTest {
                 )
             ).build());
 
-        mockMvc.perform(get("/demandes"))
+        mockMvc.perform(get("/demandes").header("X-User-Id", "5"))
             .andExpect(status().isOk())
             .andDo(print())
             .andExpect(jsonPath("$.content[0].requesterId").value("5"))

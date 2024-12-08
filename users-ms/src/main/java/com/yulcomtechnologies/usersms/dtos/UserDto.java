@@ -13,5 +13,6 @@ public class UserDto {
     private String userType;
     private String region;
     private String username;
+    private Boolean isActive;
     private CompanyDto company;
 }

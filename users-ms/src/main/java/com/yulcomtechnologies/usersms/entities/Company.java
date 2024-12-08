@@ -32,6 +32,17 @@ public class Company {
     @Column(name = "phone", nullable = false, length = 255)
     private String phone;
 
+    @ManyToOne
+    @JoinColumn(name = "id_document_id", referencedColumnName = "id")
+    private File idDocument;
+
+    @ManyToOne
+    @JoinColumn(name = "enterprise_status_id", referencedColumnName = "id")
+    private File enterpriseStatut;
+
+    @Column(name = "rccm")
+    private String rccm;
+
     public Company(String ifu, String name, String address, String email, String phone) {
         this.ifu = ifu;
         this.name = name;

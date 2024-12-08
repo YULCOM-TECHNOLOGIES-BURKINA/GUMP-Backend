@@ -63,13 +63,12 @@ public class KeycloakSsoService implements SsoProvider {
     }
 
     public String createUser(CreateUserCommand createUserCommand) {
-        System.out.println(createUserCommand);
         var keycloakRegisterDto = new KeycloakCreateUserDto();
         var adminToken = getAdminToken().getBody();
 
 
         BeanUtils.copyProperties(createUserCommand, keycloakRegisterDto);
-        keycloakRegisterDto.enabled = true;
+        keycloakRegisterDto.enabled = createUserCommand.enabled();
         keycloakRegisterDto.emailVerified = true;
         keycloakRegisterDto.credentials.add(
           Map.of(
@@ -79,6 +78,14 @@ public class KeycloakSsoService implements SsoProvider {
           )
         );
 
+        keycloakRegisterDto.setAttributes(
+            Map.of(
+                "userType", createUserCommand.userType().name(),
+                "userRole", createUserCommand.role().name()
+            )
+        );
+
+        System.out.println(keycloakRegisterDto);
         var headers = getHeaders();
         headers.set("Authorization", "Bearer " + adminToken.accessToken());
         HttpEntity<String> request = null;
@@ -102,6 +109,39 @@ public class KeycloakSsoService implements SsoProvider {
 
         assignRoleToUser(getRole(createUserCommand.role().name()), userId);
         return userId;
+    }
+
+    @Override
+    public void activateUser(String ssoUserId) {
+        var headers = getHeaders();
+        System.out.println(getAdminToken().getBody().accessToken());
+        headers.set("Authorization", "Bearer " + Objects.requireNonNull(getAdminToken().getBody()).accessToken());
+        HttpEntity<String> request = new HttpEntity<>(
+            "{\"enabled\": true}",
+            headers
+        );
+
+        var url = String.format("%s/admin/realms/%s/users/%s", keycloakServerUrl, realm, ssoUserId);
+        System.out.println(url);
+
+        restTemplate.exchange(
+            url,
+            HttpMethod.PUT, request, String.class
+        );
+    }
+
+    @Override
+    public void deleteUser(String keycloakUserId) {
+        var headers = getHeaders();
+        headers.set("Authorization", "Bearer " + Objects.requireNonNull(getAdminToken().getBody()).accessToken());
+        HttpEntity<String> request = new HttpEntity<>(headers);
+
+        var url = String.format("%s/admin/realms/%s/users/%s", keycloakServerUrl, realm, keycloakUserId);
+
+        restTemplate.exchange(
+            url,
+            HttpMethod.DELETE, request, String.class
+        );
     }
 
     public RoleInformation getRole(String role) {
@@ -141,7 +181,6 @@ public class KeycloakSsoService implements SsoProvider {
             throw new RuntimeException(e);
         }
         var url = String.format("%s/admin/realms/%s/users/%s/role-mappings/clients/%s", keycloakServerUrl, realm, userId, clientId);
-        System.out.println(url);
         var response = restTemplate.exchange(url, HttpMethod.POST, request, String.class);
         System.out.println(response.getBody());
     }

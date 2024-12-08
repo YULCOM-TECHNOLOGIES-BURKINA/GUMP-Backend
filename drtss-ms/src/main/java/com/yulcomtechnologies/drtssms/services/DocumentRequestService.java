@@ -8,10 +8,13 @@ import com.yulcomtechnologies.drtssms.entities.DocumentRequest;
 import com.yulcomtechnologies.drtssms.entities.File;
 import com.yulcomtechnologies.drtssms.enums.DocumentRequestStatus;
 import com.yulcomtechnologies.drtssms.events.DocumentRequestChanged;
+import com.yulcomtechnologies.drtssms.feignClients.UsersFeignClient;
 import com.yulcomtechnologies.drtssms.mappers.DocumentRequestMapper;
 import com.yulcomtechnologies.drtssms.repositories.ApplicationConfigRepository;
 import com.yulcomtechnologies.drtssms.repositories.DocumentRequestRepository;
 import com.yulcomtechnologies.drtssms.repositories.FileRepository;
+import com.yulcomtechnologies.sharedlibrary.auth.AuthenticatedUserService;
+import com.yulcomtechnologies.sharedlibrary.enums.UserRole;
 import com.yulcomtechnologies.sharedlibrary.events.EventPublisher;
 import com.yulcomtechnologies.sharedlibrary.exceptions.BadRequestException;
 import com.yulcomtechnologies.sharedlibrary.exceptions.ResourceNotFoundException;
@@ -43,14 +46,18 @@ public class DocumentRequestService {
     private final AttestationGenerator attestationGenerator;
     private final EventPublisher eventPublisher;
     private final ApplicationConfigRepository applicationConfigRepository;
+    private final AuthenticatedUserService authenticatedUserService;
+    private final UsersFeignClient usersFeignClient;
 
-    public DocumentRequest submitDocumentRequest(MultipartFile attestationCnss, MultipartFile attestationAnpe, String publicContractNumber) throws IOException {
+    public DocumentRequest submitDocumentRequest(MultipartFile attestationCnss, MultipartFile attestationAnpe, String publicContractNumber, Boolean isForPublicContract) throws IOException {
         File cnssAttestation = saveFile(attestationCnss, "Attestation CNSS");
         File anpeAttestation = saveFile(attestationAnpe, "Attestation ANPE");
+        var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
 
         var documentRequest = DocumentRequest.builder()
-            .requesterId("5")
+            .requesterId(currentUser.getKeycloakUserId())
             .isPaid(false)
+            .isForPublicContract(isForPublicContract)
             .createdAt(LocalDateTime.now())
             .publicContractNumber(publicContractNumber)
             .status(DocumentRequestStatus.PENDING.name()).build();
@@ -75,6 +82,37 @@ public class DocumentRequestService {
     }
 
     public Page<DocumentRequestDto> getPaginatedDocumentRequests(Pageable pageable) {
+        var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
+        var role = UserRole.valueOf(currentUser.getRole());
+        var userData = usersFeignClient.getUsernameOrKeycloakId(currentUser.getKeycloakUserId());
+
+        if (role == UserRole.ADMIN) {
+            return documentRequestRepository.findAll(pageable).map(
+                documentRequest -> documentRequestMapper.toDto(
+                    documentRequest,
+                    applicationConfigRepository.get()
+                )
+            );
+        }
+
+        if (role == UserRole.USER) {
+            return documentRequestRepository.findAllByRequesterId(currentUser.getKeycloakUserId(), pageable).map(
+                documentRequest -> documentRequestMapper.toDto(
+                    documentRequest,
+                    applicationConfigRepository.get()
+                )
+            );
+        }
+
+        if (role == UserRole.DRTSS_AGENT || role == UserRole.DRTSS_REGIONAL_MANAGER) {
+            return documentRequestRepository.findAllByRegion(userData.getRegion(), pageable).map(
+                documentRequest -> documentRequestMapper.toDto(
+                    documentRequest,
+                    applicationConfigRepository.get()
+                )
+            );
+        }
+
         return documentRequestRepository.findAll(pageable).map(
             documentRequest -> documentRequestMapper.toDto(
                 documentRequest,
@@ -97,6 +135,8 @@ public class DocumentRequestService {
         DocumentRequestStatus status,
         String rejectionReason
     ) {
+        var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
+
         if (status == DocumentRequestStatus.REJECTED && rejectionReason == null) {
             throw new BadRequestException("Vous devenez fournir un motif de rejet");
         }
@@ -106,7 +146,7 @@ public class DocumentRequestService {
 
         documentRequest.setStatus(status.name());
         documentRequest.setRejectionReason(rejectionReason);
-        documentRequest.setReviewedBy("KeycloakUserUtil.getCurrentUserId()");
+        documentRequest.setReviewedBy(currentUser.getKeycloakUserId());
 
         documentRequestRepository.save(documentRequest);
         eventPublisher.dispatch(new DocumentRequestChanged(documentRequest.getId()));
@@ -114,6 +154,8 @@ public class DocumentRequestService {
 
     public void approveDocumentRequest(Long id, ApproveDocumentRequestDto approveDocumentRequestDto) throws IOException {
         log.info("Approving document request with id {}", id);
+        var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
+
 
         DocumentRequest documentRequest = documentRequestRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("DocumentRequest not found"));
@@ -127,7 +169,7 @@ public class DocumentRequestService {
         }
 
         documentRequest.setStatus(DocumentRequestStatus.APPROVED.name());
-        documentRequest.setApprovedBy("KeycloakUserUtil.getCurrentUserId()");
+        documentRequest.setApprovedBy(currentUser.getKeycloakUserId());
 
         attestationGenerator.generateDocument(
             approveDocumentRequestDto,

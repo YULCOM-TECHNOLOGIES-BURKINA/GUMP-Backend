@@ -7,4 +7,5 @@ public class CompanyDto {
     private String name;
     private String ifu;
     private String address;
+    private String rccm;
 }

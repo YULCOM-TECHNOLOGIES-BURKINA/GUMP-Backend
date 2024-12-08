@@ -47,6 +47,7 @@ public class UsersControllerTest extends BaseIntegrationTest {
                 .email("yulcom@gmail.com")
                 .userType(UserType.USER)
                 .forename("Yulcom")
+                .isActive(true)
                 .lastname("Yulcom")
                 .role(UserRole.USER)
                 .company(company)

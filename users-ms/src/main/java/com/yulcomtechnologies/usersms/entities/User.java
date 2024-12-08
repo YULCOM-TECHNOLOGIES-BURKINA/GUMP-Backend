@@ -18,7 +18,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "keycloak_user_id", nullable = false, unique = true)
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive;
+
+    @Column(name = "keycloak_user_id")
     private String keycloakUserId;
 
     @Column(name = "email", nullable = false, unique = true)

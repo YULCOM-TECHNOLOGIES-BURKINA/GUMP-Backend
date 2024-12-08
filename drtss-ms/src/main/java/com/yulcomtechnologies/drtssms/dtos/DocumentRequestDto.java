@@ -20,4 +20,5 @@ public class DocumentRequestDto {
     private Boolean isPaid;
     private Boolean isPastDue;
     private CompanyDto company;
+    private Boolean isForPublicContract;
 }

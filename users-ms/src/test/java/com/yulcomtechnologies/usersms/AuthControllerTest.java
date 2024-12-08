@@ -11,17 +11,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-//Find a way to use this test containers
 public class AuthControllerTest extends BaseIntegrationTest {
     @Autowired CompanyRepository companyRepository;
 
-    @MockBean
+    //@MockBean
     SsoProvider ssoProvider;
 
     @Autowired
@@ -29,7 +29,7 @@ public class AuthControllerTest extends BaseIntegrationTest {
 
     @Test
     void registersSuccessfully() throws Exception {
-        when(ssoProvider.createUser(any())).thenReturn("12345678");
+       //when(ssoProvider.createUser(any())).thenReturn("12345678");
 
         mockMvc
             .perform(
@@ -51,6 +51,7 @@ public class AuthControllerTest extends BaseIntegrationTest {
         var user = userRepository.findByUsername("00077218Y").orElseThrow();
 
         assertEquals("12345678", user.getCnssNumber());
+        assertFalse(user.getIsActive());
         assertEquals("arnaud.bakyono@gmail.com", user.getEmail());
         assertEquals(UserType.USER, user.getUserType());
         assertEquals(UserRole.USER, user.getRole());

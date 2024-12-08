@@ -6,7 +6,7 @@
   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
 >
 
-  <changeSet id="005" author="kulturman">
+  <changeSet id="006" author="kulturman">
     <sql>
       CREATE TABLE application_config (
           id SERIAL PRIMARY KEY,

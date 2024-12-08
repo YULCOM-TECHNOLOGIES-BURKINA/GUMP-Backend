@@ -22,6 +22,8 @@ public class DocumentRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String region;
+
     @Column(name = "requester_id", nullable = false)
     private String requesterId;  // Keycloak user ID of the requester
 
@@ -39,6 +41,9 @@ public class DocumentRequest {
 
     @Column(name = "approved_by")
     private String approvedBy;
+
+    @Column(name = "is_for_public_contract", nullable = false)
+    private Boolean isForPublicContract;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();

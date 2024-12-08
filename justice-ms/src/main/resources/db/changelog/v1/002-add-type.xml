@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+>
+
+  <changeSet id="002" author="claver">
+    <sql>
+      ALTER TABLE "document_requests" ADD COLUMN "type" VARCHAR(50) DEFAULT NULL;
+      ALTER TABLE "document_requests" ADD COLUMN "is_paid" BOOLEAN DEFAULT FALSE;
+
+      UPDATE "document_requests" SET "type" = 'EXTRAIT_RCCM' WHERE "type" IS NULL;
+      UPDATE "document_requests" SET "is_paid" = FALSE WHERE "is_paid" IS NULL;
+      ALTER TABLE "document_requests" ALTER COLUMN "type" SET NOT NULL;
+    </sql>
+  </changeSet>
+</databaseChangeLog>

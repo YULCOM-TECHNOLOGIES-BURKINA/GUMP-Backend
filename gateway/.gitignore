@@ -1,5 +1,4 @@
 HELP.md
-uploads/
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
@@ -30,5 +29,7 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+uploads
+attestations
 ### VS Code ###
 .vscode/

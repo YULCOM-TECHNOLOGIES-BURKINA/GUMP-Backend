@@ -11,6 +11,8 @@ public class DocumentRequestDto {
     private String requesterId;
     @NotNull
     private String businessDomain;
+    private String publicContractNumber;
+    private Boolean isForPublicContract;
     private String rccmReference;
     private String ifuNumber;
     private String address;

@@ -5,6 +5,7 @@ import com.yulcomtechnologies.usersms.enums.UserType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
@@ -13,4 +14,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Page<User> findAllByUserType(Pageable pageable, UserType userType);
 
     Optional<User> findByUsername(String username);
+
+    Page<User> findAllByIsActive(Boolean isActive, Pageable pageable);
+
+    @Query("SELECT u FROM User u WHERE u.username = :usernameOrSsoUserId OR u.keycloakUserId = :usernameOrSsoUserId")
+    Optional<User> findByUsernameOrKeycloakUserId(String usernameOrSsoUserId);
 }
