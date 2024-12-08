@@ -18,6 +18,9 @@ spring:
     enabled: true
     change-log: classpath:changelog/db.changelog-master.yaml
 
+  security:
+    enabled: false
+
 keycloak:
   auth-server-url: https://sso.kulturman.com
   realm: gump

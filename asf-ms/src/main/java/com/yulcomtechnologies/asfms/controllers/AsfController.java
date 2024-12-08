@@ -38,7 +38,7 @@ import java.util.Map;
      * @param id
      * @return
      */
-    @GetMapping(path = "/demande-asf/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/demande/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public DocumentRequestDto getAsf(@PathVariable Long id) {
         return asfService.findById(id);
     }
@@ -49,7 +49,7 @@ import java.util.Map;
      * @param params
      * @return
      */
-    @PostMapping(path = "/demande-asf", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/demande", produces = MediaType.APPLICATION_JSON_VALUE)
     public Object demandeAsf(@RequestBody Map<String, String> params) {
         List<BasicNameValuePair> formData = new ArrayList<>();
         formData.add(new BasicNameValuePair("form[ifu]", params.get("ifu")));
@@ -78,7 +78,7 @@ import java.util.Map;
      * @param params
      * @return
      */
-    @PostMapping(path = "/telecharger-asf", produces = MediaType.APPLICATION_PDF_VALUE)
+    @PostMapping(path = "/telecharger", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]> telechargerAsf(@RequestBody Map<String, String> params) {
         List<BasicNameValuePair> formData = new ArrayList<>();
         formData.add(new BasicNameValuePair("form[ifu]", params.get("ifu")));
@@ -102,7 +102,7 @@ import java.util.Map;
      * @param params
      * @return
      */
-    @PostMapping(path = "/statut-asf", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/statut", produces = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, Object> statutAsf(@RequestBody Map<String, String> params) {
         List<BasicNameValuePair> formData = new ArrayList<>();
         formData.add(new BasicNameValuePair("form[ifu]", params.get("ifu")));
@@ -133,7 +133,7 @@ import java.util.Map;
      * @param params
      * @return
      */
-    @PostMapping(path = "/verifier-asf", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/verifier", produces = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, Object> verifierAsf(@RequestBody Map<String, String> params) {
         List<BasicNameValuePair> formData = new ArrayList<>();
         formData.add(new BasicNameValuePair("form[ifu]", params.get("ifu")));
@@ -149,7 +149,7 @@ import java.util.Map;
      * @param params
      * @return
      */
-    @PostMapping(path = "/details-asf", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/details", produces = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, Object> detailsAsf(@RequestBody Map<String, String> params) {
         List<BasicNameValuePair> formData = new ArrayList<>();
         formData.add(new BasicNameValuePair("form[ifu]", params.get("ifu")));
