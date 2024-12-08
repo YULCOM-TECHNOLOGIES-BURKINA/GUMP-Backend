@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+>
+
+  <changeSet id="010" author="claver">
+    <sql>
+      CREATE SEQUENCE debiteurs_seq
+        INCREMENT BY 1
+        START WITH 1
+        NO MINVALUE
+        NO MAXVALUE
+        CACHE 1;
+
+      CREATE TABLE debiteurs (
+             id BIGINT DEFAULT nextval('debiteurs_seq') PRIMARY KEY,
+             debiteur VARCHAR(255),
+             promoteur VARCHAR(255),
+             numero_ifu VARCHAR(50),
+             numero_immatriculation VARCHAR(50),
+             registre_commerce VARCHAR(50),
+             contacts VARCHAR(100),
+             date_naissance VARCHAR(20),
+             numero_cnib VARCHAR(50),
+             numero_cheque VARCHAR(50),
+             montant_du DECIMAL(15,2),
+             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+             CONSTRAINT idx_debiteur_ifu UNIQUE (numero_ifu),
+             CONSTRAINT idx_debiteur_cnib UNIQUE (numero_cnib)
+      );
+    </sql>
+  </changeSet>
+</databaseChangeLog>

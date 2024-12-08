@@ -80,10 +80,6 @@ public class DocumentRequest {
 
     @Column(name = "rejection_reason")
     private String rejectionReason;
-
-    @Column(name = "public_contract_number")
-    private String public_contract_number;
-
     public boolean isApproved() {
         return status.equals(DocumentRequestStatus.APPROVED.toString());
     }
