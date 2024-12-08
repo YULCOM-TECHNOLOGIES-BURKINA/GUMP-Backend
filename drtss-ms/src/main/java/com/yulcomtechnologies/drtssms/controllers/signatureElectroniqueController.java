@@ -1,6 +1,7 @@
 package com.yulcomtechnologies.drtssms.controllers;
 
 import com.itextpdf.io.IOException;
+import com.yulcomtechnologies.drtssms.dtos.DocumentRequestDto;
 import com.yulcomtechnologies.drtssms.dtos.FileDto;
 import com.yulcomtechnologies.drtssms.entities.SignatureScanner;
 import com.yulcomtechnologies.drtssms.services.SignatureDocumentService;
@@ -42,6 +43,13 @@ public class signatureElectroniqueController {
     @Autowired
     private SignatureDocumentService signatureDocumentService;
 
+
+
+    @GetMapping("signataire/{email}")
+    public ResponseEntity<SignatureScanner> getSignatoryByEmail(@PathVariable String email) {
+        var signaturory = signatureDocumentService.getSignatoryByEmail(email);
+        return ResponseEntity.ok(signaturory);
+    }
 
     /**
      * Creer un signataire ,personne pouvant signer
@@ -171,6 +179,21 @@ public class signatureElectroniqueController {
                 .body(resource);
     }
 
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    @PostMapping("toggle_status/{id}")
+    public ResponseEntity<SignatureScanner> toggleSignatoryStatus(@PathVariable Long id) {
+        try {
+            SignatureScanner updatedSignatory = signatureDocumentService.updateSignatoryStatus(id);
+            return ResponseEntity.ok(updatedSignatory);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
     /**
      * Conversion du fichier multipart en fichier
      *

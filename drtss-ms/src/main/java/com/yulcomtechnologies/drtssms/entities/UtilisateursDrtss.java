@@ -38,6 +38,25 @@ public class UtilisateursDrtss {
     @Column(name = "tel")
     private String tel;
 
+    @Column(name = "region",nullable = false)
+    private String region;
+
+    @Column(name = "role",nullable = false)
+    private String role;
+
+    @Column(name = "user_type",nullable = false)
+    private String userType;
+
+    @Column(name = "lastname",nullable = true)
+    private String lastname;
+
+    @Column(name = "username",nullable = false)
+    private String username;
+
+    @Column(name = "forename",nullable = false)
+    private String forename;
+
+
     @Column(name = "actif")
     private boolean actif = true;
 

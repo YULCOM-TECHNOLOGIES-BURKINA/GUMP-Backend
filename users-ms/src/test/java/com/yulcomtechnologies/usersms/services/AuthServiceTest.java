@@ -59,7 +59,8 @@ public class AuthServiceTest {
             "password",
             "password",
             "lupin.arsene@gmail.com",
-            "1234"
+            "1234",
+            "CENTRE"
         );
 
         var corporationData = new CorporationData(
@@ -99,6 +100,7 @@ public class AuthServiceTest {
               .role(UserRole.USER)
               .userType(UserType.USER)
               .isActive(false)
+              .region(registrationRequest.region)
               .cnssNumber(registrationRequest.cnssNumber)
               .email(registrationRequest.email)
               .username(registrationRequest.ifuNumber)

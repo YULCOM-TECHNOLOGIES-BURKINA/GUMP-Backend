@@ -12,4 +12,7 @@ public interface SignatureScannerRepository extends JpaRepository<SignatureScann
     @Query("from SignatureScanner s where s.utilisateur.id =:userId")
     Optional< SignatureScanner> findSignatureScannerByUserId(@Param("userId") Long userId);
 
+    @Query("from SignatureScanner s where s.utilisateur.email =:email")
+    Optional< SignatureScanner> getSignatoryByEmail(@Param("email") String email);
+
 }
