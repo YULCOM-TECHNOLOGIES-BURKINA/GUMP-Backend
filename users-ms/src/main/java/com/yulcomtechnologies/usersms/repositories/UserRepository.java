@@ -19,4 +19,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT u FROM User u WHERE u.username = :usernameOrSsoUserId OR u.keycloakUserId = :usernameOrSsoUserId")
     Optional<User> findByUsernameOrKeycloakUserId(String usernameOrSsoUserId);
+
+    Page<User> findAllByIsActiveFalse(Pageable pageable);
 }

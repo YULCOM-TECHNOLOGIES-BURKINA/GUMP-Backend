@@ -49,6 +49,13 @@ public class UsersController {
         return ResponseEntity.ok(userService.getUsers(pageable, userType));
     }
 
+    @GetMapping("inactive-users")
+    public ResponseEntity<Page<UserDto>> getInactiveUsers(
+        Pageable pageable
+    ) {
+        return ResponseEntity.ok(userService.getInactiveUsers(pageable));
+    }
+
     @GetMapping("users/{id}")
     public ResponseEntity<UserDto> getUser(
         @PathVariable Long id
