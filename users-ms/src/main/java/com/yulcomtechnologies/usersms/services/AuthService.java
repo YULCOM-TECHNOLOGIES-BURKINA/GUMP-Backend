@@ -32,7 +32,6 @@ public class AuthService {
             () -> new ResourceNotFoundException("User not found")
         );
 
-
         ssoProvider.activateUser(user.getKeycloakUserId());
         user.setIsActive(true);
         userRepository.save(user);

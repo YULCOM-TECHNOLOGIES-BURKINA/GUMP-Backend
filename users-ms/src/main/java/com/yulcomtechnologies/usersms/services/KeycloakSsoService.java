@@ -68,7 +68,7 @@ public class KeycloakSsoService implements SsoProvider {
 
 
         BeanUtils.copyProperties(createUserCommand, keycloakRegisterDto);
-        keycloakRegisterDto.enabled = true;
+        keycloakRegisterDto.enabled = createUserCommand.enabled();
         keycloakRegisterDto.emailVerified = true;
         keycloakRegisterDto.credentials.add(
           Map.of(

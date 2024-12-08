@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AuthControllerTest extends BaseIntegrationTest {
     @Autowired CompanyRepository companyRepository;
 
-    @MockBean
+    //@MockBean
     SsoProvider ssoProvider;
 
     @Autowired
@@ -29,7 +29,7 @@ public class AuthControllerTest extends BaseIntegrationTest {
 
     @Test
     void registersSuccessfully() throws Exception {
-       when(ssoProvider.createUser(any())).thenReturn("12345678");
+       //when(ssoProvider.createUser(any())).thenReturn("12345678");
 
         mockMvc
             .perform(

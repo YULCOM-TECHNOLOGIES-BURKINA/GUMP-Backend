@@ -8,11 +8,13 @@ import com.yulcomtechnologies.drtssms.entities.DocumentRequest;
 import com.yulcomtechnologies.drtssms.entities.File;
 import com.yulcomtechnologies.drtssms.enums.DocumentRequestStatus;
 import com.yulcomtechnologies.drtssms.events.DocumentRequestChanged;
+import com.yulcomtechnologies.drtssms.feignClients.UsersFeignClient;
 import com.yulcomtechnologies.drtssms.mappers.DocumentRequestMapper;
 import com.yulcomtechnologies.drtssms.repositories.ApplicationConfigRepository;
 import com.yulcomtechnologies.drtssms.repositories.DocumentRequestRepository;
 import com.yulcomtechnologies.drtssms.repositories.FileRepository;
 import com.yulcomtechnologies.sharedlibrary.auth.AuthenticatedUserService;
+import com.yulcomtechnologies.sharedlibrary.enums.UserRole;
 import com.yulcomtechnologies.sharedlibrary.events.EventPublisher;
 import com.yulcomtechnologies.sharedlibrary.exceptions.BadRequestException;
 import com.yulcomtechnologies.sharedlibrary.exceptions.ResourceNotFoundException;
@@ -45,6 +47,7 @@ public class DocumentRequestService {
     private final EventPublisher eventPublisher;
     private final ApplicationConfigRepository applicationConfigRepository;
     private final AuthenticatedUserService authenticatedUserService;
+    private final UsersFeignClient usersFeignClient;
 
     public DocumentRequest submitDocumentRequest(MultipartFile attestationCnss, MultipartFile attestationAnpe, String publicContractNumber, Boolean isForPublicContract) throws IOException {
         File cnssAttestation = saveFile(attestationCnss, "Attestation CNSS");
@@ -80,8 +83,36 @@ public class DocumentRequestService {
 
     public Page<DocumentRequestDto> getPaginatedDocumentRequests(Pageable pageable) {
         var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
+        var role = UserRole.valueOf(currentUser.getRole());
+        var userData = usersFeignClient.getUsernameOrKeycloakId(currentUser.getKeycloakUserId());
 
-        System.out.println(currentUser);
+        if (role == UserRole.ADMIN) {
+            return documentRequestRepository.findAll(pageable).map(
+                documentRequest -> documentRequestMapper.toDto(
+                    documentRequest,
+                    applicationConfigRepository.get()
+                )
+            );
+        }
+
+        if (role == UserRole.USER) {
+            return documentRequestRepository.findAllByRequesterId(currentUser.getKeycloakUserId(), pageable).map(
+                documentRequest -> documentRequestMapper.toDto(
+                    documentRequest,
+                    applicationConfigRepository.get()
+                )
+            );
+        }
+
+        if (role == UserRole.DRTSS_AGENT || role == UserRole.DRTSS_REGIONAL_MANAGER) {
+            return documentRequestRepository.findAllByRegion(userData.getRegion(), pageable).map(
+                documentRequest -> documentRequestMapper.toDto(
+                    documentRequest,
+                    applicationConfigRepository.get()
+                )
+            );
+        }
+
         return documentRequestRepository.findAll(pageable).map(
             documentRequest -> documentRequestMapper.toDto(
                 documentRequest,

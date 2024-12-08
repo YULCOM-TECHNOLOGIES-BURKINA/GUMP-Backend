@@ -22,7 +22,6 @@ public class UserExtractionFilter implements GlobalFilter {
 
         // Extract token from the Authorization header
         String authHeader = request.getHeaders().getFirst("Authorization");
-        System.out.println("authHeader: " + authHeader);
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
 
