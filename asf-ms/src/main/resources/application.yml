@@ -1,0 +1,30 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/gump-ms-asf-db
+    username: postgres
+    password: mandson1er
+
+  application:
+    name: asf-ms
+  config:
+    import: optional:configserver:http://localhost:8888
+
+  cloud:
+    compatibility-verifier:
+      enabled: false
+keycloak:
+  auth-server-url: https://sso.kulturman.com
+  realm: gump
+
+eureka:
+  client:
+    enabled: false
+server:
+  port: 8082
+  servlet:
+    context-path: /api
+
+app:
+  url: http://localhost:8082/api
+
