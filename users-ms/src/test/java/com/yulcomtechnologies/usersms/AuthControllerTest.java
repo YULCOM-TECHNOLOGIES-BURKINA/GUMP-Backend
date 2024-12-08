@@ -44,7 +44,8 @@ public class AuthControllerTest extends BaseIntegrationTest {
                             "12345678",
                             "12345678",
                             "12345678",
-                            "arnaud.bakyono@gmail.com"
+                            "arnaud.bakyono@gmail.com",
+                            "CENTRE"
                         )))
                     )
             )
