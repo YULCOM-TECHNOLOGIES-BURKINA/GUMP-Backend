@@ -3,44 +3,21 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-  <!-- ChangeSet: Création de la table "document_requests" -->
   <changeSet id="001" author="mandson">
-    <createTable tableName="document_requests">
-      <column name="id" type="BIGINT" autoIncrement="true">
-        <constraints primaryKey="true" nullable="false" />
-      </column>
-
-      <column name="statut_demande" type="VARCHAR(255)">
-        <constraints nullable="true" />
-      </column>
-
-      <column name="date_demande" type="TIMESTAMP">
-        <constraints nullable="false" />
-        <defaultValueComputed value="CURRENT_TIMESTAMP" />
-      </column>
-
-      <column name="date_delivrance" type="VARCHAR(255)">
-        <constraints nullable="true" />
-      </column>
-
-      <column name="ifu" type="VARCHAR(255)">
-        <constraints nullable="true" />
-      </column>
-
-      <column name="nes" type="VARCHAR(255)">
-        <constraints nullable="true" />
-      </column>
-
-      <column name="raison_sociale" type="VARCHAR(255)">
-        <constraints nullable="true" />
-      </column>
-
-      <column name="reference" type="VARCHAR(255)">
-        <constraints nullable="true" />
-      </column>
-    </createTable>
+    <sql>
+      CREATE TABLE "document_requests" (
+                                         "id" SERIAL PRIMARY KEY,
+                                         "statut_demande" VARCHAR(255),
+                                         "date_demande" TIMESTAMP NOT NULL,
+                                         "date_delivrance" VARCHAR(255),
+                                         "ifu" VARCHAR(255),
+                                         "nes" VARCHAR(255),
+                                         "raison_sociale" VARCHAR(255),
+                                         "reference" VARCHAR(255)
+      );
+    </sql>
   </changeSet>
 
 </databaseChangeLog>

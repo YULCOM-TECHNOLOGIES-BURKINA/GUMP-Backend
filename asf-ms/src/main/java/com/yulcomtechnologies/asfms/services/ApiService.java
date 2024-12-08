@@ -41,7 +41,6 @@ public class ApiService {
      * @throws Exception
      */
     private CloseableHttpClient createHttpClientWithDisabledSSL() throws Exception {
-        // Configurer SSL pour accepter tous les certificats
         TrustStrategy acceptingTrustStrategy = (certChain, authType) -> true;
         SSLContext sslContext = SSLContextBuilder.create()
                 .loadTrustMaterial(null, acceptingTrustStrategy)

@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog
-  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
->
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-  <changeSet id="001" author="mandson">
-    <sql>
+    <changeSet id="001" author="mandson">
+        <sql>
+            CREATE TABLE "document_requests" (
+                                                 "id" SERIAL PRIMARY KEY,
+                                                 "statut_demande" VARCHAR(255),
+                                                 "date_demande" TIMESTAMP NOT NULL,
+                                                 "date_delivrance" VARCHAR(255),
+                                                 "ifu" VARCHAR(255),
+                                                 "nes" VARCHAR(255),
+                                                 "raison_sociale" VARCHAR(255),
+                                                 "reference" VARCHAR(255)
+            );
+        </sql>
+    </changeSet>
 
-      CREATE TABLE "document_requests" (
-         "id" SERIAL PRIMARY KEY,
-         "requester_id" VARCHAR(255) NOT NULL,  -- Keycloak user ID of the requester
-         "status" VARCHAR(50) DEFAULT 'PENDING',
-         "reviewed_by" VARCHAR(255),
-         "approved_by" VARCHAR(255),
-         "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-         "generated_document_id" INTEGER,
-         FOREIGN KEY ("generated_document_id") REFERENCES "files" ("id")
-      );
-
-    </sql>
-  </changeSet>
 </databaseChangeLog>
