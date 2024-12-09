@@ -24,7 +24,7 @@ public class DocumentRequestController {
     public ResponseEntity<CreatedResource> submitDocumentRequest(
         @RequestBody @Validated DocumentRequestDto documentRequestDto,
         @RequestParam(value = "publicContractNumber", required = false) String publicContractNumber,
-        @RequestParam(value = "isForPublicContract", required = false, defaultValue = "false") Boolean isForPublicContract
+        @RequestParam(value = "isForPublicContract", required = false, defaultValue = "true") Boolean isForPublicContract
     ) {
 
         DocumentRequest documentRequest = documentRequestService.submitDocumentRequest(documentRequestDto, isForPublicContract);

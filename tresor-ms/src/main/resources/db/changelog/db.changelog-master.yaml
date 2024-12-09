@@ -13,3 +13,6 @@ databaseChangeLog:
 
   - include:
       file: db/changelog/v1/005-add-is_for_public_contract-column.xml
+
+  - include:
+      file: db/changelog/v1/006-add-debiteurs-table-column.xml

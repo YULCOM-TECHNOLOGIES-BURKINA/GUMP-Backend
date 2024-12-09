@@ -49,14 +49,25 @@ public class DocumentRequestService {
     private final AuthenticatedUserService authenticatedUserService;
     private final UsersFeignClient usersFeignClient;
 
-    public DocumentRequest submitDocumentRequest(MultipartFile attestationCnss, MultipartFile attestationAnpe, String publicContractNumber, Boolean isForPublicContract) throws IOException {
+    public DocumentRequest submitDocumentRequest(
+        MultipartFile attestationCnss, MultipartFile attestationAnpe,
+        String publicContractNumber, Boolean isForPublicContract,
+        String contractPurpose, String contractingOrganizationName
+    ) throws IOException {
         File cnssAttestation = saveFile(attestationCnss, "Attestation CNSS");
         File anpeAttestation = saveFile(attestationAnpe, "Attestation ANPE");
         var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
+        log.info("currentUser: {}", currentUser);
+        var userData = usersFeignClient.getUsernameOrKeycloakId(currentUser.getKeycloakUserId());
+        log.info("userData: {}", userData);
+
 
         var documentRequest = DocumentRequest.builder()
             .requesterId(currentUser.getKeycloakUserId())
             .isPaid(false)
+            .contractPurpose(contractPurpose)
+            .contractingOrganizationName(contractingOrganizationName)
+            .region(userData.getRegion())
             .isForPublicContract(isForPublicContract)
             .createdAt(LocalDateTime.now())
             .publicContractNumber(publicContractNumber)
@@ -83,9 +94,10 @@ public class DocumentRequestService {
 
     public Page<DocumentRequestDto> getPaginatedDocumentRequests(Pageable pageable) {
         var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
-        System.out.println(currentUser);
         var role = UserRole.valueOf(currentUser.getRole());
         var userData = usersFeignClient.getUsernameOrKeycloakId(currentUser.getKeycloakUserId());
+
+        log.info("Role: {}", role);
 
         if (role == UserRole.ADMIN) {
             return documentRequestRepository.findAll(pageable).map(

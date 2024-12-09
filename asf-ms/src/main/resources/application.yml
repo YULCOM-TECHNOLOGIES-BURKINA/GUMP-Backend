@@ -1,0 +1,39 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5428/gump
+    username: gump
+    password: gump
+
+  application:
+    name: asf-ms
+  config:
+    import: optional:configserver:http://localhost:8888
+
+  cloud:
+    compatibility-verifier:
+      enabled: false
+
+  liquibase:
+    enabled: true
+    change-log: classpath:changelog/db.changelog-master.yaml
+
+  security:
+    enabled: false
+
+keycloak:
+  auth-server-url: https://sso.kulturman.com
+  realm: gump
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+server:
+  port: 8083
+  servlet:
+    context-path: /api
+
+app:
+  url: http://localhost:8083/api
+

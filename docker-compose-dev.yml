@@ -4,6 +4,7 @@ services:
     container_name: gump-drtss-backend
     volumes:
       - ./uploads:/uploads
+      - ./attestations:/attestations
     depends_on:
       - drtss-database
       - eureka-server
@@ -53,6 +54,23 @@ services:
         - SPRING_DATASOURCE_URL=jdbc:postgresql://justice-database:5432/gump
         - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
 
+  asf:
+      image: ghcr.io/yulcom-technologies-burkina/gump-asf-ms:$COMMIT_SHA
+      container_name: gump-asf-backend
+      volumes:
+        - ./uploads:/uploads
+      restart: on-failure
+      depends_on:
+        - eureka-server
+        - asf-database
+      networks:
+        - gump-network
+      ports:
+        - 8083:8083
+      environment:
+        - SPRING_DATASOURCE_URL=jdbc:postgresql://asf-database:5432/gump
+        - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+
   users:
     image: ghcr.io/yulcom-technologies-burkina/gump-users-ms:$COMMIT_SHA
     container_name: gump-users-backend
@@ -74,6 +92,7 @@ services:
     container_name: gump-tresor-backend
     volumes:
       - ./uploads:/uploads
+      - ./attestations:/attestations
     depends_on:
       - tresor-database
       - eureka-server
@@ -139,6 +158,24 @@ services:
       retries: 10
     ports:
       - 5437:5432
+
+  asf-database:
+    image: postgres:16.4
+    networks:
+      - gump-network
+    volumes:
+      - asf-data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=gump
+      - POSTGRES_PASSWORD=gump
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - 5428:5432
 
   tresor-database:
     image: postgres:16.4
@@ -243,6 +280,7 @@ services:
       #- KEYCLOAK_AUTH_SERVER_URL=http://keycloak:9080
       - KEYCLOAK_REALM=gump
       - TRESOR_MS_URI=http://tresor:8080
+      - ASF_MS_URI=http://tresor:8084
       - DRTSS_MS_URI=http://drtss:8082
       - JUSTICE_MS_URI=http://justice:8085
       - USERS_MS_URI=http://users:8081
@@ -255,6 +293,7 @@ volumes:
   keycloak_data:
   keycloak-db-data:
   justice-data:
+  asf-data:
 
 networks:
   gump-network:

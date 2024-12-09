@@ -73,7 +73,7 @@ class DocumentRequestControllerTest extends BaseIntegrationTest {
         );
 
 
-        when(usersFeignClient.getUser(any()))
+        when(usersFeignClient.getUsernameOrKeycloakId(any()))
             .thenReturn(UserDto.builder().company(
                 new CompanyDto(
                     "Yulcom",

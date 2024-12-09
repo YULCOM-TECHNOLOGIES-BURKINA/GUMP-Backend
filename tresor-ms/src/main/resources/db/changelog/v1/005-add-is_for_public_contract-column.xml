@@ -10,7 +10,7 @@
     <sql>
       ALTER TABLE "document_requests" ADD COLUMN is_for_public_contract BOOLEAN DEFAULT FALSE;
       UPDATE "document_requests" SET is_for_public_contract = TRUE WHERE is_for_public_contract IS NULL;
-      ALTER TABLE "document_requests" ALTER COLUMN "public_contract_number" NULL;
+      ALTER TABLE "document_requests" ALTER COLUMN "public_contract_number" SET DEFAULT NULL;
     </sql>
   </changeSet>
 </databaseChangeLog>

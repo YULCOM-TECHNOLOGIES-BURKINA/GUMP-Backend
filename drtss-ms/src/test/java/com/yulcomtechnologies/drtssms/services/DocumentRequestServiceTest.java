@@ -12,6 +12,8 @@ import com.yulcomtechnologies.drtssms.feignClients.UsersFeignClient;
 import com.yulcomtechnologies.drtssms.repositories.ApplicationConfigRepository;
 import com.yulcomtechnologies.drtssms.repositories.AttestationRepository;
 import com.yulcomtechnologies.drtssms.repositories.DocumentRequestRepository;
+import com.yulcomtechnologies.sharedlibrary.auth.AuthenticatedUserData;
+import com.yulcomtechnologies.sharedlibrary.auth.AuthenticatedUserService;
 import com.yulcomtechnologies.sharedlibrary.events.EventPublisher;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Disabled;
@@ -22,6 +24,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -52,20 +55,29 @@ public class DocumentRequestServiceTest extends BaseIntegrationTest {
 
     DocumentRequest documentRequest;
 
+    @MockBean
+    AuthenticatedUserService authenticatedUserService;
+
 
     @Test
     @Transactional
     void approvesDocumentSuccessfully() throws IOException {
+        when(authenticatedUserService.getAuthenticatedUserData()).thenReturn(
+            Optional.of(new AuthenticatedUserData("kman", "ROLE", "1"))
+        );
+
         documentRequest = DocumentRequest.builder()
             .isPaid(true)
             .createdAt(LocalDateTime.now())
             .requesterId("1")
             .publicContractNumber("1234")
+            .isForPublicContract(true)
+            .region("CENTRE")
             .status(DocumentRequestStatus.PROCESSING.name()).build();
 
         documentRequestRepository.save(documentRequest);
 
-        when(usersFeignClient.getUser(documentRequest.getId().toString())).thenReturn(
+        when(usersFeignClient.getUsernameOrKeycloakId(documentRequest.getId().toString())).thenReturn(
             UserDto.builder()
                 .id(1L)
                 .email("test@gmail.com")

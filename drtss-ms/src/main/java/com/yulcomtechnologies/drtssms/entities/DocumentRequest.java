@@ -24,6 +24,12 @@ public class DocumentRequest {
 
     private String region;
 
+    @Column(name = "contract_purpose", nullable = true)
+    private String contractPurpose;
+
+    @Column(name = "contracting_organization_name", nullable = true)
+    private String contractingOrganizationName;
+
     @Column(name = "requester_id", nullable = false)
     private String requesterId;  // Keycloak user ID of the requester
 

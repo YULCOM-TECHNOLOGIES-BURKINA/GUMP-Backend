@@ -1,5 +1,6 @@
 package com.yulcomtechnologies.drtssms.dtos;
 
+import jakarta.persistence.Column;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -21,4 +22,6 @@ public class DocumentRequestDto {
     private Boolean isPastDue;
     private CompanyDto company;
     private Boolean isForPublicContract;
+    private String contractPurpose;
+    private String contractingOrganizationName;
 }
