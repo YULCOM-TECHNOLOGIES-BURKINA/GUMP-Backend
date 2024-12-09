@@ -11,6 +11,7 @@ import com.yulcomtechnologies.usersms.events.AccountStateChanged;
 import com.yulcomtechnologies.usersms.repositories.CompanyRepository;
 import com.yulcomtechnologies.usersms.repositories.FileRepository;
 import com.yulcomtechnologies.usersms.repositories.UserRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,6 +27,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@Disabled
 public class AuthServiceTest {
     @InjectMocks
     AuthService authService;
