@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/gump-ms-drtps-db
-    username: postgres
-    password: mandson1er
+    url: jdbc:postgresql://localhost:5432/gump
+    username: gump
+    password: gump
   servlet:
     multipart:
       max-file-size: 10MB

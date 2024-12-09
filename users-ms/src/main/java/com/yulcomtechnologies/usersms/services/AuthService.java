@@ -124,18 +124,6 @@ public class AuthService {
             () -> new ResourceNotFoundException("User not found")
         );
 
-        var company = user.getCompany();
-        companyRepository.delete(company);
-        userRepository.delete(user);
-
-        if (company.getEnterpriseStatut() != null) {
-            fileRepository.delete(company.getEnterpriseStatut());
-        }
-
-        if (company.getIdDocument() != null) {
-            fileRepository.delete(company.getIdDocument());
-        }
-
         eventPublisher.dispatch(new AccountStateChanged(user.getId()));
     }
 
