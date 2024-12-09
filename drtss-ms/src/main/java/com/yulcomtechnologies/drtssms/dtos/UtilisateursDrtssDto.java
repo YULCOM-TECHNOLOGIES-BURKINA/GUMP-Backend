@@ -1,6 +1,7 @@
 package com.yulcomtechnologies.drtssms.dtos;
 
 import com.yulcomtechnologies.drtssms.entities.UtilisateursDrtss;
+import jakarta.persistence.Column;
 import lombok.*;
 
 import java.time.Instant;
@@ -27,6 +28,19 @@ public class UtilisateursDrtssDto {
 
     private String tel;
 
+    private String region;
+
+    private String role;
+
+    private String userType;
+
+    private String lastname;
+
+    private String username;
+
+    private String forename;
+
+
     private boolean actif;
 
     public static UtilisateursDrtssDto toDTO(UtilisateursDrtss utilisateursDrtss){
@@ -40,6 +54,12 @@ public class UtilisateursDrtssDto {
                         .tel(s.getTel())
                         .actif(s.isActif())
                         .titre_honorifique(s.getTitre_honorifique())
+                        .region(s.getRegion())
+                        .role(s.getRole())
+                        .lastname(s.getLastname())
+                        .forename(s.getForename())
+                        .userType(s.getUserType())
+                        .username(s.getUsername())
                         .build()
                 )
                 .orElse(null);
@@ -57,7 +77,14 @@ public class UtilisateursDrtssDto {
                     utilisateurs.setMatricule(dto.getMatricule());
                     utilisateurs.setTitre_honorifique(dto.getTitre_honorifique());
                     utilisateurs.setTel(dto.getTel());
+                    utilisateurs.setRegion(dto.getRegion());
+                    utilisateurs.setUsername(dto.getUsername());
+                    utilisateurs.setLastname(dto.getLastname());
+                    utilisateurs.setForename(dto.getForename());
+                    utilisateurs.setUserType(dto.getUserType());
+                    utilisateurs.setRole(dto.getRole());
                     utilisateurs.setActif(dto.isActif());
+
                     return utilisateurs;
                 })
                 .orElse(null);

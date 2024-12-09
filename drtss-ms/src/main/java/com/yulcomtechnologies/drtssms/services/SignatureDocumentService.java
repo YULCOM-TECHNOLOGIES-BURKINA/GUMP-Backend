@@ -58,6 +58,29 @@ public class SignatureDocumentService {
         return signatureScannerRepository.findAll(pageable);
     }
 
+    /**
+     *
+     * @param email
+     * @return
+     */
+    public SignatureScanner getSignatoryByEmail(String email){
+        return signatureScannerRepository.getSignatoryByEmail(email).get();
+    }
+
+    /**
+     * Active / desactive signataire
+     * @param id
+     * @return
+     */
+    public SignatureScanner updateSignatoryStatus(Long id) {
+         SignatureScanner signatory = signatureScannerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Signatory with ID " + id + " not found"));
+
+         signatory.getSignatureCertificat().setActif(!signatory.getSignatureCertificat().isActif());
+
+         return signatureScannerRepository.save(signatory);
+    }
+
 
     /**
      * @param file
@@ -266,6 +289,7 @@ public class SignatureDocumentService {
              return null;
         }
     }
+
 
 }
 
