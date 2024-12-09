@@ -77,3 +77,11 @@ spring:
           filters:
             - StripPrefix=1
             - PrefixPath=/api
+
+        - id: asf-ms
+          uri: ${ASF_MS_URI:http://localhost:8084}
+          predicates:
+            - Query=service, asf-ms
+          filters:
+            - StripPrefix=1
+            - PrefixPath=/api
