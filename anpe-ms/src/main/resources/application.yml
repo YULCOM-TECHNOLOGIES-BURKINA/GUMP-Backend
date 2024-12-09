@@ -1,12 +1,12 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/gump-ms-asf-db
+    url: jdbc:postgresql://localhost:5432/gump-ms-anpe-db
     username: postgres
     password: mandson1er
 
   application:
-    name: asf-ms
+    name: anpe-ms
   config:
     import: optional:configserver:http://localhost:8888
 
@@ -30,7 +30,7 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka/
 server:
-  port: 8083
+  port: 8084
   servlet:
     context-path: /api
 
