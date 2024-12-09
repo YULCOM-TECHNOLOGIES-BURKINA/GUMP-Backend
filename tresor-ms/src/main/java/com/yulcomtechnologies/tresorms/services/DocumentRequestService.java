@@ -24,7 +24,7 @@ public class DocumentRequestService {
     public DocumentRequest submitDocumentRequest(DocumentRequestDto documentRequestDto, Boolean isForPublicContract) {
         var documentRequest = new DocumentRequest();
         BeanUtils.copyProperties(documentRequestDto, documentRequest);
-        documentRequest.setIsForPublicContract(isForPublicContract);
+        documentRequest.setIsForPublicContract(true);
         documentRequest.setStatus(DocumentRequestStatus.PENDING.toString());
 
         return repository.save(documentRequest);
