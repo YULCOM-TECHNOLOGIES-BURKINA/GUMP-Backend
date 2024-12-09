@@ -140,7 +140,7 @@ import java.util.Map;
      * @return
      */
     @PostMapping(path = "/details", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, Object> detailsAsf(@RequestBody AsfControlResquestDto params) {
+    public Map<String, Object> detailsAsf(@RequestBody AsfResquestDto params) {
         List<BasicNameValuePair> formData = new ArrayList<>();
         formData.add(new BasicNameValuePair("form[ifu]", params.getIfu()));
         formData.add(new BasicNameValuePair("form[nes]", params.getNes()));
