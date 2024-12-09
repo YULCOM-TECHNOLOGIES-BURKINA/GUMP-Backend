@@ -2,6 +2,9 @@ package com.yulcomtechnologies.asfms.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yulcomtechnologies.asfms.dtos.AsfControlResquestDto;
+import com.yulcomtechnologies.asfms.dtos.AsfDmResquestDto;
+import com.yulcomtechnologies.asfms.dtos.AsfResquestDto;
 import com.yulcomtechnologies.asfms.dtos.DocumentRequestDto;
 import com.yulcomtechnologies.asfms.enums.AuthRequestValue;
 import com.yulcomtechnologies.asfms.services.ApiService;
@@ -30,16 +33,6 @@ import java.util.Map;
     private  String e_sintax_url= AuthRequestValue.E_SINTAXE.getValue();
 
 
-    /**
-     * DocumentRequest
-     * @param id
-     * @return
-     */
-    @GetMapping(path = "/demandes/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public DocumentRequestDto getAsf(@PathVariable Long id) {
-        return asfService.findById(id);
-    }
-
 
     /**
      * Faire  Demande d'ASF
@@ -47,10 +40,10 @@ import java.util.Map;
      * @return
      */
     @PostMapping(path = "/demandes", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object demandeAsf(@RequestBody Map<String, String> params) {
+    public Object demandeAsf(@RequestBody AsfDmResquestDto params) {
         List<BasicNameValuePair> formData = new ArrayList<>();
-        formData.add(new BasicNameValuePair("form[ifu]", params.get("ifu")));
-        formData.add(new BasicNameValuePair("form[nes]", params.get("nes")));
+        formData.add(new BasicNameValuePair("form[ifu]", params.getIfu()));
+        formData.add(new BasicNameValuePair("form[nes]", params.getNes()));
         String url = e_sintax_url+"rest/asf/demande";
 
 
@@ -61,7 +54,7 @@ import java.util.Map;
             JsonNode rootNode = objectMapper.readTree(jsonResult);
 
             String reference = rootNode.get("data").get("items").get("resultat").get("reference").asText();
-            asfService.sync_request_on_local(params.get("ifu"), params.get("nes"), reference);
+            asfService.sync_request_on_local(params.getIfu(), params.getNes(), reference);
 
             return jsonResult;
         } catch (Exception e) {
@@ -76,11 +69,11 @@ import java.util.Map;
      * @return
      */
     @PostMapping(path = "/telecharger", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<byte[]> telechargerAsf(@RequestBody Map<String, String> params) {
+    public ResponseEntity<byte[]> telechargerAsf(@RequestBody AsfResquestDto params) {
         List<BasicNameValuePair> formData = new ArrayList<>();
-        formData.add(new BasicNameValuePair("form[ifu]", params.get("ifu")));
-        formData.add(new BasicNameValuePair("form[nes]", params.get("nes")));
-        formData.add(new BasicNameValuePair("form[reference]", params.get("reference")));
+        formData.add(new BasicNameValuePair("form[ifu]", params.getIfu()));
+        formData.add(new BasicNameValuePair("form[nes]", params.getNes()));
+        formData.add(new BasicNameValuePair("form[reference]", params.getReference()));
 
         String url = e_sintax_url+"rest/asf/docs";
         byte[] pdfData = apiService.callApiForPdf(url, formData);
@@ -100,11 +93,11 @@ import java.util.Map;
      * @return
      */
     @PostMapping(path = "/statut", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, Object> statutAsf(@RequestBody Map<String, String> params) {
+    public Map<String, Object> statutAsf(@RequestBody AsfResquestDto params) {
         List<BasicNameValuePair> formData = new ArrayList<>();
-        formData.add(new BasicNameValuePair("form[ifu]", params.get("ifu")));
-        formData.add(new BasicNameValuePair("form[nes]", params.get("nes")));
-        formData.add(new BasicNameValuePair("form[reference]", params.get("reference")));
+        formData.add(new BasicNameValuePair("form[ifu]", params.getIfu()));
+        formData.add(new BasicNameValuePair("form[nes]", params.getNes()));
+        formData.add(new BasicNameValuePair("form[reference]", params.getReference()));
 
         String url =  e_sintax_url+"rest/asf/statut";
         return apiService.callApi(url, formData);
@@ -115,11 +108,11 @@ import java.util.Map;
      * @param params
      * @return
      */
-    @GetMapping(path = "/demandes", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, Object> historiqueDemandes(@RequestBody Map<String, String> params) {
+    @PostMapping(path = "/historique", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> historiqueDemandes(@RequestBody AsfResquestDto params) {
         List<BasicNameValuePair> formData = new ArrayList<>();
-        formData.add(new BasicNameValuePair("form[ifu]", params.get("ifu")));
-        formData.add(new BasicNameValuePair("form[nes]", params.get("nes")));
+        formData.add(new BasicNameValuePair("form[ifu]", params.getIfu()));
+        formData.add(new BasicNameValuePair("form[nes]", params.getNes()));
 
         String url =  e_sintax_url+"rest/asf/historique";
         return apiService.callApi(url, formData);
@@ -131,11 +124,11 @@ import java.util.Map;
      * @return
      */
     @PostMapping(path = "/verifier", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, Object> verifierAsf(@RequestBody Map<String, String> params) {
+    public Map<String, Object> verifierAsf(@RequestBody AsfControlResquestDto params) {
         List<BasicNameValuePair> formData = new ArrayList<>();
-        formData.add(new BasicNameValuePair("form[ifu]", params.get("ifu")));
-        formData.add(new BasicNameValuePair("form[nes]", params.get("nes")));
-        formData.add(new BasicNameValuePair("form[attestation]", params.get("attestation")));
+        formData.add(new BasicNameValuePair("form[ifu]", params.getIfu()));
+        formData.add(new BasicNameValuePair("form[nes]", params.getNes()));
+        formData.add(new BasicNameValuePair("form[attestation]", params.getAttestation()));
 
         String url =  e_sintax_url+"rest/asf/verifdocs";
         return apiService.callApi(url, formData);
@@ -147,11 +140,11 @@ import java.util.Map;
      * @return
      */
     @PostMapping(path = "/details", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, Object> detailsAsf(@RequestBody Map<String, String> params) {
+    public Map<String, Object> detailsAsf(@RequestBody AsfControlResquestDto params) {
         List<BasicNameValuePair> formData = new ArrayList<>();
-        formData.add(new BasicNameValuePair("form[ifu]", params.get("ifu")));
-        formData.add(new BasicNameValuePair("form[nes]", params.get("nes")));
-        formData.add(new BasicNameValuePair("form[reference]", params.get("reference")));
+        formData.add(new BasicNameValuePair("form[ifu]", params.getIfu()));
+        formData.add(new BasicNameValuePair("form[nes]", params.getNes()));
+        formData.add(new BasicNameValuePair("form[reference]", params.getReference()));
 
         String url =  e_sintax_url+"rest/asf/details";
         return apiService.callApi(url, formData);
