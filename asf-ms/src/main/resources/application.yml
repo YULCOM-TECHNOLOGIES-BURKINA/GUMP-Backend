@@ -30,10 +30,10 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka/
 server:
-  port: 8084
+  port: 8083
   servlet:
     context-path: /api
 
 app:
-  url: http://localhost:8084/api
+  url: http://localhost:8083/api
 
