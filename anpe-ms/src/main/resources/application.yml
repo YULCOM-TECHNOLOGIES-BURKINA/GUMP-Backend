@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/gump-ms-anpe-db
-    username: postgres
-    password: mandson1er
+    url: jdbc:postgresql://localhost:5440/gump
+    username: gump
+    password: gump
 
   application:
     name: anpe-ms
