@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/gump-ms-asf-db
-    username: postgres
-    password: mandson1er
+    url: jdbc:postgresql://localhost:5428/gump
+    username: gump
+    password: gump
 
   application:
     name: asf-ms
