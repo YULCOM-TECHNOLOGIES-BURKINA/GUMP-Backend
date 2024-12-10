@@ -109,6 +109,7 @@ public class AuthService {
             .email(corporationData.email())
             .rccm(corporationData.rccmNumber())
             .ifu(registerRequest.getIfuNumber())
+            .nes(registerRequest.getNes())
             .name(corporationData.name())
             .enterpriseStatut(saveFile(statutFile, "Statut entreprise"))
             .idDocument(saveFile(cnibFile, "CNIB"))
@@ -123,18 +124,6 @@ public class AuthService {
         User user = userRepository.findById(userId).orElseThrow(
             () -> new ResourceNotFoundException("User not found")
         );
-
-        var company = user.getCompany();
-        companyRepository.delete(company);
-        userRepository.delete(user);
-
-        if (company.getEnterpriseStatut() != null) {
-            fileRepository.delete(company.getEnterpriseStatut());
-        }
-
-        if (company.getIdDocument() != null) {
-            fileRepository.delete(company.getIdDocument());
-        }
 
         eventPublisher.dispatch(new AccountStateChanged(user.getId()));
     }

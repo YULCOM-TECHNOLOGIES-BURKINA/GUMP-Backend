@@ -43,11 +43,15 @@ public class Company {
     @Column(name = "rccm")
     private String rccm;
 
-    public Company(String ifu, String name, String address, String email, String phone) {
+    @Column(name = "nes")
+    private String nes;
+
+    public Company(String ifu, String name, String address, String email, String phone,String nes) {
         this.ifu = ifu;
         this.name = name;
         this.address = address;
         this.email = email;
         this.phone = phone;
+        this.nes = nes;
     }
 }

@@ -2,6 +2,8 @@ package com.yulcomtechnologies.usersms.events;
 
 import com.yulcomtechnologies.sharedlibrary.exceptions.ResourceNotFoundException;
 import com.yulcomtechnologies.usersms.feignClients.NotificationFeignClient;
+import com.yulcomtechnologies.usersms.repositories.CompanyRepository;
+import com.yulcomtechnologies.usersms.repositories.FileRepository;
 import com.yulcomtechnologies.usersms.repositories.UserRepository;
 import com.yulcomtechnologies.usersms.services.SsoProvider;
 import lombok.AllArgsConstructor;
@@ -15,6 +17,9 @@ public class AccountStateChangedListener {
     private final NotificationFeignClient notificationFeignClient;
     private final UserRepository userRepository;
     private final SsoProvider ssoProvider;
+    private final CompanyRepository companyRepository;
+    private final FileRepository fileRepository;
+
 
     @EventListener
     @Async
@@ -41,6 +46,19 @@ public class AccountStateChangedListener {
                 "",
                 ""
             );
+
+            var company = user.getCompany();
+            companyRepository.delete(company);
+
+            userRepository.delete(user);
+
+            if (company.getEnterpriseStatut() != null) {
+                fileRepository.delete(company.getEnterpriseStatut());
+            }
+
+            if (company.getIdDocument() != null) {
+                fileRepository.delete(company.getIdDocument());
+            }
 
             ssoProvider.deleteUser(user.getKeycloakUserId());
         }

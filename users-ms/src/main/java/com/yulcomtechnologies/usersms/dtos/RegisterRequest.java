@@ -33,4 +33,8 @@ public class RegisterRequest {
     @NotNull
     @NotBlank
     public String region;
+
+    @NotNull
+    @NotBlank
+    public String nes;
 }

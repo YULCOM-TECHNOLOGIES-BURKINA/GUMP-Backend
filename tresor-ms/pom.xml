@@ -129,7 +129,13 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
+    <dependency>
+      <groupId>com.yulcomtechnologies</groupId>
+      <artifactId>shared-library</artifactId>
+      <version>0.0.15-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
