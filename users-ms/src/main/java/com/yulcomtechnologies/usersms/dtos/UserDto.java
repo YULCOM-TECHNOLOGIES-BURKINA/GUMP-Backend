@@ -2,6 +2,8 @@ package com.yulcomtechnologies.usersms.dtos;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 public class UserDto {
     private Long id;
@@ -19,5 +21,6 @@ public class UserDto {
     private String matricule;
     private String titre_honorifique;
     private String tel;
+    private LocalDateTime createdAt;
 
 }

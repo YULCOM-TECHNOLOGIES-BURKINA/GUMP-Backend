@@ -78,6 +78,13 @@ public class UsersController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("users/{id}/toggle")
+    public ResponseEntity<Void> toglleUserAccountState(
+            @PathVariable Long id
+    ) {
+        authService.toglleUserAccountState(id);
+        return ResponseEntity.ok().build();
+    }
     @PostMapping("users/{id}/reject")
     public ResponseEntity<Void> rejectPendingAccount(
         @PathVariable Long id
@@ -85,4 +92,14 @@ public class UsersController {
         authService.rejectAccountCreation(id);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("users/{id}/status/toggle")
+    public ResponseEntity<Void> toggleUserStatus(
+            @PathVariable Long id
+    ) {
+        authService.validatePendingUserAccount(id);
+        return ResponseEntity.ok().build();
+    }
+
+
 }
