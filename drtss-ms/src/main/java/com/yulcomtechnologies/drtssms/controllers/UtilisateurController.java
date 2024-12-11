@@ -1,7 +1,9 @@
 package com.yulcomtechnologies.drtssms.controllers;
 
+import com.yulcomtechnologies.drtssms.dtos.UserDto;
 import com.yulcomtechnologies.drtssms.dtos.UtilisateursDrtssDto;
 import com.yulcomtechnologies.drtssms.entities.UtilisateursDrtss;
+import com.yulcomtechnologies.drtssms.feignClients.UsersFeignClient;
 import com.yulcomtechnologies.drtssms.services.UtilisateurService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -20,6 +22,9 @@ public class UtilisateurController {
 
     @Autowired
     private UtilisateurService utilisateurService;
+
+    @Autowired
+    private UsersFeignClient usersFeignClient;
 
 
 
@@ -57,5 +62,10 @@ public class UtilisateurController {
     @PostMapping(path = "/update_status")
     public UtilisateursDrtss update_status(@RequestBody UtilisateursDrtssDto utilisateursDrtssDto){
         return utilisateurService.update_status(utilisateursDrtssDto.getId());
+    }
+
+    @GetMapping(path = "/users/{id}")
+    public UserDto userFeign(@PathVariable String id) {
+        return usersFeignClient.getUser(id);
     }
 }

@@ -5,6 +5,8 @@ import com.yulcomtechnologies.usersms.enums.UserType;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 
 @Entity
 @Table(name = "users")
@@ -53,6 +55,21 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "company_id", referencedColumnName = "id")
     private Company company;
+
+
+
+
+    @Column(name = "matricule",unique = true)
+    private String matricule;
+
+    @Column(name = "titre_honorifique")
+    private String titre_honorifique;
+
+    @Column(name = "tel")
+    private String tel;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt = LocalDateTime.now();
 }
 
 

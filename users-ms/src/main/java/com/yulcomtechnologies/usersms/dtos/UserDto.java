@@ -15,4 +15,9 @@ public class UserDto {
     private String username;
     private Boolean isActive;
     private CompanyDto company;
+
+    private String matricule;
+    private String titre_honorifique;
+    private String tel;
+
 }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+>
+
+  <changeSet id="005" author="mandson">
+    <sql>
+        ALTER TABLE "users"
+        ADD COLUMN "matricule" VARCHAR(255) UNIQUE,
+        ADD COLUMN "titre_honorifique" VARCHAR(255),
+        ADD COLUMN "tel" VARCHAR(20),
+        ADD COLUMN "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+    </sql>
+  </changeSet>
+</databaseChangeLog>

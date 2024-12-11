@@ -1,10 +1,12 @@
 package com.yulcomtechnologies.drtssms.services;
 
 
+import com.yulcomtechnologies.drtssms.dtos.UserDto;
 import com.yulcomtechnologies.drtssms.dtos.UtilisateursDrtssDto;
 import com.yulcomtechnologies.drtssms.entities.SignatureCertificat;
 import com.yulcomtechnologies.drtssms.entities.SignatureScanner;
 import com.yulcomtechnologies.drtssms.entities.UtilisateursDrtss;
+import com.yulcomtechnologies.drtssms.feignClients.UsersFeignClient;
 import com.yulcomtechnologies.drtssms.repositories.SignatureCertificatRepository;
 import com.yulcomtechnologies.drtssms.repositories.SignatureScannerRepository;
 import com.yulcomtechnologies.drtssms.repositories.UtilisateursDrtssRepository;
@@ -25,6 +27,14 @@ public class UtilisateurService {
 private final UtilisateursDrtssRepository utilisateursDrtssRepository;
 private final SignatureScannerRepository signatureScannerRepository;
 private final SignatureCertificatRepository signatureCertificatRepository;
+private final UsersFeignClient usersFeignClient;
+
+
+
+    public UserDto feignUtilisateur(String idUser){
+         UserDto user=  usersFeignClient.getUser(idUser);
+        return user;
+    }
 
     /**
      *

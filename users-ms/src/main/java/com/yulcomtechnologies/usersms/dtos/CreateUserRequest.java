@@ -41,4 +41,13 @@ public class CreateUserRequest {
     @NotNull
     @NotBlank
     private String userType;
+
+    private String matricule;
+
+    private String titre_honorifique;
+
+    private String tel;
+
+
+
 }

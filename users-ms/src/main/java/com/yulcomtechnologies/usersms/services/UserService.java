@@ -51,6 +51,11 @@ public class UserService {
             .username(createUserRequest.getUsername())
             .role(UserRole.valueOf(createUserRequest.getRole()))
             .userType(UserType.valueOf(createUserRequest.getUserType()))
+
+            .matricule(createUserRequest.getMatricule())
+            .titre_honorifique(createUserRequest.getTitre_honorifique())
+            .tel(createUserRequest.getTel())
+            .userType(UserType.valueOf(createUserRequest.getUserType()))
             .build();
 
         userRepository.save(user);
