@@ -24,3 +24,7 @@ databaseChangeLog:
 
   - include:
         file: db/changelog/v1/011-update-document_requests.xml
+
+  - include:
+      file: db/changelog/v1/012-update-utilisateurs-drtss-table.xml
+

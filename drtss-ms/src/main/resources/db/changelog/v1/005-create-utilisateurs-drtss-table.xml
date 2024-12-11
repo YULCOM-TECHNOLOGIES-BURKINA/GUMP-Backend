@@ -5,6 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
 >
+
   <changeSet id="005" author="mandson">
     <sql>
       CREATE TABLE "utilisateurs_drtss"
@@ -15,13 +16,7 @@
       "email"       VARCHAR(255) UNIQUE NOT NULL,
       "matricule"   VARCHAR(255) UNIQUE NOT NULL,
       "titre_honorifique" VARCHAR(255),
-      "tel"         VARCHAR(20),
-      "region"         VARCHAR(255) NOT NULL,
-      "role"         VARCHAR(255) NOT NULL,
-      "user_type"     VARCHAR(255) NOT NULL,
-      lastname VARCHAR(255),
-      username VARCHAR(255),
-      forename VARCHAR(255),
+      "tel"         VARCHAR(20) NOT NULL,
       "actif"       BOOLEAN DEFAULT TRUE NOT NULL,
       "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
