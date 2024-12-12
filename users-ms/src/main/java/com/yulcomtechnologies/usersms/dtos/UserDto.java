@@ -22,6 +22,6 @@ public class UserDto {
     private String titre_honorifique;
     private String tel;
     private Boolean is_signatory;
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt=LocalDateTime.now();
 
 }

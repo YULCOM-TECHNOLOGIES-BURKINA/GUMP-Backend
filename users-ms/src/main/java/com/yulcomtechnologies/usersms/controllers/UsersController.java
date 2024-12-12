@@ -88,7 +88,7 @@ public class UsersController {
     }
 
 
-    @GetMapping("users/{id}/toggle")
+    @GetMapping("user/{id}/toggle")
     public ResponseEntity<Void> toglleUserAccountState(
             @PathVariable Long id
     ) {
@@ -96,7 +96,7 @@ public class UsersController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("users/{id}/signatory/toggle")
+    @GetMapping("user/{id}/signatory/toggle")
     public ResponseEntity<Void> toglleUserSignatoryState(
             @PathVariable Long id
     ) {
