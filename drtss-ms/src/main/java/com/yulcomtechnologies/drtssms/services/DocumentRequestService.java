@@ -13,6 +13,7 @@ import com.yulcomtechnologies.drtssms.mappers.DocumentRequestMapper;
 import com.yulcomtechnologies.drtssms.repositories.ApplicationConfigRepository;
 import com.yulcomtechnologies.drtssms.repositories.DocumentRequestRepository;
 import com.yulcomtechnologies.drtssms.repositories.FileRepository;
+import com.yulcomtechnologies.sharedlibrary.auth.AuthenticatedUserData;
 import com.yulcomtechnologies.sharedlibrary.auth.AuthenticatedUserService;
 import com.yulcomtechnologies.sharedlibrary.enums.UserRole;
 import com.yulcomtechnologies.sharedlibrary.events.EventPublisher;
@@ -30,10 +31,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.Base64;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -130,6 +128,10 @@ public class DocumentRequestService {
         throw new BadRequestException("Vous ne pouvez pas accéder à cette ressource");
     }
 
+    public Optional<AuthenticatedUserData> getUserDetails() {
+        Optional<AuthenticatedUserData> userData = authenticatedUserService.getAuthenticatedUserData();
+        return userData;
+    }
     public DocumentRequestDto getDocumentRequest(String id) {
         return documentRequestRepository.findById(Long.parseLong(id))
             .map(documentRequest -> documentRequestMapper.toDto(
