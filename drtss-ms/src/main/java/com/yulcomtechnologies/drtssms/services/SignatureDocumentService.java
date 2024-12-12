@@ -77,10 +77,12 @@ public class SignatureDocumentService {
      * @return
      */
     public SignatureScanner updateSignatoryStatus(Long id) {
-         SignatureScanner signatory = signatureScannerRepository.findById(id)
+         SignatureScanner signatory = signatureScannerRepository.findSignatureScannerByUserId(id)
                 .orElseThrow(() -> new RuntimeException("Signatory with ID " + id + " not found"));
 
          signatory.getSignatureCertificat().setActif(!signatory.getSignatureCertificat().isActif());
+
+         usersFeignClient.toglleUserSignatoryState(String.valueOf(id));
 
          return signatureScannerRepository.save(signatory);
     }
@@ -110,7 +112,7 @@ public class SignatureDocumentService {
             signatureScan.setCheminImage(fileName);
             signatureScan.setUser_id(utilisateur.getId());
             signatureScan.setEmail(utilisateur.getEmail());
-            //signatureScan.setDate_created(LocalDateTime.now());
+           //signatureScan.setDate_created(LocalDateTime.now());
             SignatureScanner signatureScanSave = signatureScannerRepository.save(signatureScan);
 
             SignataireCertificatDto certificatDTO = new SignataireCertificatDto();

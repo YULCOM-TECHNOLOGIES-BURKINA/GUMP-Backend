@@ -4,6 +4,7 @@ import com.yulcomtechnologies.drtssms.dtos.*;
 import com.yulcomtechnologies.drtssms.entities.DocumentRequest;
 import com.yulcomtechnologies.drtssms.enums.DocumentRequestStatus;
 import com.yulcomtechnologies.drtssms.services.DocumentRequestService;
+import com.yulcomtechnologies.sharedlibrary.auth.AuthenticatedUserData;
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -74,6 +76,11 @@ public class DocumentController {
         var documentRequests = documentRequestService.getPaginatedDocumentRequests(pageable);
         return ResponseEntity.ok(documentRequests);
     }
+
+ /*   @GetMapping("authenticatedUsercontrole")
+    public Optional<AuthenticatedUserData> authenticatedUsercontrole() {
+      return   documentRequestService.getUserDetails();
+    }*/
 
     @GetMapping("demandes/{id}")
     public ResponseEntity<DocumentRequestDto> getDocumentRequest(@PathVariable String id) {
