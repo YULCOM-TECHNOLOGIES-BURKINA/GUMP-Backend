@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
@@ -67,5 +68,13 @@ public class UtilisateurController {
     @GetMapping(path = "/users/{id}")
     public UserDto userFeign(@PathVariable String id) {
         return usersFeignClient.getUser(id);
+    }
+
+    @GetMapping("users/{id}/signatory/toggle")
+    public ResponseEntity<Void> toglleUserSignatoryState(
+            @PathVariable Long id
+    ) {
+        usersFeignClient.toglleUserSignatoryState(String.valueOf(id));
+        return ResponseEntity.ok().build();
     }
 }

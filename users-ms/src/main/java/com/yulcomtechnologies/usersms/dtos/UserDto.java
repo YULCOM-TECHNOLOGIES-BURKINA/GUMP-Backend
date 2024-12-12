@@ -21,6 +21,7 @@ public class UserDto {
     private String matricule;
     private String titre_honorifique;
     private String tel;
+    private Boolean is_signatory;
     private LocalDateTime createdAt;
 
 }

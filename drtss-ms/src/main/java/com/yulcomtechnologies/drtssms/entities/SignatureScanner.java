@@ -22,10 +22,15 @@ public class SignatureScanner {
     private Long id;
 
   //  @JsonIgnore
-    @OneToOne
-    @JoinColumn(name = "utilisateur_id",referencedColumnName = "id")
-    private UtilisateursDrtss utilisateur;
+    //@OneToOne
+    //@JoinColumn(name = "utilisateur_id",referencedColumnName = "id")
+   // private UtilisateursDrtss utilisateur;*/
 
+    @Column(name = "user_id", nullable = false,unique = true)
+    private Long user_id;
+
+    @Column(name = "email", nullable = false,unique = true)
+    private String email;
 
     @Column(name = "chemin_image")
     private String cheminImage;

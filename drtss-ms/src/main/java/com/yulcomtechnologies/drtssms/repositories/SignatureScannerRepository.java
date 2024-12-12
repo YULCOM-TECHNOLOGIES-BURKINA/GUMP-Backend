@@ -9,10 +9,10 @@ import java.util.Optional;
 
 public interface SignatureScannerRepository extends JpaRepository<SignatureScanner,Long> {
 
-    @Query("from SignatureScanner s where s.utilisateur.id =:userId")
+    @Query("from SignatureScanner s where s.user_id =:userId")
     Optional< SignatureScanner> findSignatureScannerByUserId(@Param("userId") Long userId);
 
-    @Query("from SignatureScanner s where s.utilisateur.email =:email")
+    @Query("from SignatureScanner s where s.email =:email")
     Optional< SignatureScanner> getSignatoryByEmail(@Param("email") String email);
 
 }

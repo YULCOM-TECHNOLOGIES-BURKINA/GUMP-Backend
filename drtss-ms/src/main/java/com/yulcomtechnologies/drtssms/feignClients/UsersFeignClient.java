@@ -12,4 +12,7 @@ public interface UsersFeignClient {
 
     @GetMapping("/api/users/{userId}/find")
     UserDto getUsernameOrKeycloakId(@PathVariable("userId") String userId);
+
+      @GetMapping("/api/users/{userId}/signatory/toggle")
+      UserDto toglleUserSignatoryState(@PathVariable("userId") String userId);
 }

@@ -65,6 +65,10 @@ public class User {
     @Column(name = "tel")
     private String tel;
 
+
+    @Column(name = "is_signatory", nullable = true)
+    private Boolean is_signatory=false;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 }
