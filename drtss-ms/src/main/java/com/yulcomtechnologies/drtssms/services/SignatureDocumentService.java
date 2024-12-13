@@ -11,6 +11,7 @@ import com.yulcomtechnologies.drtssms.repositories.FileRepository;
 import com.yulcomtechnologies.drtssms.repositories.SignatureCertificatRepository;
 import com.yulcomtechnologies.drtssms.repositories.SignatureScannerRepository;
 import com.yulcomtechnologies.drtssms.repositories.UtilisateursDrtssRepository;
+import com.yulcomtechnologies.sharedlibrary.exceptions.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,8 +68,10 @@ public class SignatureDocumentService {
      * @param email
      * @return
      */
-    public SignatureScanner getSignatoryByEmail(String email){
-        return signatureScannerRepository.getSignatoryByEmail(email).get();
+    public SignatureScanner getSignatoryByEmail(String email) {
+        return signatureScannerRepository
+                .getSignatoryByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("No signatory found for email: " + email));
     }
 
     /**

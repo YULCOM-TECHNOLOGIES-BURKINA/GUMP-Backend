@@ -126,4 +126,12 @@ public class UserService {
       //  eventPublisher.dispatch(new AccountStateChanged(user.getId()));
     }
 
+    public User getUserByEmail(String email) {
+
+        var user = userRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("User not found")
+        );
+
+        return (user);
+    }
 }

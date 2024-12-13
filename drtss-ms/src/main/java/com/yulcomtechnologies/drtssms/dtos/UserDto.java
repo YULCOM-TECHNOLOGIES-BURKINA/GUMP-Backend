@@ -23,5 +23,6 @@ public class UserDto {
     private String matricule;
     private String titre_honorifique;
     private String tel;
+    private String keycloakUserId;
 
 }

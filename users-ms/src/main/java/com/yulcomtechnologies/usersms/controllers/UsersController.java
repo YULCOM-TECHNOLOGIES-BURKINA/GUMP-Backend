@@ -2,6 +2,7 @@ package com.yulcomtechnologies.usersms.controllers;
 
 import com.yulcomtechnologies.usersms.dtos.CreateUserRequest;
 import com.yulcomtechnologies.usersms.dtos.UserDto;
+import com.yulcomtechnologies.usersms.entities.User;
 import com.yulcomtechnologies.usersms.enums.UserType;
 import com.yulcomtechnologies.usersms.services.AuthService;
 import com.yulcomtechnologies.usersms.services.CorporationData;
@@ -61,6 +62,12 @@ public class UsersController {
         @PathVariable Long id
     ) {
         return ResponseEntity.ok(userService.getUser(id));
+    }
+    @GetMapping("users/{email}/email")
+    public ResponseEntity<User> findUserByEmail(
+            @PathVariable String email
+    ) {
+        return ResponseEntity.ok(userService.getUserByEmail(email));
     }
 
     @GetMapping("users/{usernameOrSsoId}/find")

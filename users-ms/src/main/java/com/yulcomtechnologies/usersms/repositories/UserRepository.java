@@ -15,10 +15,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByUsername(String username);
 
+    Optional<User> findByEmail(String email);
+
     Page<User> findAllByIsActive(Boolean isActive, Pageable pageable);
 
     @Query("SELECT u FROM User u WHERE u.username = :usernameOrSsoUserId OR u.keycloakUserId = :usernameOrSsoUserId")
     Optional<User> findByUsernameOrKeycloakUserId(String usernameOrSsoUserId);
 
     Page<User> findAllByIsActiveFalse(Pageable pageable);
+
 }

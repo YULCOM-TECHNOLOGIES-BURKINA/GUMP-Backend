@@ -77,4 +77,12 @@ public class UtilisateurController {
         usersFeignClient.toglleUserSignatoryState(String.valueOf(id));
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("users/{email}/email")
+    public  UserDto  findUserByEmail(
+            @PathVariable String email
+    ) {
+        usersFeignClient.findUserByEmail(email);
+        return  usersFeignClient.findUserByEmail(email);
+    }
 }
