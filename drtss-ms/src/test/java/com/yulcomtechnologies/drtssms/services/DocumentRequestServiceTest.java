@@ -97,7 +97,7 @@ public class DocumentRequestServiceTest extends BaseIntegrationTest {
 
         documentRequestService.approveDocumentRequest(
             documentRequest.getId(),
-            validateRequestDto,"test@gmail.com"
+            validateRequestDto
         );
 
         var updatedDocument = documentRequestRepository.findById(documentRequest.getId()).orElseThrow();
