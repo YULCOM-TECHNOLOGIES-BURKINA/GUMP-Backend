@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+>
+
+  <changeSet id="012" author="mandson">
+    <sql>
+      ALTER TABLE "utilisateurs_drtss" ADD COLUMN "region" VARCHAR(255);
+      ALTER TABLE "utilisateurs_drtss" ADD COLUMN "role" VARCHAR(255);
+      ALTER TABLE "utilisateurs_drtss" ADD COLUMN "user_type" VARCHAR(255);
+      ALTER TABLE "utilisateurs_drtss" ADD COLUMN "lastname" VARCHAR(255);
+      ALTER TABLE "utilisateurs_drtss" ADD COLUMN "username" VARCHAR(255);
+      ALTER TABLE "utilisateurs_drtss" ADD COLUMN "forename" VARCHAR(255);
+    </sql>
+  </changeSet>
+</databaseChangeLog>

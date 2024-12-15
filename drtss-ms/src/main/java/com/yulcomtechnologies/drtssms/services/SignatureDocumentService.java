@@ -2,13 +2,16 @@ package com.yulcomtechnologies.drtssms.services;
 
 import com.yulcomtechnologies.drtssms.dtos.SignataireCertificatDto;
 import com.yulcomtechnologies.drtssms.dtos.SignatureLocationDto;
+import com.yulcomtechnologies.drtssms.dtos.UserDto;
 import com.yulcomtechnologies.drtssms.entities.SignatureScanner;
 import com.yulcomtechnologies.drtssms.entities.UtilisateursDrtss;
 import com.yulcomtechnologies.drtssms.enums.FileStoragePath;
+import com.yulcomtechnologies.drtssms.feignClients.UsersFeignClient;
 import com.yulcomtechnologies.drtssms.repositories.FileRepository;
 import com.yulcomtechnologies.drtssms.repositories.SignatureCertificatRepository;
 import com.yulcomtechnologies.drtssms.repositories.SignatureScannerRepository;
 import com.yulcomtechnologies.drtssms.repositories.UtilisateursDrtssRepository;
+import com.yulcomtechnologies.sharedlibrary.exceptions.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +48,8 @@ public class SignatureDocumentService {
 
     @Autowired
     private CertificateService certificateService;
+    @Autowired
+    private UsersFeignClient usersFeignClient;
 
     /**
      *
@@ -63,8 +68,10 @@ public class SignatureDocumentService {
      * @param email
      * @return
      */
-    public SignatureScanner getSignatoryByEmail(String email){
-        return signatureScannerRepository.getSignatoryByEmail(email).get();
+    public SignatureScanner getSignatoryByEmail(String email) {
+        return signatureScannerRepository
+                .getSignatoryByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("No signatory found for email: " + email));
     }
 
     /**
@@ -73,10 +80,12 @@ public class SignatureDocumentService {
      * @return
      */
     public SignatureScanner updateSignatoryStatus(Long id) {
-         SignatureScanner signatory = signatureScannerRepository.findById(id)
+         SignatureScanner signatory = signatureScannerRepository.findSignatureScannerByUserId(id)
                 .orElseThrow(() -> new RuntimeException("Signatory with ID " + id + " not found"));
 
          signatory.getSignatureCertificat().setActif(!signatory.getSignatureCertificat().isActif());
+
+         usersFeignClient.toglleUserSignatoryState(String.valueOf(id));
 
          return signatureScannerRepository.save(signatory);
     }
@@ -91,9 +100,9 @@ public class SignatureDocumentService {
     public SignatureScanner createSignatory(MultipartFile file, Long userId) {
         String uploadPath = FileStoragePath.SCAN_SIGN_PATH.getPath();
 
-        UtilisateursDrtss utilisateur = utilisateursDrtssRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé avec l'ID : " + userId));
-        try {
+        UserDto utilisateur = usersFeignClient.getUser(String.valueOf(userId));
+        System.out.println(utilisateur.getEmail());
+         try {
             Path directory = Paths.get(uploadPath);
             if (!Files.exists(directory)) {
                 Files.createDirectories(directory);
@@ -104,22 +113,23 @@ public class SignatureDocumentService {
 
             SignatureScanner signatureScan = new SignatureScanner();
             signatureScan.setCheminImage(fileName);
-            signatureScan.setUtilisateur(utilisateur);
-            //signatureScan.setDate_created(LocalDateTime.now());
+            signatureScan.setUser_id(utilisateur.getId());
+            signatureScan.setEmail(utilisateur.getEmail());
+           //signatureScan.setDate_created(LocalDateTime.now());
             SignatureScanner signatureScanSave = signatureScannerRepository.save(signatureScan);
 
             SignataireCertificatDto certificatDTO = new SignataireCertificatDto();
-            certificatDTO.setAlias(utilisateur.getPrenom() + '.' + utilisateur.getId());
+            certificatDTO.setAlias(utilisateur.getForename() + '.' + utilisateur.getId());
             certificatDTO.setPassword("password");
-            certificatDTO.setCommonName(utilisateur.getNom() + " " + utilisateur.getPrenom());
+            certificatDTO.setCommonName(utilisateur.getForename() + " " + utilisateur.getLastname());
             certificatDTO.setOrganization("DRTPS - BY:" + utilisateur.getEmail());
-            certificatDTO.setOrganizationalUnit("Certificat GUMP-DRTPS - :" + utilisateur.getNom() + utilisateur.getPrenom());
+            certificatDTO.setOrganizationalUnit("Certificat GUMP-DRTPS - :" + utilisateur.getForename() + utilisateur.getLastname());
             certificatDTO.setCountry("BF");
             certificatDTO.setEmailAddress(utilisateur.getEmail());
             certificatDTO.setSignataire(signatureScanSave);
 
             certificateService.generateP12Certificate(certificatDTO);
-
+            usersFeignClient.toglleUserSignatoryState(String.valueOf(userId));
             return signatureScanSave;
 
         } catch (IOException e) {

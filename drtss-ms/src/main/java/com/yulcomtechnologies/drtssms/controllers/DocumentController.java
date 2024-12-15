@@ -22,17 +22,17 @@ public class DocumentController {
 
     @PostMapping("demandes/{id}/pay")
     public ResponseEntity<PaymentRequestResponse> payForRequest(
-        @PathVariable Long id,
-        @Validated @RequestBody PayRequest payRequest
-        ) {
+            @PathVariable Long id,
+            @Validated @RequestBody PayRequest payRequest
+    ) {
 
         return ResponseEntity.ok(documentRequestService.pay(id, payRequest));
     }
 
     @PostMapping("demandes/{id}/update-payment-status")
     public ResponseEntity<Void> updatePaymentStatus(
-        @PathVariable Long id,
-        @RequestParam String paymentId
+            @PathVariable Long id,
+            @RequestParam String paymentId
     ) {
         documentRequestService.updatePaymentStatus(id, paymentId);
         return ResponseEntity.ok().build();
@@ -40,7 +40,7 @@ public class DocumentController {
 
     @GetMapping("demandes/{id}/payment-status")
     public ResponseEntity<DocumentRequestPaymentStatus> getPaymentStatus(
-        @PathVariable Long id
+            @PathVariable Long id
     ) {
         var documentRequest = documentRequestService.getDocumentRequest(id.toString());
 
@@ -49,21 +49,21 @@ public class DocumentController {
 
     @PostMapping("demandes")
     public ResponseEntity<CreatedResource> submitDocumentRequest(
-        @RequestParam("attestationCnss") MultipartFile attestationCnss,
-        @RequestParam("attestationAnpe") MultipartFile attestationAnpe,
-        @RequestParam("publicContractNumber") String publicContractNumber,
-        @RequestParam(value = "contractPurpose", required = false) String contractPurpose,
-        @RequestParam(value = "contractingOrganizationName", required = false) String contractingOrganizationName,
-        @RequestParam(value = "isForPublicContract", required = false, defaultValue = "false") Boolean isForPublicContract
+            @RequestParam("attestationCnss") MultipartFile attestationCnss,
+            @RequestParam("attestationAnpe") MultipartFile attestationAnpe,
+            @RequestParam("publicContractNumber") String publicContractNumber,
+            @RequestParam(value = "contractPurpose", required = false) String contractPurpose,
+            @RequestParam(value = "contractingOrganizationName", required = false) String contractingOrganizationName,
+            @RequestParam(value = "isForPublicContract", required = false, defaultValue = "false") Boolean isForPublicContract
     ) throws IOException {
 
         DocumentRequest documentRequest = documentRequestService.submitDocumentRequest(
-            attestationCnss,
-            attestationAnpe,
-            publicContractNumber,
-            isForPublicContract,
-            contractPurpose,
-            contractingOrganizationName
+                attestationCnss,
+                attestationAnpe,
+                publicContractNumber,
+                isForPublicContract,
+                contractPurpose,
+                contractingOrganizationName
         );
 
         return ResponseEntity.ok(new CreatedResource(documentRequest.getId().toString()));
@@ -83,9 +83,9 @@ public class DocumentController {
 
     @PostMapping("demandes/{id}/review")
     public ResponseEntity<?> reviewDocumentRequest(
-        @PathVariable Long id,
-        @RequestParam("status") DocumentRequestStatus status,
-        @RequestParam(required = false) String rejectionReason
+            @PathVariable Long id,
+            @RequestParam("status") DocumentRequestStatus status,
+            @RequestParam(required = false) String rejectionReason
     ) {
         documentRequestService.reviewDocumentRequest(id, status, rejectionReason);
         return ResponseEntity.ok().build();
@@ -93,9 +93,9 @@ public class DocumentController {
 
     @PostMapping("demandes/{id}/approve")
     public ResponseEntity<?> approveDocumentRequest(
-        @PathVariable Long id,
-        @RequestBody @Validated ApproveDocumentRequestDto approveDocumentRequestDto
-        ) throws IOException {
+            @PathVariable Long id,
+            @RequestBody @Validated ApproveDocumentRequestDto approveDocumentRequestDto
+    ) throws IOException {
         documentRequestService.approveDocumentRequest(id, approveDocumentRequestDto);
         return ResponseEntity.ok().build();
     }

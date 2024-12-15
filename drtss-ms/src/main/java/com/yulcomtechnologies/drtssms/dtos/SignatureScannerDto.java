@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.yulcomtechnologies.drtssms.entities.SignatureCertificat;
 import com.yulcomtechnologies.drtssms.entities.SignatureScanner;
 import com.yulcomtechnologies.drtssms.entities.UtilisateursDrtss;
+import com.yulcomtechnologies.drtssms.feignClients.UsersFeignClient;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,14 +19,17 @@ import java.util.Optional;
 public class SignatureScannerDto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
 
 
-    private UtilisateursDrtss utilisateur;
+    private Long user_id;
 
     private String filePath;
 
     private LocalDateTime createdAt;
+
+    // private UserDto userDto;
 
 
     private SignatureCertificat signatureCertificat;
@@ -36,11 +40,14 @@ public class SignatureScannerDto {
                         .id(s.getId())
                         .filePath(s.getCheminImage())
                         .signatureCertificat(s.getSignatureCertificat())
-                        .utilisateur(s.getUtilisateur())
+                        .user_id(s.getUser_id())
                         .build()
                 )
                 .orElse(null);
     }
+
+
+
 
 
 }

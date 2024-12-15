@@ -2,6 +2,7 @@ package com.yulcomtechnologies.usersms.controllers;
 
 import com.yulcomtechnologies.usersms.dtos.CreateUserRequest;
 import com.yulcomtechnologies.usersms.dtos.UserDto;
+import com.yulcomtechnologies.usersms.entities.User;
 import com.yulcomtechnologies.usersms.enums.UserType;
 import com.yulcomtechnologies.usersms.services.AuthService;
 import com.yulcomtechnologies.usersms.services.CorporationData;
@@ -62,6 +63,12 @@ public class UsersController {
     ) {
         return ResponseEntity.ok(userService.getUser(id));
     }
+    @GetMapping("users/{email}/email")
+    public ResponseEntity<User> findUserByEmail(
+            @PathVariable String email
+    ) {
+        return ResponseEntity.ok(userService.getUserByEmail(email));
+    }
 
     @GetMapping("users/{usernameOrSsoId}/find")
     public ResponseEntity<UserDto> findUser(
@@ -78,11 +85,29 @@ public class UsersController {
         return ResponseEntity.ok().build();
     }
 
+
     @PostMapping("users/{id}/reject")
     public ResponseEntity<Void> rejectPendingAccount(
         @PathVariable Long id
     ) {
         authService.rejectAccountCreation(id);
+        return ResponseEntity.ok().build();
+    }
+
+
+    @GetMapping("user/{id}/toggle")
+    public ResponseEntity<Void> toglleUserAccountState(
+            @PathVariable Long id
+    ) {
+        authService.toglleUserAccountState(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("user/{id}/signatory/toggle")
+    public ResponseEntity<Void> toglleUserSignatoryState(
+            @PathVariable Long id
+    ) {
+        userService.toglleUserSignatoryState(id);
         return ResponseEntity.ok().build();
     }
 }

@@ -2,6 +2,8 @@ package com.yulcomtechnologies.usersms.dtos;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 public class UserDto {
     private Long id;
@@ -15,4 +17,11 @@ public class UserDto {
     private String username;
     private Boolean isActive;
     private CompanyDto company;
+
+    private String matricule;
+    private String titre_honorifique;
+    private String tel;
+    private Boolean is_signatory;
+    private LocalDateTime createdAt=LocalDateTime.now();
+
 }

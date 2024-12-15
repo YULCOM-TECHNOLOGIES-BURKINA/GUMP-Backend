@@ -131,6 +131,51 @@ public class KeycloakSsoService implements SsoProvider {
     }
 
     @Override
+    public void toggleUserAccount(String ssoUserId, boolean statut) {
+        try {
+            // Récupérer le token administrateur
+            String adminToken = getAdminToken().getBody().accessToken();
+            if (adminToken == null || adminToken.isBlank()) {
+                throw new IllegalStateException("Admin token is null or empty");
+            }
+
+            // Configurer les en-têtes
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.set("Authorization", "Bearer " + adminToken);
+
+            // Construire le corps de la requête avec le statut (enabled: true/false)
+            String requestBody = String.format("{\"enabled\": %b}", statut);
+
+            // Construire l'objet HttpEntity avec le corps et les en-têtes
+            HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
+
+            // Construire l'URL
+            String url = String.format("%s/admin/realms/%s/users/%s", keycloakServerUrl, realm, ssoUserId);
+            System.out.println("Request URL: " + url);
+
+            // Effectuer la requête HTTP PUT
+            ResponseEntity<String> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.PUT,
+                    request,
+                    String.class
+            );
+
+            // Gérer la réponse
+            if (response.getStatusCode().is2xxSuccessful()) {
+                System.out.printf("User %s successfully toggled to %b%n", ssoUserId, statut);
+            } else {
+                System.err.printf("Failed to toggle user %s. HTTP Status: %s%n", ssoUserId, response.getStatusCode());
+            }
+        } catch (Exception e) {
+            // Gestion des erreurs
+            System.err.printf("Error while toggling user %s: %s%n", ssoUserId, e.getMessage());
+            throw new RuntimeException("Failed to toggle user account", e);
+        }
+    }
+
+    @Override
     public void deleteUser(String keycloakUserId) {
         var headers = getHeaders();
         headers.set("Authorization", "Bearer " + Objects.requireNonNull(getAdminToken().getBody()).accessToken());

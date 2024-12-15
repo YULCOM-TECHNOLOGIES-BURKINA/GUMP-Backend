@@ -49,6 +49,19 @@ public class AuthService {
     }
 
     @Transactional
+    public void toglleUserAccountState(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException("User not found")
+        );
+
+        ssoProvider.toggleUserAccount(user.getKeycloakUserId(),!user.getIsActive());
+        user.setIsActive(!user.getIsActive());
+        userRepository.save(user);
+        eventPublisher.dispatch(new AccountStateChanged(user.getId()));
+    }
+
+
+    @Transactional
     public void register(
         RegisterRequest registerRequest,
         MultipartFile cnibFile,
@@ -109,6 +122,7 @@ public class AuthService {
             .email(corporationData.email())
             .rccm(corporationData.rccmNumber())
             .ifu(registerRequest.getIfuNumber())
+            .nes(registerRequest.getNes())
             .name(corporationData.name())
             .enterpriseStatut(saveFile(statutFile, "Statut entreprise"))
             .idDocument(saveFile(cnibFile, "CNIB"))

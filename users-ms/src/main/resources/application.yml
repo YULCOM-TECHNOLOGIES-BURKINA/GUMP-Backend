@@ -6,7 +6,7 @@ spring:
           issuer-uri: ${keycloak.auth-server-url}/realms/${keycloak.realm}
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/gump-users-ms-db
+    url: jdbc:postgresql://localhost:5429/gump
     username: gump
     password: gump
   application:

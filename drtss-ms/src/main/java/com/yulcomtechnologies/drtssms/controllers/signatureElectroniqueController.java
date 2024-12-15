@@ -45,7 +45,7 @@ public class signatureElectroniqueController {
 
 
 
-    @GetMapping("signataire/{email}")
+    @GetMapping("/signataire/{email}")
     public ResponseEntity<SignatureScanner> getSignatoryByEmail(@PathVariable String email) {
         var signaturory = signatureDocumentService.getSignatoryByEmail(email);
         return ResponseEntity.ok(signaturory);

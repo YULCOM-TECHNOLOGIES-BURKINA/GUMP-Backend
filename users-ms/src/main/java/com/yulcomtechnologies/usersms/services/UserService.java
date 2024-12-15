@@ -1,5 +1,6 @@
 package com.yulcomtechnologies.usersms.services;
 
+import com.yulcomtechnologies.sharedlibrary.events.EventPublisher;
 import com.yulcomtechnologies.sharedlibrary.exceptions.ResourceNotFoundException;
 import com.yulcomtechnologies.sharedlibrary.services.FileStorageService;
 import com.yulcomtechnologies.usersms.dtos.CreateUserRequest;
@@ -7,6 +8,7 @@ import com.yulcomtechnologies.usersms.dtos.UserDto;
 import com.yulcomtechnologies.usersms.entities.User;
 import com.yulcomtechnologies.usersms.enums.UserRole;
 import com.yulcomtechnologies.usersms.enums.UserType;
+import com.yulcomtechnologies.usersms.events.AccountStateChanged;
 import com.yulcomtechnologies.usersms.mappers.UserMapper;
 import com.yulcomtechnologies.usersms.repositories.UserRepository;
 import jakarta.transaction.Transactional;
@@ -14,6 +16,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 
 @Service
@@ -23,6 +27,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final FileStorageService fileStorageService;
+    private final EventPublisher eventPublisher;
 
 
     @Transactional
@@ -51,6 +56,13 @@ public class UserService {
             .username(createUserRequest.getUsername())
             .role(UserRole.valueOf(createUserRequest.getRole()))
             .userType(UserType.valueOf(createUserRequest.getUserType()))
+
+            .matricule(createUserRequest.getMatricule())
+            .titre_honorifique(createUserRequest.getTitre_honorifique())
+            .tel(createUserRequest.getTel())
+            .userType(UserType.valueOf(createUserRequest.getUserType()))
+            .is_signatory(false)
+            .createdAt(LocalDateTime.now())
             .build();
 
         userRepository.save(user);
@@ -100,5 +112,26 @@ public class UserService {
         }
 
         return userDto;
+    }
+
+    @Transactional
+    public void toglleUserSignatoryState(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException("User not found")
+        );
+
+        user.setIs_signatory(!user.getIs_signatory());
+        System.out.println(user.getIs_signatory());
+        userRepository.save(user);
+      //  eventPublisher.dispatch(new AccountStateChanged(user.getId()));
+    }
+
+    public User getUserByEmail(String email) {
+
+        var user = userRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("User not found")
+        );
+
+        return (user);
     }
 }

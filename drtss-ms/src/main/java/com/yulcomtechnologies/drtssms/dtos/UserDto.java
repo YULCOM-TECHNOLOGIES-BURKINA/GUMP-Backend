@@ -19,4 +19,10 @@ public class UserDto {
     private String region;
     private String username;
     private CompanyDto company;
+
+    private String matricule;
+    private String titre_honorifique;
+    private String tel;
+    private String keycloakUserId;
+
 }
