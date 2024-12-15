@@ -6,6 +6,7 @@ import com.yulcomtechnologies.tresorms.dtos.GetDocumentRequestDto;
 import com.yulcomtechnologies.tresorms.entities.ApplicationConfig;
 import com.yulcomtechnologies.tresorms.entities.DocumentRequest;
 import com.yulcomtechnologies.tresorms.enums.RequestType;
+import com.yulcomtechnologies.tresorms.repositories.ApplicationConfigRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -20,11 +21,12 @@ import java.time.temporal.ChronoUnit;
 @AllArgsConstructor
 public class DocumentRequestMapper {
     private final FileStorageService fileStorageService;
-    private final ApplicationConfig applicationConfig;
+    private final ApplicationConfigRepository applicationConfigRepository;
 
     public GetDocumentRequestDto toDto(DocumentRequest documentRequest) {
         var dto = new GetDocumentRequestDto();
         dto.setId(documentRequest.getId().toString());
+        var applicationConfig = applicationConfigRepository.get();
 
         int processingTime = documentRequest.getRequestType().equals(RequestType.LIQUIDATION) ? applicationConfig.getProcessingTimeInDaysForLiquidation() : applicationConfig.getProcessingTimeInDaysForSoumission();
 
