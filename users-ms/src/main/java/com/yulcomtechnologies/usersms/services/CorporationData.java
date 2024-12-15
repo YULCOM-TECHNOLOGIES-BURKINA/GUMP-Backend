@@ -7,7 +7,8 @@ public record CorporationData(
     String email,
     String website,
 
-    String rccmNumber
+    String rccmNumber,
+    String location
 
 ) {
 }

@@ -12,7 +12,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,7 +40,16 @@ public class DocumentRequestMapper {
         dto.setIsPaid(documentRequest.getIsPaid());
         dto.setCompany(usersFeignClient.getUsernameOrKeycloakId(documentRequest.getRequesterId()).getCompany());
         dto.setIsPastDue(
-            LocalDateTime.now().isAfter(documentRequest.getCreatedAt().plusDays(applicationConfig.getProcessingTimeInDays()))
+            LocalDateTime.now().isAfter(
+                addDaysExcludingWeekends(documentRequest.getCreatedAt().toLocalDate(), applicationConfig.getProcessingTimeInDays()).atStartOfDay()
+            )
+        );
+
+        dto.setRemainingDaysBeforeDueDate(
+            (int) LocalDateTime.now().until(
+                addDaysExcludingWeekends(documentRequest.getCreatedAt().toLocalDate(), applicationConfig.getProcessingTimeInDays()).atStartOfDay(),
+                ChronoUnit.DAYS
+            )
         );
 
         if (documentRequest.isApproved()) {
@@ -66,5 +78,19 @@ public class DocumentRequestMapper {
          fileDto.setLabel(file.getLabel());
         fileDto.setPath(fileStorageService.getPath(file));
         return fileDto;
+    }
+
+    private LocalDate addDaysExcludingWeekends(LocalDate startDate, int daysToAdd) {
+        LocalDate date = startDate;
+        int addedDays = 0;
+
+        while (addedDays < daysToAdd) {
+            date = date.plusDays(1);
+            if (date.getDayOfWeek() != DayOfWeek.SATURDAY && date.getDayOfWeek() != DayOfWeek.SUNDAY) {
+                addedDays++;
+            }
+        }
+
+        return date;
     }
 }
