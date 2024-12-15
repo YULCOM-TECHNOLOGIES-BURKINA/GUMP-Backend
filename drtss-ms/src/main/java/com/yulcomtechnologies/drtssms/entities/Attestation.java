@@ -20,6 +20,9 @@ public class Attestation {
 
     private String uuid;
 
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
     @Column(name = "attestation_anpe_number")
     private String attestationAnpeNumber;
 

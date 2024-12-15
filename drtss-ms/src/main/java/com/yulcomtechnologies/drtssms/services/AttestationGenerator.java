@@ -17,6 +17,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -32,6 +33,7 @@ public class AttestationGenerator {
     private final PdfQRCodeService pdfQRCodeService;
     private final ApplicationConfigRepository applicationConfigRepository;
     private final UsersFeignClient usersFeignClient;
+    private final NumberGeneratorService numberGeneratorService;
 
     public void generateDocument(
         ApproveDocumentRequestDto approveDocumentRequestDto,
@@ -82,7 +84,8 @@ public class AttestationGenerator {
             .attestationAnpeDate(approveDocumentRequestDto.getAttestationAnpeDate())
             .attestationCnssDate(approveDocumentRequestDto.getAttestationCnssDate())
             .documentRequest(DocumentRequest.builder().id(documentRequestId).build())
-            .number(UUID.randomUUID().toString())
+            .number(numberGeneratorService.generateNumber())
+            .createdAt(LocalDateTime.now())
             .uuid(UUID.randomUUID().toString())
             .documentRequest(documentRequest)
             .file(file)

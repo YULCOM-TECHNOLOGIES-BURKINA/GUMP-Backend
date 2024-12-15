@@ -10,4 +10,7 @@ public class CompanyDto {
     private String rccm;
     private String statutDocumentPath;
     private String cnibDocumentPath;
+    private String postalAddress;
+    private String phone;
+    private String location;
 }
