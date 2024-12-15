@@ -17,6 +17,12 @@ public class Company {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "postal_address")
+    private String postalAddress;
+
+    @Column(name = "location")
+    private String location;
+
     @Column(name = "ifu", nullable = false, unique = true, length = 255)
     private String ifu;
 

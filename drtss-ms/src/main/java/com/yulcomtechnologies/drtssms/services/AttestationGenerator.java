@@ -4,10 +4,12 @@ import com.yulcomtechnologies.drtssms.dtos.ApproveDocumentRequestDto;
 import com.yulcomtechnologies.drtssms.entities.Attestation;
 import com.yulcomtechnologies.drtssms.entities.DocumentRequest;
 import com.yulcomtechnologies.drtssms.entities.File;
+import com.yulcomtechnologies.drtssms.feignClients.UsersFeignClient;
 import com.yulcomtechnologies.drtssms.repositories.ApplicationConfigRepository;
 import com.yulcomtechnologies.drtssms.repositories.AttestationRepository;
 import com.yulcomtechnologies.drtssms.repositories.DocumentRequestRepository;
 import com.yulcomtechnologies.drtssms.repositories.FileRepository;
+import com.yulcomtechnologies.sharedlibrary.auth.AuthenticatedUserService;
 import com.yulcomtechnologies.sharedlibrary.services.FileStorageService;
 import com.yulcomtechnologies.sharedlibrary.services.PdfQRCodeService;
 import com.yulcomtechnologies.sharedlibrary.services.TemplateProcessor;
@@ -29,6 +31,7 @@ public class AttestationGenerator {
     private final TemplateProcessor templateProcessor;
     private final PdfQRCodeService pdfQRCodeService;
     private final ApplicationConfigRepository applicationConfigRepository;
+    private final UsersFeignClient usersFeignClient;
 
     public void generateDocument(
         ApproveDocumentRequestDto approveDocumentRequestDto,
@@ -43,18 +46,21 @@ public class AttestationGenerator {
         );
 
         var map = new HashMap<String, Object>();
+        var userData = usersFeignClient.getUsernameOrKeycloakId(documentRequest.getRequesterId());
+        var company = userData.getCompany();
+
         map.put("attestationNumber", approveDocumentRequestDto.getAttestationAnpeNumber());
         map.put("anpeNumber", approveDocumentRequestDto.getAttestationAnpeNumber());
         map.put("cnssNumber", approveDocumentRequestDto.getAttestationCnssNumber());
         map.put("cnssDate", approveDocumentRequestDto.getAttestationCnssDate());
         map.put("anpeDate", approveDocumentRequestDto.getAttestationAnpeDate());
-        map.put("companyName", "Yulcom technologies");
-        map.put("location", "Ouagadougou");
-        map.put("address", "Ouaga 2000");
-        map.put("bp", "Yulcom technologies");
-        map.put("region", "Centre");
+        map.put("companyName", company.getName());
+        map.put("location", company.getLocation());
+        map.put("address", company.getAddress());
+        map.put("bp", company.getPostalAddress());
+        map.put("region", userData.getRegion());
         map.put("logo", fileStorageService.getPath(applicationConfigRepository.get().getLogo()));
-        map.put("telephone", "50-50-50-50");
+        map.put("telephone", company.getPhone());
 
 
         var filledTemplate = templateProcessor.fillVariables("attestation.html", map);

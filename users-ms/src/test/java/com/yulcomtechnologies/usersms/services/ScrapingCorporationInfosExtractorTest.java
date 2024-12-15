@@ -23,7 +23,8 @@ public class ScrapingCorporationInfosExtractorTest {
                 "70800839",
                 "",
                 null,
-                "BFOUA2016B4661"
+                "BFOUA2016B4661",
+                ""
             ),
             result.get()
         );

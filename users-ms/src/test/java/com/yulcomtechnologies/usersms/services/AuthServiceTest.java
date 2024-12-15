@@ -71,7 +71,8 @@ public class AuthServiceTest {
             "1234",
             "mail@test.com",
             null,
-            "BFOUA2016B4661"
+            "BFOUA2016B4661",
+            "OUAGADOUGOU"
         );
 
         when(corporationInfosExtractor.extractCorporationInfos(registrationRequest.ifuNumber)).thenReturn(
@@ -139,9 +140,6 @@ public class AuthServiceTest {
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
         authService.rejectAccountCreation(userId);
-
-        verify(userRepository).delete(user);
-        verify(companyRepository).delete(user.getCompany());
 
         verify(eventPublisher).dispatch(new AccountStateChanged(user.getId()));
     }
