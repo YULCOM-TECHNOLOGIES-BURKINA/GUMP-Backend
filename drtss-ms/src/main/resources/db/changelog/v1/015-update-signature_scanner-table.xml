@@ -9,11 +9,12 @@
     <changeSet id="015" author="mandson">
 
         <sql>
-            ALTER TABLE signature_scanner ADD COLUMN user_id BIGINT DEFAULT 0;
 
-            UPDATE signature_scanner SET user_id = 0 WHERE user_id IS NULL;
+            ALTER TABLE signature_scanner DROP COLUMN IF EXISTS user_id;
 
-            ALTER TABLE signature_scanner ALTER COLUMN user_id SET NOT NULL;
+
+            ALTER TABLE signature_scanner ADD COLUMN user_id BIGINT;
+
 
             ALTER TABLE signature_scanner ADD CONSTRAINT unique_user_id UNIQUE (user_id);
         </sql>

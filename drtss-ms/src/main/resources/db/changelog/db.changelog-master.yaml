@@ -27,7 +27,5 @@ databaseChangeLog:
       file: db/changelog/v1/013-update-signature_scanner-table.xml
 
   - include:
-      file: db/changelog/v1/014-update-signature_scanner-table.xml
-
-  - include:
       file: db/changelog/v1/015-update-signature_scanner-table.xml
+
