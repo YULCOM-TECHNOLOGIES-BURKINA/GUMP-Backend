@@ -1,6 +1,9 @@
 package com.yulcomtechnologies.drtssms.services;
 
-import com.yulcomtechnologies.drtssms.dtos.*;
+import com.yulcomtechnologies.drtssms.dtos.ApproveDocumentRequestDto;
+import com.yulcomtechnologies.drtssms.dtos.DocumentRequestDto;
+import com.yulcomtechnologies.drtssms.dtos.PayRequest;
+import com.yulcomtechnologies.drtssms.dtos.PaymentRequestResponse;
 import com.yulcomtechnologies.drtssms.entities.DocumentRequest;
 import com.yulcomtechnologies.drtssms.entities.File;
 import com.yulcomtechnologies.drtssms.enums.DocumentRequestStatus;
@@ -10,7 +13,6 @@ import com.yulcomtechnologies.drtssms.mappers.DocumentRequestMapper;
 import com.yulcomtechnologies.drtssms.repositories.ApplicationConfigRepository;
 import com.yulcomtechnologies.drtssms.repositories.DocumentRequestRepository;
 import com.yulcomtechnologies.drtssms.repositories.FileRepository;
-import com.yulcomtechnologies.sharedlibrary.auth.AuthenticatedUserData;
 import com.yulcomtechnologies.sharedlibrary.auth.AuthenticatedUserService;
 import com.yulcomtechnologies.sharedlibrary.enums.UserRole;
 import com.yulcomtechnologies.sharedlibrary.events.EventPublisher;
@@ -28,7 +30,10 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Base64;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -47,15 +52,14 @@ public class DocumentRequestService {
     public DocumentRequest submitDocumentRequest(
         MultipartFile attestationCnss, MultipartFile attestationAnpe,
         String publicContractNumber, Boolean isForPublicContract,
-        String contractPurpose, String contractingOrganizationName,String email
+        String contractPurpose, String contractingOrganizationName
     ) throws IOException {
         File cnssAttestation = saveFile(attestationCnss, "Attestation CNSS");
         File anpeAttestation = saveFile(attestationAnpe, "Attestation ANPE");
-        UserDto  currentUser= usersFeignClient.findUserByEmail(email);
-       // var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
+        var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
         log.info("currentUser: {}", currentUser);
-       // var userData = usersFeignClient.getUsernameOrKeycloakId(currentUser.getKeycloakUserId());
-       // log.info("userData: {}", userData);
+        var userData = usersFeignClient.getUsernameOrKeycloakId(currentUser.getKeycloakUserId());
+        log.info("userData: {}", userData);
 
 
         var documentRequest = DocumentRequest.builder()
@@ -63,7 +67,7 @@ public class DocumentRequestService {
             .isPaid(false)
             .contractPurpose(contractPurpose)
             .contractingOrganizationName(contractingOrganizationName)
-            .region(currentUser.getRegion())
+            .region(userData.getRegion())
             .isForPublicContract(isForPublicContract)
             .createdAt(LocalDateTime.now())
             .publicContractNumber(publicContractNumber)
@@ -88,12 +92,8 @@ public class DocumentRequestService {
         return fileRepository.save(fileEntity);
     }
 
-    public Page<DocumentRequestDto> getPaginatedDocumentRequests(Pageable pageable,String email) {
-
-       UserDto  currentUser= usersFeignClient.findUserByEmail(email);
-
-
-        //var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
+    public Page<DocumentRequestDto> getPaginatedDocumentRequests(Pageable pageable) {
+        var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
         var role = UserRole.valueOf(currentUser.getRole());
         var userData = usersFeignClient.getUsernameOrKeycloakId(currentUser.getKeycloakUserId());
 
@@ -130,49 +130,6 @@ public class DocumentRequestService {
         throw new BadRequestException("Vous ne pouvez pas accéder à cette ressource");
     }
 
-    public Page<DocumentRequestDto> getPaginatedDocumentRequests2(Pageable pageable,String keycloakUserId) {
-        //   var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
-       // var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
-        var userData = usersFeignClient.getUsernameOrKeycloakId(keycloakUserId);
-         log.info("Role: {}", userData.getRole());
-        UserRole role = UserRole.valueOf(userData.getRole());
-
-        if (role == UserRole.ADMIN) {
-            return documentRequestRepository.findAll(pageable).map(
-                    documentRequest -> documentRequestMapper.toDto(
-                            documentRequest,
-                            applicationConfigRepository.get()
-                    )
-            );
-        }
-
-        if (role == UserRole.USER) {
-            return documentRequestRepository.findAllByRequesterId(keycloakUserId, pageable).map(
-                    documentRequest -> documentRequestMapper.toDto(
-                            documentRequest,
-                            applicationConfigRepository.get()
-                    )
-            );
-        }
-
-        if (role == UserRole.DRTSS_AGENT || role == UserRole.DRTSS_REGIONAL_MANAGER) {
-            return documentRequestRepository.findAllByRegion(userData.getRegion(), pageable).map(
-                    documentRequest -> documentRequestMapper.toDto(
-                            documentRequest,
-                            applicationConfigRepository.get()
-                    )
-            );
-        }
-
-        //Later throw 401
-        throw new BadRequestException("Vous ne pouvez pas accéder à cette ressource");
-    }
-
-
-    public  Optional<AuthenticatedUserData>  getUserDetails() {
-        Optional<AuthenticatedUserData> userData = authenticatedUserService.getAuthenticatedUserData();
-        return userData;
-    }
     public DocumentRequestDto getDocumentRequest(String id) {
         return documentRequestRepository.findById(Long.parseLong(id))
             .map(documentRequest -> documentRequestMapper.toDto(
@@ -185,11 +142,9 @@ public class DocumentRequestService {
     public void reviewDocumentRequest(
         Long id,
         DocumentRequestStatus status,
-        String rejectionReason,
-        String email
+        String rejectionReason
     ) {
-      //  var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
-        UserDto  currentUser= usersFeignClient.findUserByEmail(email);
+        var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
 
         if (status == DocumentRequestStatus.REJECTED && rejectionReason == null) {
             throw new BadRequestException("Vous devenez fournir un motif de rejet");
@@ -206,10 +161,9 @@ public class DocumentRequestService {
         eventPublisher.dispatch(new DocumentRequestChanged(documentRequest.getId()));
     }
 
-    public void approveDocumentRequest(Long id, ApproveDocumentRequestDto approveDocumentRequestDto,String email) throws IOException {
+    public void approveDocumentRequest(Long id, ApproveDocumentRequestDto approveDocumentRequestDto) throws IOException {
         log.info("Approving document request with id {}", id);
-        UserDto  currentUser= usersFeignClient.findUserByEmail(email);
-        // var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
+        var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
 
 
         DocumentRequest documentRequest = documentRequestRepository.findById(id)
