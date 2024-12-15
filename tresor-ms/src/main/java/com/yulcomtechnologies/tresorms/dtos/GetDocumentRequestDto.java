@@ -20,5 +20,6 @@ public class GetDocumentRequestDto {
     private String organizationAddress;
     private String organizationPhone;
     private String status;
+    private int remainingDaysBeforeDueDate;
     private AttestationDto attestation;
 }
