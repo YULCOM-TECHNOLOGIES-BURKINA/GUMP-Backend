@@ -44,7 +44,7 @@ public class AttestationGenerator {
         var map = new HashMap<String, Object>();
         map.put("documentNumber", "0".repeat(4) + documentRequestId);
         map.put("identity", documentRequest.getRequesterId());
-        map.put("contractOwner", documentRequest.getRequesterId());
+        map.put("contractOwner", documentRequest.getContractingOrganizationName());
         map.put("address", documentRequest.getAddress());
         map.put("profession", documentRequest.getBusinessDomain());
         map.put("dateCreated", LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));

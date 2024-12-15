@@ -78,7 +78,10 @@ class DocumentRequestControllerTest extends BaseIntegrationTest {
                 new CompanyDto(
                     "Yulcom",
                     "YulcomIFU",
-                    "YulcomAddress"
+                    "YulcomAddress",
+                    "",
+                    "",
+                    ""
                 )
             ).build());
 

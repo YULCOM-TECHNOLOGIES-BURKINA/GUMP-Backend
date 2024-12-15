@@ -20,6 +20,7 @@ public class DocumentRequestDto {
     private AttestationDto attestation;
     private Boolean isPaid;
     private Boolean isPastDue;
+    private Integer remainingDaysBeforeDueDate;
     private CompanyDto company;
     private Boolean isForPublicContract;
     private String contractPurpose;

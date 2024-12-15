@@ -47,7 +47,8 @@ public class ScrapingCorporationInfosExtractor implements CorporationInfosExtrac
                         data.get("Téléphone") != null ? data.get("Téléphone").replace("-", "") : "",
                         data.get("Mail"),
                         data.get("website"),
-                        data.get("N° RCCM")
+                        data.get("N° RCCM"),
+                        data.get("Siège")
                     )
                 );
             }
