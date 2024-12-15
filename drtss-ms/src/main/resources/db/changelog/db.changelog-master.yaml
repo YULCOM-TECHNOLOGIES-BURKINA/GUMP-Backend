@@ -25,3 +25,6 @@ databaseChangeLog:
       file: db/changelog/v1/012-update-utilisateurs-drtss-table.xml
   - include:
       file: db/changelog/v1/013-update-signature_scanner-table.xml
+
+  - include:
+      file: db/changelog/v1/014-update-signature_scanner-table.xml
