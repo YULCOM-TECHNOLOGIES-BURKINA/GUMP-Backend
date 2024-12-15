@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+>
+
+    <changeSet id="015" author="mandson">
+
+        <sql>
+            ALTER TABLE signature_scanner ADD COLUMN user_id BIGINT DEFAULT 0;
+
+            UPDATE signature_scanner SET user_id = 0 WHERE user_id IS NULL;
+
+            ALTER TABLE signature_scanner ALTER COLUMN user_id SET NOT NULL;
+
+            ALTER TABLE signature_scanner ADD CONSTRAINT unique_user_id UNIQUE (user_id);
+        </sql>
+
+    </changeSet>
+
+</databaseChangeLog>
