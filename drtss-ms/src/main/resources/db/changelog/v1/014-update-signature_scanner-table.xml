@@ -9,10 +9,13 @@
     <changeSet id="014" author="mandson">
 
              <sql>
+                -- Supprimer la colonne user_id si nécessaire
                 ALTER TABLE signature_scanner DROP COLUMN IF EXISTS user_id;
 
+                -- Ajouter la colonne user_id proprement
                 ALTER TABLE signature_scanner ADD COLUMN user_id BIGINT DEFAULT 0 NOT NULL;
 
+                -- Ajout de la contrainte UNIQUE sur user_id
                 ALTER TABLE signature_scanner ADD CONSTRAINT unique_user_id UNIQUE (user_id);
             </sql>
 
