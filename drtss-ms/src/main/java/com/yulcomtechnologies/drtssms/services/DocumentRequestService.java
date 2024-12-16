@@ -79,7 +79,7 @@ public class DocumentRequestService {
         files.add(cnssAttestation);
         files.add(anpeAttestation);
         documentRequest.setFiles(files);
-        eventPublisher.dispatch(new DocumentRequestChanged(7L));
+       // eventPublisher.dispatch(new DocumentRequestChanged(7L));
 
         return documentRequestRepository.save(documentRequest);
 

@@ -18,6 +18,7 @@
 
       ALTER TABLE "companies" ADD COLUMN "id_document_id" INTEGER DEFAULT NULL;
       ALTER TABLE "companies" ADD COLUMN "rccm" VARCHAR(255) DEFAULT NULL;
+      ALTER TABLE "companies" ADD COLUMN "nes" VARCHAR(255) NOT NULL;
       ALTER TABLE "companies" ADD COLUMN "enterprise_status_id" INTEGER DEFAULT NULL;
       ALTER TABLE "companies" ADD FOREIGN KEY ("id_document_id") REFERENCES "files" ("id");
       ALTER TABLE "companies" ADD FOREIGN KEY ("enterprise_status_id") REFERENCES "files" ("id");
