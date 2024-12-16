@@ -5,6 +5,7 @@ import com.yulcomtechnologies.drtssms.entities.DocumentRequest;
 import com.yulcomtechnologies.drtssms.entities.File;
 import com.yulcomtechnologies.drtssms.enums.DocumentRequestStatus;
 import com.yulcomtechnologies.drtssms.events.DocumentRequestChanged;
+import com.yulcomtechnologies.drtssms.events.NewDocumentRequest;
 import com.yulcomtechnologies.drtssms.feignClients.UsersFeignClient;
 import com.yulcomtechnologies.drtssms.mappers.DocumentRequestMapper;
 import com.yulcomtechnologies.drtssms.repositories.ApplicationConfigRepository;
@@ -76,7 +77,7 @@ public class DocumentRequestService {
         files.add(cnssAttestation);
         files.add(anpeAttestation);
         documentRequest.setFiles(files);
-        eventPublisher.dispatch(new DocumentRequestChanged(7L));
+        eventPublisher.dispatch(new NewDocumentRequest());
 
         return documentRequestRepository.save(documentRequest);
 

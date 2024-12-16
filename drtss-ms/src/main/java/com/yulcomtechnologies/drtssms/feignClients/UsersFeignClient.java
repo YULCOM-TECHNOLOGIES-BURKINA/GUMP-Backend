@@ -1,10 +1,13 @@
 package com.yulcomtechnologies.drtssms.feignClients;
 
 import com.yulcomtechnologies.drtssms.dtos.UserDto;
+import com.yulcomtechnologies.sharedlibrary.enums.UserType;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.List;
 
 @FeignClient(name = "users-ms")
 public interface UsersFeignClient {
@@ -19,4 +22,9 @@ public interface UsersFeignClient {
 
     @GetMapping("/api/users/{email}/email")
     UserDto findUserByEmail(@PathVariable("email") String email);
+
+    @GetMapping("/api/users/{userType}/type")
+    List<UserDto> getUserByType(
+            @PathVariable UserType userType
+    );
  }
