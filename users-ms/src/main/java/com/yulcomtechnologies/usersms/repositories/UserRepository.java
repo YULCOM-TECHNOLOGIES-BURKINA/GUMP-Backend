@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -23,5 +24,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsernameOrKeycloakUserId(String usernameOrSsoUserId);
 
     Page<User> findAllByIsActiveFalse(Pageable pageable);
+
+    @Query("SELECT u FROM User u WHERE u.userType = :userType")
+    List<User> findByuserType(UserType userType);
 
 }

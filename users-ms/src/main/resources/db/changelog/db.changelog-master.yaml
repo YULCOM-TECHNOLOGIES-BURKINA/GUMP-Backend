@@ -14,3 +14,7 @@ databaseChangeLog:
       file: db/changelog/v1/005-update-users.xml
   - include:
       file: db/changelog/v1/006-update-users.xml
+  - include:
+      file: db/changelog/v1/007-update-users.xml
+  - include:
+      file: db/changelog/v1/008-update-users.xml
