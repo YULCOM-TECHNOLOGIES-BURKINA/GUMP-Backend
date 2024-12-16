@@ -56,7 +56,6 @@ public class UtilisateursDrtss {
     @Column(name = "forename",nullable = false)
     private String forename;
 
-
     @Column(name = "actif")
     private boolean actif = true;
 
