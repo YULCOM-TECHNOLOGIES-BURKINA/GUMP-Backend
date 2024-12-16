@@ -30,8 +30,7 @@ public class NewDocumentRequestListener {
     public void handleDocumentRequestStatusChanged(NewDocumentRequest event) {
         log.info("Mon test de notification: ");
 
-       // var user = usersFeignClient.getUsernameOrKeycloakId(documentRequest.getRequesterId());
-       // log.info("User: " + user);
+
      List<UserDto>  userDtrss=usersFeignClient.getUserByType(UserType.DRTSS_USER);
 
      userDtrss.forEach(userDto -> {
