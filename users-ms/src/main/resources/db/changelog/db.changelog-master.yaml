@@ -20,3 +20,6 @@ databaseChangeLog:
       file: db/changelog/v1/007-update-users.xml
   - include:
       file: db/changelog/v1/008-update-users.xml
+
+  - include:
+      file: db/changelog/v1/009-add-nes-number.xml
