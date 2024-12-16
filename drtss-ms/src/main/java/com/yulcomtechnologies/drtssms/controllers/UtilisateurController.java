@@ -5,16 +5,20 @@ import com.yulcomtechnologies.drtssms.dtos.UtilisateursDrtssDto;
 import com.yulcomtechnologies.drtssms.entities.UtilisateursDrtss;
 import com.yulcomtechnologies.drtssms.feignClients.UsersFeignClient;
 import com.yulcomtechnologies.drtssms.services.UtilisateurService;
+import com.yulcomtechnologies.sharedlibrary.enums.UserType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @AllArgsConstructor
 @RestController
@@ -85,4 +89,7 @@ public class UtilisateurController {
         usersFeignClient.findUserByEmail(email);
         return  usersFeignClient.findUserByEmail(email);
     }
+
+
+
 }

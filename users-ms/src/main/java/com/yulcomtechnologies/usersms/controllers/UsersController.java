@@ -113,7 +113,7 @@ public class UsersController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("users/{userType}/find-by-type")
+    @GetMapping("users/{userType}/type")
     public List<User> getUserByType(
             @PathVariable UserType userType
     ) {
