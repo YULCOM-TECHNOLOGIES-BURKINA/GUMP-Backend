@@ -2,10 +2,10 @@ spring:
   application:
     name: notification-ms
   mail:
-    host: localhost
-    port: 1025
-    username: your_email@gmail.com
-    password: your_password
+    host: smtp.gmail.com
+    port: 587
+    username: mandson1er@gmail.com
+    password: hvbv qrgc puyn deqe
     properties:
       mail:
         smtp:

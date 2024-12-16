@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Service
@@ -123,7 +124,7 @@ public class UserService {
         user.setIs_signatory(!user.getIs_signatory());
         System.out.println(user.getIs_signatory());
         userRepository.save(user);
-      //  eventPublisher.dispatch(new AccountStateChanged(user.getId()));
+        eventPublisher.dispatch(new AccountStateChanged(user.getId()));
     }
 
     public User getUserByEmail(String email) {
@@ -133,5 +134,11 @@ public class UserService {
         );
 
         return (user);
+    }
+
+    public List<User> getUserByType(UserType userType ) {
+
+       return userRepository.findByuserType(userType);
+
     }
 }

@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController("users")
 @AllArgsConstructor
 public class UsersController {
@@ -109,5 +111,13 @@ public class UsersController {
     ) {
         userService.toglleUserSignatoryState(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("users/{userType}/find")
+    public List<User> getUserByType(
+            @PathVariable UserType userType
+    ) {
+        return  userService.getUserByType(userType);
+
     }
 }

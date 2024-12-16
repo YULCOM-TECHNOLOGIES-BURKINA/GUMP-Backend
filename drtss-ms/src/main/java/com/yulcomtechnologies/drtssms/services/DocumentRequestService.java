@@ -21,6 +21,7 @@ import com.yulcomtechnologies.sharedlibrary.exceptions.ResourceNotFoundException
 import com.yulcomtechnologies.sharedlibrary.services.FileStorageService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -47,6 +48,7 @@ public class DocumentRequestService {
     private final ApplicationConfigRepository applicationConfigRepository;
     private final AuthenticatedUserService authenticatedUserService;
     private final UsersFeignClient usersFeignClient;
+    private final ApplicationEventPublisher eventPublish;
 
     public DocumentRequest submitDocumentRequest(
         MultipartFile attestationCnss, MultipartFile attestationAnpe,
@@ -77,8 +79,10 @@ public class DocumentRequestService {
         files.add(cnssAttestation);
         files.add(anpeAttestation);
         documentRequest.setFiles(files);
+        eventPublisher.dispatch(new DocumentRequestChanged(7L));
 
         return documentRequestRepository.save(documentRequest);
+
     }
 
     private File saveFile(MultipartFile file, String label) throws IOException {
