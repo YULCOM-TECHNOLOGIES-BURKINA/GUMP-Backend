@@ -118,6 +118,25 @@ import java.util.Map;
         return apiService.callApi(url, formData);
     }
 
+
+    /**
+     * verify_esyntax
+     * @param params
+     * @return
+     */
+    @PostMapping(path = "/verify_esyntax", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> verify_esyntax(@RequestBody AsfDmResquestDto params) {
+        List<BasicNameValuePair> formData = new ArrayList<>();
+        formData.add(new BasicNameValuePair("form[ifu]", params.getIfu()));
+        formData.add(new BasicNameValuePair("form[nes]", params.getNes()));
+
+        String url =  e_sintax_url+"rest/asf/contribuable";
+        return apiService.callApi(url, formData);
+    }
+
+
+
+
     /**
      * Verifier demandes asf
      * @param params

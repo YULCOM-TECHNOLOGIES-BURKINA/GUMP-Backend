@@ -28,8 +28,6 @@ public class NewDocumentRequestListener {
     @EventListener
     @Async
     public void handleDocumentRequestStatusChanged(NewDocumentRequest event) {
-        log.info("Mon test de notification: ");
-
 
      List<UserDto>  userDtrss=usersFeignClient.getUserByType(UserType.DRTSS_USER);
 
@@ -48,13 +46,6 @@ public class NewDocumentRequestListener {
 
      });
 
-    }
-
-    private String getFormattedMessage(DocumentRequest documentRequest, String message) {
-        return switch (DocumentRequestStatus.valueOf(documentRequest.getStatus())) {
-            case REJECTED ->String.format(message, documentRequest.getRejectionReason());
-            default -> message;
-        };
     }
 
     private NotificationStatus getEmailData() {
