@@ -1,7 +1,7 @@
 package com.yulcomtechnologies.drtssms.enums;
 
 public enum NotificationStatus {
-    NOTIFY_PENDING_REQUEST("Demande de Document en Attente", "Une Nouvelle Demande de Document en Attente", "Une Nouvelle demande de document en attente"),
+    NOTIFY_PENDING_REQUEST("Demande de Document en Attente", "Nouvelle Demande Reçue", "Une nouvelle demande de document a été soumise et attend un traitement"),
     PENDING("Demande de Document en Attente", "Demande de Document en Attente", "Votre demande de document est en attente"),
     REJECTED("Demande de Document Rejetée", "Demande de Document Rejetée", "Votre demande de document a été rejetée pour le motif suivant: %s"),
     PROCESSING("Demande de Document en Cours de Traitement", "Demande de Document en Cours de Traitement", "Votre demande de document est en cours de traitement"),

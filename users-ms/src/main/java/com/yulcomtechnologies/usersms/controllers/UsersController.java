@@ -121,6 +121,15 @@ public class UsersController {
 
     }
 
+    @GetMapping("users/type/{userType}/region/{region}")
+    public List<User> getUserByTypeAndRegion(
+            @PathVariable UserType userType,
+            @PathVariable String region
+    ) {
+        return  userService.getUserByTypeAndRegion(userType,region);
+
+    }
+
     @GetMapping("users/me")
     public ResponseEntity<UserDto> getMe() {
         return ResponseEntity.ok(userService.getMe());

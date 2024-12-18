@@ -9,4 +9,6 @@ import lombok.Getter;
 @Getter
 @EqualsAndHashCode
 public class NewDocumentRequest implements Dispatchable {
- }
+ private String region;
+
+}

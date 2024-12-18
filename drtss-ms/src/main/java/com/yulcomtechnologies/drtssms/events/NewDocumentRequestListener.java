@@ -28,8 +28,8 @@ public class NewDocumentRequestListener {
     @EventListener
     @Async
     public void handleDocumentRequestStatusChanged(NewDocumentRequest event) {
-
-     List<UserDto>  userDtrss=usersFeignClient.getUserByType(UserType.DRTSS_USER);
+            System.out.println("NewDocumentRequestListener region"+event.getRegion());
+     List<UserDto>  userDtrss=usersFeignClient.getUserByTypeAndRegion(UserType.DRTSS_USER,event.getRegion());
 
      userDtrss.forEach(userDto -> {
 

@@ -28,4 +28,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.userType = :userType")
     List<User> findByuserType(UserType userType);
 
+    @Query("SELECT u FROM User u WHERE u.userType = :userType AND u.region = :region")
+    List<User> finUserByTypeAndRegion(UserType userType,String region);
+
 }

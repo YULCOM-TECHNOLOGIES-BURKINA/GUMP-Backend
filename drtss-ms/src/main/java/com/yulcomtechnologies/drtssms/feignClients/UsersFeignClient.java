@@ -27,4 +27,11 @@ public interface UsersFeignClient {
     List<UserDto> getUserByType(
             @PathVariable UserType userType
     );
- }
+
+    @GetMapping("api/users/type/{userType}/region/{region}")
+    List<UserDto> getUserByTypeAndRegion(
+            @PathVariable UserType userType,
+            @PathVariable String region
+    ) ;
+
+}

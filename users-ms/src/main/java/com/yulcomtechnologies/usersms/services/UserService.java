@@ -139,6 +139,10 @@ public class UserService {
        return userRepository.findByuserType(userType);
     }
 
+    public List<User> getUserByTypeAndRegion(UserType userType ,String region) {
+        return userRepository.finUserByTypeAndRegion(userType,region);
+    }
+
     public UserDto getMe() {
         var authenticatedUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(
             () -> new BadRequestException("User not found")

@@ -63,7 +63,6 @@ public class DocumentRequestService {
         var userData = usersFeignClient.getUsernameOrKeycloakId(currentUser.getKeycloakUserId());
         log.info("userData: {}", userData);
 
-
         var documentRequest = DocumentRequest.builder()
             .requesterId(currentUser.getKeycloakUserId())
             .isPaid(false)
@@ -80,7 +79,8 @@ public class DocumentRequestService {
         files.add(cnssAttestation);
         files.add(anpeAttestation);
         documentRequest.setFiles(files);
-        eventPublisher.dispatch(new NewDocumentRequest());
+       // currentUser.
+        eventPublisher.dispatch(new NewDocumentRequest(userData.getRegion()));
 
         return documentRequestRepository.save(documentRequest);
 
