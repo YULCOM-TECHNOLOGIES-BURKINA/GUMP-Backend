@@ -1,5 +1,6 @@
 package com.yulcomtechnologies.usersms.dtos;
 
+import jakarta.persistence.Column;
 import lombok.Data;
 
 @Data
@@ -13,4 +14,7 @@ public class CompanyDto {
     private String postalAddress;
     private String phone;
     private String location;
+    private String representantLastname;
+    private String representantFirstname;
+    private String representantPhone;
 }

@@ -1,6 +1,8 @@
 package com.yulcomtechnologies.usersms.services;
 
+import com.yulcomtechnologies.sharedlibrary.auth.AuthenticatedUserService;
 import com.yulcomtechnologies.sharedlibrary.events.EventPublisher;
+import com.yulcomtechnologies.sharedlibrary.exceptions.BadRequestException;
 import com.yulcomtechnologies.sharedlibrary.exceptions.ResourceNotFoundException;
 import com.yulcomtechnologies.sharedlibrary.services.FileStorageService;
 import com.yulcomtechnologies.usersms.dtos.CreateUserRequest;
@@ -29,7 +31,7 @@ public class UserService {
     private final UserMapper userMapper;
     private final FileStorageService fileStorageService;
     private final EventPublisher eventPublisher;
-
+    private final AuthenticatedUserService authenticatedUserService;
 
     @Transactional
     public void createUser(CreateUserRequest createUserRequest) throws Exception {
@@ -122,23 +124,30 @@ public class UserService {
         );
 
         user.setIs_signatory(!user.getIs_signatory());
-        System.out.println(user.getIs_signatory());
         userRepository.save(user);
         eventPublisher.dispatch(new AccountStateChanged(user.getId()));
     }
 
     public User getUserByEmail(String email) {
 
-        var user = userRepository.findByEmail(email).orElseThrow(
+        return (userRepository.findByEmail(email).orElseThrow(
                 () -> new ResourceNotFoundException("User not found")
-        );
-
-        return (user);
+        ));
     }
 
     public List<User> getUserByType(UserType userType ) {
-
        return userRepository.findByuserType(userType);
+    }
 
+    public UserDto getMe() {
+        var authenticatedUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(
+            () -> new BadRequestException("User not found")
+        );
+
+        var userData = userRepository.findByUsernameOrKeycloakUserId(authenticatedUser.getKeycloakUserId()).orElseThrow(
+            () -> new ResourceNotFoundException("User not found")
+        );
+
+        return mapUser(userData);
     }
 }

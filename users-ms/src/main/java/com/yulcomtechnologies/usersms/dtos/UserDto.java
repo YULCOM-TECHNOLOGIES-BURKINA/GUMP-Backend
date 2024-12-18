@@ -23,5 +23,4 @@ public class UserDto {
     private String tel;
     private Boolean is_signatory;
     private LocalDateTime createdAt=LocalDateTime.now();
-
 }

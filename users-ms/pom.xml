@@ -136,7 +136,13 @@
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-openfeign</artifactId>
     </dependency>
-  </dependencies>
+        <dependency>
+            <groupId>com.yulcomtechnologies</groupId>
+            <artifactId>shared-library</artifactId>
+            <version>0.0.15-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>

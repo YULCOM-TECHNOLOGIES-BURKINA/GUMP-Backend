@@ -120,4 +120,9 @@ public class UsersController {
         return  userService.getUserByType(userType);
 
     }
+
+    @GetMapping("users/me")
+    public ResponseEntity<UserDto> getMe() {
+        return ResponseEntity.ok(userService.getMe());
+    }
 }

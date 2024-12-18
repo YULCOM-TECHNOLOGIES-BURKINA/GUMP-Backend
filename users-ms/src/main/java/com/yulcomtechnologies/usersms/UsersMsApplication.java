@@ -10,8 +10,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAsync
 @EnableFeignClients("com.yulcomtechnologies.usersms.feignClients")
 @ComponentScan({
+    "com.yulcomtechnologies.usersms",
     "com.yulcomtechnologies.sharedlibrary",
-    "com.yulcomtechnologies.usersms"
 })
 public class UsersMsApplication {
 
