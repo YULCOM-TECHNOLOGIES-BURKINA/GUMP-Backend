@@ -38,6 +38,15 @@ public class Company {
     @Column(name = "phone", nullable = false, length = 255)
     private String phone;
 
+    @Column(name = "representant_lastname")
+    private String representantLastname;
+
+    @Column(name = "representant_firstname")
+    private String representantFirstname;
+
+    @Column(name = "representant_phone")
+    private String representantPhone;
+
     @ManyToOne
     @JoinColumn(name = "id_document_id", referencedColumnName = "id")
     private File idDocument;

@@ -1,5 +1,6 @@
 package com.yulcomtechnologies.usersms.dtos;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -37,4 +38,16 @@ public class RegisterRequest {
     @NotNull
     @NotBlank
     public String nes;
+
+    @NotNull
+    @NotBlank
+    private String representantLastname;
+
+    @NotNull
+    @NotBlank
+    private String representantFirstname;
+
+    @NotNull
+    @NotBlank
+    private String representantPhone;
 }
