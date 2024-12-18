@@ -1,4 +1,4 @@
-package com.yulcomtechnologies.drtssms.dtos;
+package com.yulcomtechnologies.tresorms.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

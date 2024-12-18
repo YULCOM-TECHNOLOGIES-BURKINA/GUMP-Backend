@@ -25,6 +25,10 @@ public class Attestation {
 
     @Column(name = "expiration_date")
     private LocalDateTime expirationDate;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
     @Column(unique = true)
     private String number;
 

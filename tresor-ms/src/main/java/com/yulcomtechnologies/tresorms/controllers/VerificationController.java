@@ -1,6 +1,6 @@
-package com.yulcomtechnologies.drtssms.controllers;
+package com.yulcomtechnologies.tresorms.controllers;
 
-import com.yulcomtechnologies.drtssms.services.VerificationService;
+import com.yulcomtechnologies.tresorms.services.VerificationService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

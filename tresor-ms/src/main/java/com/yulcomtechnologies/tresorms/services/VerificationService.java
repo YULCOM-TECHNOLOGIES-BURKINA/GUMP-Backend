@@ -1,9 +1,9 @@
-package com.yulcomtechnologies.drtssms.services;
+package com.yulcomtechnologies.tresorms.services;
 
-import com.yulcomtechnologies.drtssms.dtos.VerifyDocumentResponseDto;
-import com.yulcomtechnologies.drtssms.feignClients.UsersFeignClient;
-import com.yulcomtechnologies.drtssms.repositories.AttestationRepository;
 import com.yulcomtechnologies.sharedlibrary.exceptions.ResourceNotFoundException;
+import com.yulcomtechnologies.tresorms.dtos.VerifyDocumentResponseDto;
+import com.yulcomtechnologies.tresorms.feignClients.UsersFeignClient;
+import com.yulcomtechnologies.tresorms.repositories.AttestationRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
