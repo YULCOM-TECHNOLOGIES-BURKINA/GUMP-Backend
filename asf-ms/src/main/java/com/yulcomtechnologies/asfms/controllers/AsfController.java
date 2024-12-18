@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -143,14 +144,28 @@ import java.util.Map;
      * @return
      */
     @PostMapping(path = "/verifier", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, Object> verifierAsf(@RequestBody AsfControlResquestDto params) {
+    public ResponseEntity<?> verifierAsf(@RequestBody AsfControlResquestDto params) {
         List<BasicNameValuePair> formData = new ArrayList<>();
         formData.add(new BasicNameValuePair("form[ifu]", params.getIfu()));
         formData.add(new BasicNameValuePair("form[nes]", params.getNes()));
         formData.add(new BasicNameValuePair("form[attestation]", params.getAttestation()));
 
-        String url =  e_sintax_url+"rest/asf/verifdocs";
-        return apiService.callApi(url, formData);
+        String url = e_sintax_url + "rest/asf/verifdocs";
+
+         byte[] pdfData = apiService.callApiForPdf(url, formData);
+
+         if (pdfData == null || pdfData.length == 0) {
+             return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Le document PDF est introuvable."));
+        }
+
+         HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("attachment", "document.pdf");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(pdfData);
     }
 
     /**
