@@ -26,7 +26,6 @@ public class SecurityConfig {
         return serverHttpSecurity.csrf(ServerHttpSecurity.CsrfSpec::disable)
             .authorizeExchange(exchange ->
                 exchange.pathMatchers(
-
                     "/api/get-ifu/**",
                     "/api/regions/**",
                     "/api/verify_esyntax/**",

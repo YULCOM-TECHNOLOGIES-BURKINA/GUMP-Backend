@@ -280,7 +280,7 @@ services:
       #- KEYCLOAK_AUTH_SERVER_URL=http://keycloak:9080
       - KEYCLOAK_REALM=gump
       - TRESOR_MS_URI=http://tresor:8080
-      - ASF_MS_URI=http://tresor:8084
+      - ASF_MS_URI=http://asf:8083
       - DRTSS_MS_URI=http://drtss:8082
       - JUSTICE_MS_URI=http://justice:8085
       - USERS_MS_URI=http://users:8081
