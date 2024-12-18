@@ -28,6 +28,8 @@ public class SecurityConfig {
                 exchange.pathMatchers(
                     "/api/verify_esyntax",
                     "/api/get-ifu/**",
+                    "/api/regions/**",
+                    "/api/verify_esyntax/**",
                     "/api/verify-document/**",
                     "/api/auth/**",
                     "/api/eureka/**"

@@ -6,6 +6,7 @@ import com.yulcomtechnologies.sharedlibrary.exceptions.BadRequestException;
 import com.yulcomtechnologies.sharedlibrary.exceptions.ResourceNotFoundException;
 import com.yulcomtechnologies.sharedlibrary.services.FileStorageService;
 import com.yulcomtechnologies.usersms.dtos.CreateUserRequest;
+import com.yulcomtechnologies.usersms.dtos.UpdateProfileRequest;
 import com.yulcomtechnologies.usersms.dtos.UserDto;
 import com.yulcomtechnologies.usersms.entities.User;
 import com.yulcomtechnologies.usersms.enums.UserRole;
@@ -153,5 +154,29 @@ public class UserService {
         );
 
         return mapUser(userData);
+    }
+
+    public void updateProfile(UpdateProfileRequest updateProfileRequest) {
+        var authenticatedUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(
+            () -> new BadRequestException("User not found")
+        );
+
+        var user = userRepository.findByUsernameOrKeycloakUserId(authenticatedUser.getKeycloakUserId()).orElseThrow(
+            () -> new ResourceNotFoundException("User not found")
+        );
+
+        if (updateProfileRequest.getRegion() != null) {
+            user.setRegion(updateProfileRequest.getRegion());
+        }
+
+        var company = user.getCompany();
+        company.setAddress(updateProfileRequest.getAddress());
+        company.setLocation(updateProfileRequest.getLocation());
+        company.setPostalAddress(updateProfileRequest.getPostalAddress());
+        company.setPhone(updateProfileRequest.getPhone());
+        company.setRepresentantLastname(updateProfileRequest.getRepresentantLastname());
+        company.setRepresentantFirstname(updateProfileRequest.getRepresentantFirstname());
+        company.setRepresentantPhone(updateProfileRequest.getRepresentantPhone());
+        userRepository.save(user);
     }
 }
