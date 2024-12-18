@@ -79,7 +79,7 @@ spring:
             - PrefixPath=/api
 
         - id: asf-ms
-          uri: ${ASF_MS_URI:http://localhost:8084}
+          uri: ${ASF_MS_URI:http://localhost:8083}
           predicates:
             - Query=service, asf-ms
           filters:
