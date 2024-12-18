@@ -27,6 +27,7 @@ public class SecurityConfig {
             .authorizeExchange(exchange ->
                 exchange.pathMatchers(
                     "/api/get-ifu/**",
+                    "/api/verify-document/**",
                     "/api/auth/**",
                     "/api/eureka/**"
                 )
