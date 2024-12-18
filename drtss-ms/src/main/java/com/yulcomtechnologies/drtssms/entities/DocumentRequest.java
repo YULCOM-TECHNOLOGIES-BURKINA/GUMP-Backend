@@ -33,7 +33,7 @@ public class DocumentRequest {
     @Column(name = "requester_id", nullable = false)
     private String requesterId;  // Keycloak user ID of the requester
 
-    @Column(name = "public_contract_number", nullable = false)
+    @Column(name = "public_contract_number")
     private String publicContractNumber;
 
     @Column(nullable = false)

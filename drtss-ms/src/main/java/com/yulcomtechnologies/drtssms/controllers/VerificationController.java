@@ -14,7 +14,6 @@ public class VerificationController {
 
     @GetMapping("verify-document/{number}")
     public ResponseEntity<?> verifyDocument(@PathVariable String number) {
-        verificationService.verifyDocument(number);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(verificationService.verifyDocument(number));
     }
 }
