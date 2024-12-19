@@ -31,7 +31,8 @@ public class SecurityConfig {
                     "/api/verify_esyntax/**",
                     "/api/verify-document/**",
                     "/api/auth/**",
-                    "/api/eureka/**"
+                    "/api/eureka/**",
+                    "/api/files/**"
                 )
                 .permitAll()
                 .anyExchange()
