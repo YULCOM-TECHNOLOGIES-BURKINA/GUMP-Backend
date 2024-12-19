@@ -14,7 +14,7 @@ services:
     ports:
       - 8082:8082
     environment:
-      - APP_URL=http://gump.yulpay.com:8082/api
+      - APP_URL=https://gump-gateway.yulpay.com
       - SPRING_DATASOURCE_URL=jdbc:postgresql://drtss-database:5432/gump
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
 
@@ -51,6 +51,7 @@ services:
       ports:
         - 8085:8085
       environment:
+        - APP_URL=https://gump-gateway.yulpay.com
         - SPRING_DATASOURCE_URL=jdbc:postgresql://justice-database:5432/gump
         - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
 
@@ -68,6 +69,7 @@ services:
       ports:
         - 8083:8083
       environment:
+        - APP_URL=https://gump-gateway.yulpay.com
         - SPRING_DATASOURCE_URL=jdbc:postgresql://asf-database:5432/gump
         - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
 
@@ -84,6 +86,7 @@ services:
     ports:
       - 8081:8081
     environment:
+      - APP_URL=https://gump-gateway.yulpay.com
       - SPRING_DATASOURCE_URL=jdbc:postgresql://users-database:5432/gump
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
 
@@ -102,7 +105,7 @@ services:
     ports:
       - 8080:8080
     environment:
-      - APP_URL=http://gump.yulpay.com:8080/api
+      - APP_URL=https://gump-gateway.yulpay.com
       - SPRING_DATASOURCE_URL=jdbc:postgresql://tresor-database:5432/gump
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
 
@@ -202,6 +205,7 @@ services:
     volumes:
       - drtss-data:/var/lib/postgresql/data/
     environment:
+      - APP_URL=https://gump-gateway.yulpay.com
       - POSTGRES_USER=gump
       - POSTGRES_PASSWORD=gump
       - POSTGRES_HOST_AUTH_METHOD=trust
