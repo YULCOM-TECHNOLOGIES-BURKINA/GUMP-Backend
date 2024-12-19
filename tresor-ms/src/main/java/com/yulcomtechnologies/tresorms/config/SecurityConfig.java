@@ -1,5 +1,7 @@
 package com.yulcomtechnologies.tresorms.config;
 
+import com.yulcomtechnologies.sharedlibrary.auth.AuthenticatedUserService;
+import com.yulcomtechnologies.sharedlibrary.auth.GatewayAuthenticatedUserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -24,5 +26,10 @@ public class SecurityConfig {
             .addFilterBefore(new AuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    public AuthenticatedUserService authenticatedUserService() {
+        return new GatewayAuthenticatedUserService();
     }
 }
