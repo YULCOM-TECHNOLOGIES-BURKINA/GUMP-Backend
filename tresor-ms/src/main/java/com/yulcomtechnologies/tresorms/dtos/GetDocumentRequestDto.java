@@ -3,6 +3,8 @@ package com.yulcomtechnologies.tresorms.dtos;
 import com.yulcomtechnologies.tresorms.enums.RequestType;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 public class GetDocumentRequestDto {
     private String id;
@@ -22,4 +24,5 @@ public class GetDocumentRequestDto {
     private String status;
     private int remainingDaysBeforeDueDate;
     private AttestationDto attestation;
+    private LocalDateTime createdAt;
 }

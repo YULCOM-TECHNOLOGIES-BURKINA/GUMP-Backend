@@ -26,6 +26,8 @@ public class DocumentRequestMapper {
     public GetDocumentRequestDto toDto(DocumentRequest documentRequest) {
         var dto = new GetDocumentRequestDto();
         dto.setId(documentRequest.getId().toString());
+        dto.setCreatedAt(documentRequest.getCreatedAt());
+
         var applicationConfig = applicationConfigRepository.get();
 
         int processingTime = documentRequest.getRequestType().equals(RequestType.LIQUIDATION) ? applicationConfig.getProcessingTimeInDaysForLiquidation() : applicationConfig.getProcessingTimeInDaysForSoumission();

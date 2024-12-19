@@ -4,6 +4,8 @@ import com.yulcomtechnologies.tresorms.enums.RequestType;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 public class DocumentRequestDto {
     @NotNull
