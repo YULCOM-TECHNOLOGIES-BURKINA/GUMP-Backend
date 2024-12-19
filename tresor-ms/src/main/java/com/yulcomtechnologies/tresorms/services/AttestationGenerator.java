@@ -41,6 +41,8 @@ public class AttestationGenerator {
             filePath
         );
 
+        fileRepository.save(file);
+
 
         var attestation = Attestation.builder()
             .expirationDate(LocalDate.now().plusMonths(VALIDITY_PERIOD_IN_MONTHS).atTime(23, 59, 59))
@@ -78,7 +80,6 @@ public class AttestationGenerator {
             }
             var finalFileBytes = pdfFiligraneService.addFiligraneToPDF(fileBytes,filigraneTexte);
 
-            fileRepository.save(file);
             fileStorageService.saveFile(finalFileBytes, filePath);
         } catch (Exception e) {
             throw new RuntimeException(e);

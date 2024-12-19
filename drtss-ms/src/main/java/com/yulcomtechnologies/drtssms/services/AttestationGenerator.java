@@ -51,7 +51,26 @@ public class AttestationGenerator {
         var userData = usersFeignClient.getUsernameOrKeycloakId(documentRequest.getRequesterId());
         var company = userData.getCompany();
 
-        map.put("attestationNumber", approveDocumentRequestDto.getAttestationAnpeNumber());
+        var attestation = Attestation.builder()
+            .expirationDate(LocalDate.now().plusMonths(
+                applicationConfigRepository.get().getValidityTimeInMonths()
+            ).atTime(23, 59, 59))
+            .attestationAnpeNumber(approveDocumentRequestDto.getAttestationAnpeNumber())
+            .attestationCnssNumber(approveDocumentRequestDto.getAttestationCnssNumber())
+            .attestationAnpeDate(approveDocumentRequestDto.getAttestationAnpeDate())
+            .attestationCnssDate(approveDocumentRequestDto.getAttestationCnssDate())
+            .documentRequest(DocumentRequest.builder().id(documentRequestId).build())
+            .number(numberGeneratorService.generateNumber())
+            .createdAt(LocalDateTime.now())
+            .uuid(UUID.randomUUID().toString())
+            .documentRequest(documentRequest)
+            .file(file)
+            .build();
+
+
+        attestationRepository.save(attestation);
+
+        map.put("attestationNumber", attestation.getNumber());
         map.put("anpeNumber", approveDocumentRequestDto.getAttestationAnpeNumber());
         map.put("cnssNumber", approveDocumentRequestDto.getAttestationCnssNumber());
         map.put("cnssDate", approveDocumentRequestDto.getAttestationCnssDate());
@@ -75,23 +94,5 @@ public class AttestationGenerator {
             throw new RuntimeException(e);
         }
 
-        var attestation = Attestation.builder()
-            .expirationDate(LocalDate.now().plusMonths(
-                applicationConfigRepository.get().getValidityTimeInMonths()
-            ).atTime(23, 59, 59))
-            .attestationAnpeNumber(approveDocumentRequestDto.getAttestationAnpeNumber())
-            .attestationCnssNumber(approveDocumentRequestDto.getAttestationCnssNumber())
-            .attestationAnpeDate(approveDocumentRequestDto.getAttestationAnpeDate())
-            .attestationCnssDate(approveDocumentRequestDto.getAttestationCnssDate())
-            .documentRequest(DocumentRequest.builder().id(documentRequestId).build())
-            .number(numberGeneratorService.generateNumber())
-            .createdAt(LocalDateTime.now())
-            .uuid(UUID.randomUUID().toString())
-            .documentRequest(documentRequest)
-            .file(file)
-            .build();
-
-
-        attestationRepository.save(attestation);
     }
 }
