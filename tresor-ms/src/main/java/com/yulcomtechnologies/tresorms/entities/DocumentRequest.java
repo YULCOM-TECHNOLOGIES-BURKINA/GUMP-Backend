@@ -63,6 +63,9 @@ public class DocumentRequest {
     @Column(name = "organization_address")
     private String organizationAddress;
 
+    @Column(name = "organization_name")
+    private String organizationName;
+
     @Column(name = "organization_phone")
     private String organizationPhone;
 

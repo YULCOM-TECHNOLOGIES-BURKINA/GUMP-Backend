@@ -41,9 +41,21 @@ public class AttestationGenerator {
             filePath
         );
 
+
+        var attestation = Attestation.builder()
+            .expirationDate(LocalDate.now().plusMonths(VALIDITY_PERIOD_IN_MONTHS).atTime(23, 59, 59))
+            .documentRequest(DocumentRequest.builder().id(documentRequestId).build())
+            .number(UUID.randomUUID().toString())
+            .uuid(UUID.randomUUID().toString())
+            .documentRequest(documentRequest)
+            .file(file)
+            .build();
+
+        attestationRepository.save(attestation);
+
         var map = new HashMap<String, Object>();
-        map.put("documentNumber", "0".repeat(4) + documentRequestId);
-        map.put("identity", documentRequest.getRequesterId());
+        map.put("documentNumber", attestation.getNumber());
+        map.put("identity", documentRequest.getOrganizationName());
         map.put("contractOwner", documentRequest.getContractingOrganizationName());
         map.put("address", documentRequest.getAddress());
         map.put("profession", documentRequest.getBusinessDomain());
@@ -55,6 +67,7 @@ public class AttestationGenerator {
 
         var filledTemplate = templateProcessor.fillVariables(documentRequest.getRequestType().toString().toLowerCase() + ".html", map);
         var typeResquest= documentRequest.getRequestType().toString();
+
         try {
 
 
@@ -70,16 +83,5 @@ public class AttestationGenerator {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-        var attestation = Attestation.builder()
-            .expirationDate(LocalDate.now().plusMonths(VALIDITY_PERIOD_IN_MONTHS).atTime(23, 59, 59))
-            .documentRequest(DocumentRequest.builder().id(documentRequestId).build())
-            .number(UUID.randomUUID().toString())
-            .uuid(UUID.randomUUID().toString())
-            .documentRequest(documentRequest)
-            .file(file)
-            .build();
-
-        attestationRepository.save(attestation);
     }
 }

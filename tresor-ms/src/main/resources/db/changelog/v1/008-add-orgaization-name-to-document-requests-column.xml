@@ -8,7 +8,7 @@
 
   <changeSet id="007" author="kulturman">
     <sql>
-      ALTER TABLE "attestations" ADD COLUMN "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+      ALTER TABLE "document_requests" ADD COLUMN "organization_name" VARCHAR(255) DEFAULT NULL;
     </sql>
   </changeSet>
 </databaseChangeLog>

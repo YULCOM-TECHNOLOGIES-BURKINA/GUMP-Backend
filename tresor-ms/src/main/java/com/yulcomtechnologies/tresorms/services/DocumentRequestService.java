@@ -8,6 +8,7 @@ import com.yulcomtechnologies.tresorms.dtos.DocumentRequestDto;
 import com.yulcomtechnologies.tresorms.dtos.GetDocumentRequestDto;
 import com.yulcomtechnologies.tresorms.entities.DocumentRequest;
 import com.yulcomtechnologies.tresorms.enums.DocumentRequestStatus;
+import com.yulcomtechnologies.tresorms.feignClients.UsersFeignClient;
 import com.yulcomtechnologies.tresorms.mappers.DocumentRequestMapper;
 import com.yulcomtechnologies.tresorms.repositories.DocumentRequestRepository;
 import lombok.AllArgsConstructor;
@@ -22,17 +23,27 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class DocumentRequestService {
-    private DocumentRequestRepository repository;
-    private DocumentRequestMapper documentRequestMapper;
+    private final DocumentRequestRepository repository;
+    private final DocumentRequestMapper documentRequestMapper;
     private final AttestationGenerator attestationGenerator;
     private final AuthenticatedUserService authenticatedUserService;
+    private final UsersFeignClient usersFeignClient;
 
     public DocumentRequest submitDocumentRequest(DocumentRequestDto documentRequestDto, Boolean isForPublicContract) {
         var documentRequest = new DocumentRequest();
+        var authenticatedUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
+
+        var userData = usersFeignClient.getUsernameOrKeycloakId(authenticatedUser.getKeycloakUserId());
+        var company = userData.getCompany();
+
         BeanUtils.copyProperties(documentRequestDto, documentRequest);
         documentRequest.setIsForPublicContract(true);
+        documentRequest.setRccmReference(company.getRccm());
+        documentRequest.setIfuNumber(company.getIfu());
+        documentRequest.setOrganizationName(company.getName());
+        documentRequest.setIsPaid(false);
         documentRequest.setStatus(DocumentRequestStatus.PENDING.toString());
-        documentRequest.setRequesterId(UUID.randomUUID().toString());
+        documentRequest.setRequesterId(authenticatedUser.getKeycloakUserId());
         return repository.save(documentRequest);
     }
 
