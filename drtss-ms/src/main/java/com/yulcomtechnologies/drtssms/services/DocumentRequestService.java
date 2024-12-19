@@ -71,6 +71,7 @@ public class DocumentRequestService {
             .region(userData.getRegion())
             .isForPublicContract(isForPublicContract)
             .createdAt(LocalDateTime.now())
+            .contractPurpose(contractPurpose)
             .publicContractNumber(publicContractNumber)
             .status(DocumentRequestStatus.PENDING.name()).build();
 
@@ -79,7 +80,6 @@ public class DocumentRequestService {
         files.add(cnssAttestation);
         files.add(anpeAttestation);
         documentRequest.setFiles(files);
-       // currentUser.
         eventPublisher.dispatch(new NewDocumentRequest(userData.getRegion()));
 
         return documentRequestRepository.save(documentRequest);
