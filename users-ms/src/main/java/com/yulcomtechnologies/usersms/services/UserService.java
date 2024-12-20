@@ -195,4 +195,8 @@ public class UserService {
         userUpdate.setTitre_honorifique(userDto.getTitre_honorifique());
       return  userRepository.save(userUpdate);
     }
+
+    public boolean isUserWithRoleInRegion(UserRole role, String region) {
+        return userRepository.existsUserByRoleAndRegion(role, region);
+    }
 }

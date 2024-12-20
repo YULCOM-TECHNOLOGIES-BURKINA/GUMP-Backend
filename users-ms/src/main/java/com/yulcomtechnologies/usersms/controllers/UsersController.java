@@ -5,6 +5,7 @@ import com.yulcomtechnologies.usersms.dtos.UpdateProfileRequest;
 import com.yulcomtechnologies.usersms.dtos.UpdateUserInfoDto;
 import com.yulcomtechnologies.usersms.dtos.UserDto;
 import com.yulcomtechnologies.usersms.entities.User;
+import com.yulcomtechnologies.usersms.enums.UserRole;
 import com.yulcomtechnologies.usersms.enums.UserType;
 import com.yulcomtechnologies.usersms.services.AuthService;
 import com.yulcomtechnologies.usersms.services.CorporationData;
@@ -98,7 +99,11 @@ public class UsersController {
         return ResponseEntity.ok().build();
     }
 
-
+    /**
+     * Activer/Desactiver compte
+     * @param id
+     * @return
+     */
     @GetMapping("user/{id}/toggle")
     public ResponseEntity<Void> toglleUserAccountState(
             @PathVariable Long id
@@ -107,6 +112,11 @@ public class UsersController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Activer/Desactiver compte du signataire
+     * @param id
+     * @return
+     */
     @GetMapping("user/{id}/signatory/toggle")
     public ResponseEntity<Void> toglleUserSignatoryState(
             @PathVariable Long id
@@ -115,6 +125,11 @@ public class UsersController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Liste Users Par type
+     * @param userType
+     * @return
+     */
     @GetMapping("users/{userType}/type")
     public List<User> getUserByType(
             @PathVariable UserType userType
@@ -123,6 +138,12 @@ public class UsersController {
 
     }
 
+    /**
+     *
+     * @param userType
+     * @param region
+     * @return
+     */
     @GetMapping("users/type/{userType}/region/{region}")
     public List<User> getUserByTypeAndRegion(
             @PathVariable UserType userType,
@@ -145,11 +166,32 @@ public class UsersController {
         return ResponseEntity.ok().build();
     }
 
+
+    /**
+     * Mettre a jour les informations d'un utilisateur
+     * @param updateUserInfo
+     * @return
+     */
     @PostMapping("users/update")
     public ResponseEntity<Void> updateUserInfo(
         @Validated @RequestBody UpdateUserInfoDto updateUserInfo
     ) {
         userService.updateUserInfo(updateUserInfo);
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Vérifie si un utilisateur avec un rôle donné existe dans une région donnée.
+     *
+     * @param role   Le rôle de l'utilisateur
+     * @param region La région de l'utilisateur
+     * @return true si l'utilisateur existe, false sinon
+     */
+    @GetMapping("users/exists")
+    public ResponseEntity<Boolean> checkUserExists(
+            @RequestParam("role") UserRole role,
+            @RequestParam("region") String region) {
+        boolean exists = userService.isUserWithRoleInRegion(role, region);
+        return ResponseEntity.ok(exists);
     }
 }

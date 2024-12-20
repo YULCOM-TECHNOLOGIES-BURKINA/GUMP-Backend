@@ -1,7 +1,9 @@
 package com.yulcomtechnologies.usersms.repositories;
 
 import com.yulcomtechnologies.usersms.entities.User;
+import com.yulcomtechnologies.usersms.enums.UserRole;
 import com.yulcomtechnologies.usersms.enums.UserType;
+import feign.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,4 +33,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.userType = :userType AND u.region = :region")
     List<User> finUserByTypeAndRegion(UserType userType,String region);
 
+    @Query("SELECT COUNT(u) > 0 FROM User u WHERE u.role = :role AND u.region = :region")
+    boolean existsUserByRoleAndRegion(@Param("role") UserRole role, @Param("region") String region);
 }
