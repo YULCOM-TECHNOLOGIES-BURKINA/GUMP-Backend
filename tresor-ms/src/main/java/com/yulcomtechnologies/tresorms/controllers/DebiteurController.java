@@ -21,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/debiteurs")
@@ -37,11 +38,13 @@ public class DebiteurController {
                 return ResponseEntity.badRequest().build();
             }
 
-            if (!file.getOriginalFilename().endsWith(".csv")) {
+            var extension = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf('.') + 1);
+
+            if (!extension.endsWith("xlsx") && !extension.endsWith("xls")) {
                 return ResponseEntity.badRequest().build();
             }
 
-            debiteurService.importAndSaveCSV(file);
+            debiteurService.importAndSaveExcel(file);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
             log.error("Validation error during CSV import: {}", e.getMessage());

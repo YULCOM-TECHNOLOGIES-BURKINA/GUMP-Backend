@@ -6,6 +6,7 @@ import com.yulcomtechnologies.sharedlibrary.services.TemplateProcessor;
 import com.yulcomtechnologies.tresorms.entities.Attestation;
 import com.yulcomtechnologies.tresorms.entities.DocumentRequest;
 import com.yulcomtechnologies.tresorms.entities.File;
+import com.yulcomtechnologies.tresorms.enums.RequestType;
 import com.yulcomtechnologies.tresorms.repositories.AttestationRepository;
 import com.yulcomtechnologies.tresorms.repositories.DocumentRequestRepository;
 import com.yulcomtechnologies.tresorms.repositories.FileRepository;
@@ -75,9 +76,11 @@ public class AttestationGenerator {
 
             var fileBytes = pdfQRCodeService.addQRCodeToPDF(templateProcessor.htmlToPdf(filledTemplate), "QR code content");
             var filigraneTexte="Agence judiciaire de l'Etat - Valable pour (03 mois)";
-            if (typeResquest=="LIQUIDATION"){
+
+            if (typeResquest.equals(RequestType.LIQUIDATION.name())){
                 filigraneTexte="Agence judiciaire de l'Etat - Valable pour (01 mois)";
             }
+
             var finalFileBytes = pdfFiligraneService.addFiligraneToPDF(fileBytes,filigraneTexte);
 
             fileStorageService.saveFile(finalFileBytes, filePath);

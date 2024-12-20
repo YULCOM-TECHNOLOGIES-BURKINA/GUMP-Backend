@@ -36,16 +36,14 @@ class DebiteurControllerTest extends BaseIntegrationTest {
     @Test
     @Transactional
     void importCSV_Success() throws Exception {
-        // Create test CSV content
-        String csvContent = "debiteur,promoteur,numeroIFU,numeroImmatriculation,registreCommerce,contacts,dateNaissance,numeroCNIB,numeroCheque,montantDu\n" +
-            "John Doe,ABC Corp,123456,IMM789,RC001,+1234567890,1990-01-01,CNIB001,CHQ123,1000.50\n" +
-            "Jane Smith,XYZ Ltd,789012,IMM456,RC002,+9876543210,1985-05-15,CNIB002,CHQ456,2500.75";
+        byte[] fileContent;
+        fileContent = DebiteurControllerTest.class.getClassLoader().getResourceAsStream("tests.xlsx").readAllBytes();
 
         MockMultipartFile file = new MockMultipartFile(
             "file",
-            "test.csv",
+            "test.xlsx",
             "text/csv",
-            csvContent.getBytes()
+            fileContent
         );
 
         mockMvc.perform(multipart("/debiteurs/import")
@@ -60,13 +58,13 @@ class DebiteurControllerTest extends BaseIntegrationTest {
         assertEquals("John Doe", firstDebiteur.getDebiteur());
         assertEquals("ABC Corp", firstDebiteur.getPromoteur());
         assertEquals("123456", firstDebiteur.getNumeroIFU());
-        assertEquals(1000.50, firstDebiteur.getMontantDu());
+        assertEquals(500_000, firstDebiteur.getMontantDu());
 
         DebiteurEntity secondDebiteur = savedDebiteurs.get(1);
         assertEquals("Jane Smith", secondDebiteur.getDebiteur());
         assertEquals("XYZ Ltd", secondDebiteur.getPromoteur());
         assertEquals("789012", secondDebiteur.getNumeroIFU());
-        assertEquals(2500.75, secondDebiteur.getMontantDu());
+        assertEquals(2500, secondDebiteur.getMontantDu());
     }
 
     @Test
