@@ -7,6 +7,7 @@ import com.yulcomtechnologies.sharedlibrary.exceptions.ResourceNotFoundException
 import com.yulcomtechnologies.sharedlibrary.services.FileStorageService;
 import com.yulcomtechnologies.usersms.dtos.CreateUserRequest;
 import com.yulcomtechnologies.usersms.dtos.UpdateProfileRequest;
+import com.yulcomtechnologies.usersms.dtos.UpdateUserInfoDto;
 import com.yulcomtechnologies.usersms.dtos.UserDto;
 import com.yulcomtechnologies.usersms.entities.User;
 import com.yulcomtechnologies.usersms.enums.UserRole;
@@ -178,5 +179,20 @@ public class UserService {
         company.setRepresentantFirstname(updateProfileRequest.getRepresentantFirstname());
         company.setRepresentantPhone(updateProfileRequest.getRepresentantPhone());
         userRepository.save(user);
+    }
+
+    public  User updateUserInfo(UpdateUserInfoDto userDto) {
+      /*  var authenticatedUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(
+                () -> new BadRequestException("User not found")
+        );*/
+
+        User userUpdate=  userRepository.findById(userDto.getId()).orElseThrow();
+        userUpdate.setForename(userDto.getForename());
+        userUpdate.setLastname(userDto.getLastname());
+        userUpdate.setTel(userDto.getTel());
+        userUpdate.setRegion(userDto.getRegion());
+        userUpdate.setMatricule(userDto.getMatricule());
+        userUpdate.setTitre_honorifique(userDto.getTitre_honorifique());
+      return  userRepository.save(userUpdate);
     }
 }

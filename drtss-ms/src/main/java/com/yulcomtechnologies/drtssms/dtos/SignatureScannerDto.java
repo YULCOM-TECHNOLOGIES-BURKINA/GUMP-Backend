@@ -5,6 +5,7 @@ import com.yulcomtechnologies.drtssms.entities.SignatureCertificat;
 import com.yulcomtechnologies.drtssms.entities.SignatureScanner;
 import com.yulcomtechnologies.drtssms.entities.UtilisateursDrtss;
 import com.yulcomtechnologies.drtssms.feignClients.UsersFeignClient;
+import com.yulcomtechnologies.sharedlibrary.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,6 +31,10 @@ public class SignatureScannerDto {
     private LocalDateTime createdAt;
 
     // private UserDto userDto;
+     private String region;
+
+     private UserRole role;
+
 
 
     private SignatureCertificat signatureCertificat;
@@ -41,13 +46,12 @@ public class SignatureScannerDto {
                         .filePath(s.getCheminImage())
                         .signatureCertificat(s.getSignatureCertificat())
                         .user_id(s.getUser_id())
+                        .region(s.getRegion())
+                        .role(s.getRole())
                         .build()
                 )
                 .orElse(null);
     }
-
-
-
 
 
 }
