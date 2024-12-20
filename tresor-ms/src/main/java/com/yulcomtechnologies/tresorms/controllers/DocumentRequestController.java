@@ -1,8 +1,6 @@
 package com.yulcomtechnologies.tresorms.controllers;
 
-import com.yulcomtechnologies.tresorms.dtos.CreatedResource;
-import com.yulcomtechnologies.tresorms.dtos.DocumentRequestDto;
-import com.yulcomtechnologies.tresorms.dtos.GetDocumentRequestDto;
+import com.yulcomtechnologies.tresorms.dtos.*;
 import com.yulcomtechnologies.tresorms.entities.DocumentRequest;
 import com.yulcomtechnologies.tresorms.services.DocumentRequestService;
 import lombok.AllArgsConstructor;
@@ -19,6 +17,24 @@ import java.io.IOException;
 @AllArgsConstructor
 public class DocumentRequestController {
     private final DocumentRequestService documentRequestService;
+
+    @PostMapping("demandes/{id}/pay")
+    public ResponseEntity<PaymentRequestResponse> payForRequest(
+        @PathVariable Long id,
+        @Validated @RequestBody PayRequest payRequest
+    ) {
+
+        return ResponseEntity.ok(documentRequestService.pay(id, payRequest));
+    }
+
+    @PostMapping("demandes/{id}/update-payment-status")
+    public ResponseEntity<Void> updatePaymentStatus(
+        @PathVariable Long id,
+        @RequestParam String paymentId
+    ) {
+        documentRequestService.updatePaymentStatus(id, paymentId);
+        return ResponseEntity.ok().build();
+    }
 
     @PostMapping("demandes")
     public ResponseEntity<CreatedResource> submitDocumentRequest(

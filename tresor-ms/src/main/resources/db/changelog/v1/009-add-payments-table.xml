@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd"
+>
+
+  <changeSet id="009" author="kulturman">
+    <sql>
+      CREATE TABLE "payments" (
+        "id" VARCHAR(255) NOT NULL,
+        "document_request_id" INTEGER NOT NULL,
+        "amount" DECIMAL(10, 2) NOT NULL,
+        "payment_date" TIMESTAMP NOT NULL,
+        "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        "status" VARCHAR(255) NOT NULL,
+        "updated_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY ("document_request_id") REFERENCES "document_requests" ("id")
+      );
+    </sql>
+  </changeSet>
+</databaseChangeLog>

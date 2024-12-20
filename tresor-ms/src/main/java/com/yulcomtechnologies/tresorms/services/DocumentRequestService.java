@@ -2,32 +2,48 @@ package com.yulcomtechnologies.tresorms.services;
 
 import com.yulcomtechnologies.sharedlibrary.auth.AuthenticatedUserService;
 import com.yulcomtechnologies.sharedlibrary.enums.UserRole;
+import com.yulcomtechnologies.sharedlibrary.events.EventPublisher;
 import com.yulcomtechnologies.sharedlibrary.exceptions.BadRequestException;
 import com.yulcomtechnologies.sharedlibrary.exceptions.ResourceNotFoundException;
 import com.yulcomtechnologies.tresorms.dtos.DocumentRequestDto;
 import com.yulcomtechnologies.tresorms.dtos.GetDocumentRequestDto;
+import com.yulcomtechnologies.tresorms.dtos.PayRequest;
+import com.yulcomtechnologies.tresorms.dtos.PaymentRequestResponse;
 import com.yulcomtechnologies.tresorms.entities.DocumentRequest;
+import com.yulcomtechnologies.tresorms.entities.Payment;
 import com.yulcomtechnologies.tresorms.enums.DocumentRequestStatus;
+import com.yulcomtechnologies.tresorms.enums.PaymentStatus;
+import com.yulcomtechnologies.tresorms.events.PaymentSucceeded;
 import com.yulcomtechnologies.tresorms.feignClients.UsersFeignClient;
 import com.yulcomtechnologies.tresorms.mappers.DocumentRequestMapper;
+import com.yulcomtechnologies.tresorms.repositories.ApplicationConfigRepository;
 import com.yulcomtechnologies.tresorms.repositories.DocumentRequestRepository;
+import com.yulcomtechnologies.tresorms.repositories.PaymentRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.UUID;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class DocumentRequestService {
     private final DocumentRequestRepository repository;
     private final DocumentRequestMapper documentRequestMapper;
     private final AttestationGenerator attestationGenerator;
     private final AuthenticatedUserService authenticatedUserService;
     private final UsersFeignClient usersFeignClient;
+    private final DocumentRequestRepository documentRequestRepository;
+    private final PaymentRepository paymentRepository;
+    private final ApplicationConfigRepository applicationConfigRepository;
+    private final EventPublisher eventPublisher;
 
     public DocumentRequest submitDocumentRequest(DocumentRequestDto documentRequestDto, Boolean isForPublicContract) {
         var documentRequest = new DocumentRequest();
@@ -81,6 +97,78 @@ public class DocumentRequestService {
 
         documentRequest.setStatus(DocumentRequestStatus.APPROVED.toString());
         attestationGenerator.generateDocument(id);
+        repository.save(documentRequest);
+    }
+
+    public PaymentRequestResponse pay(Long id, PayRequest payRequest) {
+        var documentRequest = documentRequestRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Document request not found"));
+
+        var price = 1500.0;
+
+        var paymentId = UUID.randomUUID().toString();
+
+        paymentRepository.save(
+            Payment.builder()
+                .id(UUID.randomUUID().toString())
+                .documentRequestId(documentRequest.getId())
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .amount(price)
+                .status(PaymentStatus.PENDING.toString())
+                .build()
+        );
+
+
+        var url = Base64.getEncoder().encodeToString(payRequest.getCallbackUrl().getBytes());
+        log.info("Encoded URL: {}", url);
+
+        log.info("Payment request received for document request with id {}", id);
+
+        return new PaymentRequestResponse(
+            String.format(
+                "https://pgw-test.fasoarzeka.bf/AvepayPaymentGatewayUI/avepay-payment/app/validorder?amount=%s&merchantid=%s&securedAccessToken=eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI0UDdJNkI0Uzc5IiwiaWF0IjoxNzI5MDA3NTgyLCJzdWIiOiIyMjYwMDAwMDAzMyIsImlzcyI6ImFyemVrYSIsIlBBWUxPQUQiOiJhY2Nlc3NfdG9rZW4iLCJleHAiOjE3OTIwNzk1ODJ9.N_XttQtoOyacQwylkSWR_we5wo96Ise_3vi6O_IJUIXDqenOmWZ0xtczb_FwD2vsgqCzwEK8oxdQs8w3CheWVg&mappedOrderId=%s&linkBackToCallingWebsite=%s",
+                (int) price,
+                356,
+                paymentId,
+                url
+            )
+        );
+
+    }
+
+    public void updatePaymentStatus(Long id, String paymentId) {
+        var documentRequest = documentRequestRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Document request not found"));
+
+        var payment = paymentRepository.findById(paymentId)
+            .orElseThrow(() -> new ResourceNotFoundException("Payment not found"));
+
+        //Get payment status from payment gateway
+        //If payment is successful, update the document
+
+        if (true) {
+            payment.setStatus(PaymentStatus.SUCCEEDED.toString());
+            payment.setUpdatedAt(LocalDateTime.now());
+            paymentRepository.save(payment);
+
+            documentRequest.setIsPaid(true);
+            documentRequestRepository.save(documentRequest);
+
+            eventPublisher.dispatch(
+                new PaymentSucceeded(
+                    paymentId,
+                    documentRequest.getId()
+                )
+            );
+        }
+    }
+
+    public void rejectDocumentRequest(Long id) {
+        var documentRequest = repository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Document request not found"));
+
+        documentRequest.setStatus(DocumentRequestStatus.REJECTED.toString());
         repository.save(documentRequest);
     }
 }

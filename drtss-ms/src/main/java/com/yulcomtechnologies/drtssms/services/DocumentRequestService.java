@@ -220,6 +220,9 @@ public class DocumentRequestService {
         var documentRequest = documentRequestRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Document request not found"));
 
+        //Get payment status from payment gateway
+        //If payment is successful, update the document request
+
         documentRequest.setIsPaid(true);
         documentRequestRepository.save(documentRequest);
         eventPublisher.dispatch(new DocumentRequestChanged(documentRequest.getId()));

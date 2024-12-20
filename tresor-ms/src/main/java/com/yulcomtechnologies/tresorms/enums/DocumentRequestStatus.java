@@ -5,4 +5,6 @@ public enum DocumentRequestStatus {
     PROCESSING,
     APPROVED,
     REJECTED,
+
+    COMPANY_HAS_DEBT_WAITING_FOR_MANUAL_REVIEW,
 }
