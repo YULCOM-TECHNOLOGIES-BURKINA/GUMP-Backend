@@ -14,7 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -45,7 +44,7 @@ public class DebiteurService {
         List<DebiteurEntity> savedEntities = new ArrayList<>();
 
         for (DebiteurDTO dto : dtos) {
-            DebiteurEntity entity = upsertDebiteur(dto);
+            DebiteurEntity entity = insertDebiteur(dto);
             savedEntities.add(entity);
         }
 
@@ -54,25 +53,14 @@ public class DebiteurService {
     }
 
     @Transactional
-    public DebiteurEntity upsertDebiteur(DebiteurDTO dto) {
+    public DebiteurEntity insertDebiteur(DebiteurDTO dto) {
         if (dto.getNumeroIFU() == null || dto.getNumeroIFU().trim().isEmpty()) {
             throw new IllegalArgumentException("Numero IFU cannot be null or empty");
         }
 
-        Optional<DebiteurEntity> existingDebiteur = debiteurRepository.findByNumeroIFU(dto.getNumeroIFU());
-
-        if (existingDebiteur.isPresent()) {
-            // Update existing entity
-            DebiteurEntity existing = existingDebiteur.get();
-            updateExistingEntity(existing, dto);
-            log.info("Updated existing debiteur with IFU: {}", dto.getNumeroIFU());
-            return debiteurRepository.save(existing);
-        } else {
-            // Create new entity
-            DebiteurEntity newEntity = debiteurMapper.toEntity(dto);
-            log.info("Created new debiteur with IFU: {}", dto.getNumeroIFU());
-            return debiteurRepository.save(newEntity);
-        }
+        DebiteurEntity newEntity = debiteurMapper.toEntity(dto);
+        log.info("Created new debiteur with IFU: {}", dto.getNumeroIFU());
+        return debiteurRepository.save(newEntity);
     }
 
     private void updateExistingEntity(DebiteurEntity existing, DebiteurDTO dto) {

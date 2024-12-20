@@ -63,7 +63,7 @@ class DebiteurControllerTest extends BaseIntegrationTest {
         DebiteurEntity secondDebiteur = savedDebiteurs.get(1);
         assertEquals("Jane Smith", secondDebiteur.getDebiteur());
         assertEquals("XYZ Ltd", secondDebiteur.getPromoteur());
-        assertEquals("789012", secondDebiteur.getNumeroIFU());
+        assertEquals("123456", secondDebiteur.getNumeroIFU());
         assertEquals(2500, secondDebiteur.getMontantDu());
     }
 

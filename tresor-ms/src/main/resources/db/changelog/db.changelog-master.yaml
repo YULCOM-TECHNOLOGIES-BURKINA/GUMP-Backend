@@ -22,3 +22,6 @@ databaseChangeLog:
 
   - include:
       file: db/changelog/v1/009-add-payments-table.xml
+
+  - include:
+      file: db/changelog/v1/010-remove-unique-constraints-on-debiteurs-table.xml

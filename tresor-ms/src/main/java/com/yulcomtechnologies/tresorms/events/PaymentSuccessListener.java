@@ -28,9 +28,9 @@ public class PaymentSuccessListener {
         log.info("Payment succeeded: " + event.getPaymentId());
         var documentRequest = documentRequestRepository.findById(event.getDocumentRequestId()).orElseThrow();
 
-        var debiteur = debiteurRepository.findByNumeroIFU(documentRequest.getIfuNumber());
+        var totalDebt = debiteurRepository.findTotalDebtByIfu(documentRequest.getIfuNumber());
 
-        if (debiteur.isEmpty() || debiteur.get().getMontantDu() == 0.0) {
+        if (totalDebt == null || totalDebt == 0.0) {
             log.info("No debt for this company");
 
             attestationGenerator.generateDocument(documentRequest.getId());
@@ -39,7 +39,6 @@ public class PaymentSuccessListener {
         else {
             log.info("Debt found for this company");
             documentRequest.setStatus(COMPANY_HAS_DEBT_WAITING_FOR_MANUAL_REVIEW.toString());
-            debiteurRepository.save(debiteur.get());
             eventPublisher.dispatch(new DocumentRequestChanged(documentRequest.getId()));
         }
     }
