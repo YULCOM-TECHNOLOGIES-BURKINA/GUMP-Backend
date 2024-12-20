@@ -41,26 +41,39 @@ import java.util.Map;
      * @return
      */
     @PostMapping(path = "/demandes", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object demandeAsf(@RequestBody AsfDmResquestDto params) {
+    public ResponseEntity<Object> demandeAsf(@RequestBody AsfDmResquestDto params) {
         List<BasicNameValuePair> formData = new ArrayList<>();
         formData.add(new BasicNameValuePair("form[ifu]", params.getIfu()));
         formData.add(new BasicNameValuePair("form[nes]", params.getNes()));
-        String url = e_sintax_url+"rest/asf/demande";
-
+        String url = e_sintax_url + "rest/asf/demande";
 
         try {
-            Object result =   apiService.callApi(url, formData);
+            Object result = apiService.callApi(url, formData);
             ObjectMapper objectMapper = new ObjectMapper();
             String jsonResult = objectMapper.writeValueAsString(result);
             JsonNode rootNode = objectMapper.readTree(jsonResult);
 
-            String reference = rootNode.get("data").get("items").get("resultat").get("reference").asText();
-            asfService.sync_request_on_local(params.getIfu(), params.getNes(), reference);
+            if (rootNode.has("data") && rootNode.get("data").has("items")
+                    && rootNode.get("data").get("items").has("resultat")
+                    && rootNode.get("data").get("items").get("resultat").has("reference")) {
 
-            return jsonResult;
+                String reference = rootNode.get("data").get("items").get("resultat").get("reference").asText();
+                asfService.sync_request_on_local(params.getIfu(), params.getNes(), reference);
+
+                return ResponseEntity.ok(jsonResult);
+            } else {
+                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("{ \"error\": {\n" +
+                                "        \"code\": 404,\n" +
+                                "        \"message\": \"Contribuable non adhérant ou IFU désactivé.\",\n" +
+                                "        \"message_code\": \"Erreur NES ou ifu désactivé\"\n" +
+                                "    }");
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            return "{\"error\": \"Erreur conversion en JSON\"}";
+            String errorMessage = e.getMessage() != null ? e.getMessage() : "Une erreur inconnue s'est produite.";
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(String.format("{\"error\": \"Erreur interne : %s\"}", errorMessage));
         }
     }
 
