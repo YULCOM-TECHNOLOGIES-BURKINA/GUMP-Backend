@@ -11,6 +11,7 @@ import com.yulcomtechnologies.drtssms.repositories.FileRepository;
 import com.yulcomtechnologies.drtssms.repositories.SignatureCertificatRepository;
 import com.yulcomtechnologies.drtssms.repositories.SignatureScannerRepository;
 import com.yulcomtechnologies.drtssms.repositories.UtilisateursDrtssRepository;
+import com.yulcomtechnologies.sharedlibrary.enums.UserRole;
 import com.yulcomtechnologies.sharedlibrary.exceptions.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -36,6 +37,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -59,9 +61,15 @@ public class SignatureDocumentService {
      */
     public Page<SignatureScanner> listSignatory(int page, int size)
     {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
         return signatureScannerRepository.findAll(pageable);
     }
+
+    public List<SignatureScanner> listSignatoryByRegion(String region)
+    {
+        return signatureScannerRepository.getSignatoryByRegion(region);
+    }
+
 
     /**
      *
@@ -102,6 +110,7 @@ public class SignatureDocumentService {
 
         UserDto utilisateur = usersFeignClient.getUser(String.valueOf(userId));
         System.out.println(utilisateur.getEmail());
+
          try {
             Path directory = Paths.get(uploadPath);
             if (!Files.exists(directory)) {
@@ -115,6 +124,8 @@ public class SignatureDocumentService {
             signatureScan.setCheminImage(fileName);
             signatureScan.setUser_id(utilisateur.getId());
             signatureScan.setEmail(utilisateur.getEmail());
+            signatureScan.setRegion(utilisateur.getRegion());
+            signatureScan.setRole(UserRole.valueOf(utilisateur.getRole()));
            //signatureScan.setDate_created(LocalDateTime.now());
             SignatureScanner signatureScanSave = signatureScannerRepository.save(signatureScan);
 
@@ -160,6 +171,10 @@ public class SignatureDocumentService {
         UtilisateursDrtss signatory = utilisateursDrtssRepository.findById(signatoryId)
                 .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
 
+        SignatureScanner signatureInfo=signatureScannerRepository.findById(signatoryId).orElseThrow(() -> new IllegalArgumentException("Signataire info  non trouvé"));
+
+
+        String _alias=signatureInfo.getSignatureCertificat().getAlias();
 
         if (!signatory.isActif()) {
             String jsonError = "{\"error\": \"Utilisateur inactif, signature non autorisée\"}";
@@ -173,6 +188,15 @@ public class SignatureDocumentService {
             File attestationFile = loadFileByPath(Path.of(attestationPath));
             if (!attestationFile.exists() || !attestationFile.canRead()) {
                 String jsonError = "{\"error\": \"Fichier d'attestation introuvable ou non lisible : " + attestationPath + "\"}";
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(jsonError.getBytes());
+            }
+
+            // Charger le Certifaicat  de signature du signataire
+            File _keyStoreFile=getSignatoryCertificat(signatoryId);
+            if (_keyStoreFile == null || !_keyStoreFile.exists()) {
+                String jsonError = "{\"error\": \"Le Certificat de signature introuvable pour le signataire ID : " + signatoryId + "\"}";
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(jsonError.getBytes());
@@ -201,8 +225,9 @@ public class SignatureDocumentService {
                     signatureLocation.getPageSelect(), signatory.getNom() + " " + signatory.getPrenom(), signatory.getTitre_honorifique()
             );
 
+
             // Certifier le document avec le certificat du signataire
-            certificateService.certifyThedocument(attestationFile, keyStoreFile, keyStorePassword, alias);
+            certificateService.certifyThedocument(attestationFile, _keyStoreFile, keyStorePassword, _alias);
 
             try (FileInputStream fis = new FileInputStream(attestationFile)) {
                 byte[] data = fis.readAllBytes();
@@ -270,6 +295,41 @@ public class SignatureDocumentService {
         }
 
          HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType(mimeType));
+        headers.setContentDispositionFormData("attachment", file.getName());
+
+        return file ;
+    }
+
+    /**
+     *
+     * @param signataireId
+     * @return
+     * @throws IOException
+     */
+    public    File  getSignatoryCertificat( Long signataireId) throws IOException {
+
+
+        SignatureScanner signatureInfo=signatureScannerRepository.findById(signataireId).get();
+        String certificatPath=signatureInfo.getSignatureCertificat().getCheminCertificat();
+
+      //  final String FILE_DIRECTORY =  FileStoragePath.SCAN_SIGN_PATH.getPath();
+        String filePath =certificatPath;
+
+        // Charger le fichier
+        File file = loadFileByPath(Path.of(filePath));
+        Resource resource = new FileSystemResource(file);
+
+        if (!resource.exists() || !resource.isReadable()) {
+            throw new RuntimeException("Fichier non trouvé ou non lisible : " + filePath);
+        }
+
+        String mimeType = Files.probeContentType(file.toPath());
+        if (mimeType == null) {
+            mimeType = "application/octet-stream";
+        }
+
+        HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(mimeType));
         headers.setContentDispositionFormData("attachment", file.getName());
 

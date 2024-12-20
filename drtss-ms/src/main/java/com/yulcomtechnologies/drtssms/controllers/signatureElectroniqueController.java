@@ -30,6 +30,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.cert.Certificate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @AllArgsConstructor
@@ -116,7 +117,7 @@ public class signatureElectroniqueController {
             @RequestParam("attestationPath") String attestationPath,
             @RequestParam("signatoryId") Long signatoryId,
             @RequestParam("keyStore") MultipartFile keyStore,
-            @RequestParam(value = "keyStorePassword", defaultValue = "gump123") String keyStorePassword,
+            @RequestParam(value = "keyStorePassword", defaultValue = "password") String keyStorePassword,
             @RequestParam(value = "x",defaultValue = "70") float x,
             @RequestParam(value = "y",defaultValue = "85") float y,
             @RequestParam(value = "alias", defaultValue = "mykey") String alias) {
@@ -151,6 +152,19 @@ public class signatureElectroniqueController {
         return signatureDocumentService.listSignatory(page,size);
     }
 
+
+    @GetMapping("download_certificate/signatoryId")
+    public File downloadCertificate(@RequestParam("signatoryId") Long signatoryId) throws java.io.IOException {
+        HttpHeaders headers = new HttpHeaders();
+
+
+
+        File  file= signatureDocumentService.getSignatoryCertificat(signatoryId);
+
+
+
+        return  file;
+    }
     /**
      * Telechager le Certificat
      * @param path

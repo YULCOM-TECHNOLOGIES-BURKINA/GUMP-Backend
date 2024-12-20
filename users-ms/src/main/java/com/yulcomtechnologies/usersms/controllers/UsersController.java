@@ -2,6 +2,7 @@ package com.yulcomtechnologies.usersms.controllers;
 
 import com.yulcomtechnologies.usersms.dtos.CreateUserRequest;
 import com.yulcomtechnologies.usersms.dtos.UpdateProfileRequest;
+import com.yulcomtechnologies.usersms.dtos.UpdateUserInfoDto;
 import com.yulcomtechnologies.usersms.dtos.UserDto;
 import com.yulcomtechnologies.usersms.entities.User;
 import com.yulcomtechnologies.usersms.enums.UserType;
@@ -141,6 +142,14 @@ public class UsersController {
         @Validated @RequestBody UpdateProfileRequest updateProfileRequest
     ) {
         userService.updateProfile(updateProfileRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("users/update")
+    public ResponseEntity<Void> updateUserInfo(
+        @Validated @RequestBody UpdateUserInfoDto updateUserInfo
+    ) {
+        userService.updateUserInfo(updateUserInfo);
         return ResponseEntity.ok().build();
     }
 }

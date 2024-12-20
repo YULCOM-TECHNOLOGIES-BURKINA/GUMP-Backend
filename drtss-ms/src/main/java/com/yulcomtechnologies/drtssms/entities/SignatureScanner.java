@@ -1,6 +1,7 @@
 package com.yulcomtechnologies.drtssms.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.yulcomtechnologies.sharedlibrary.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,6 +32,13 @@ public class SignatureScanner {
 
     @Column(name = "email", nullable = false,unique = true)
     private String email;
+
+    @Column(name = "region")
+    private String region;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private UserRole role;
 
     @Column(name = "chemin_image")
     private String cheminImage;
