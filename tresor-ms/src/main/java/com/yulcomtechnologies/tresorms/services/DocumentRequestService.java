@@ -115,6 +115,7 @@ public class DocumentRequestService {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .amount(price)
+                .paymentDate(LocalDateTime.now())
                 .status(PaymentStatus.PENDING.toString())
                 .build()
         );

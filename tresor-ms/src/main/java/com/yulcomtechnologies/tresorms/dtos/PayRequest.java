@@ -10,10 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PayRequest {
-    @NotBlank
-    @NotNull
-    private String requestType;
-
     @NotNull
     @NotBlank
     private String callbackUrl;
