@@ -110,7 +110,7 @@ public class DocumentRequestService {
 
         paymentRepository.save(
             Payment.builder()
-                .id(UUID.randomUUID().toString())
+                .id(paymentId)
                 .documentRequestId(documentRequest.getId())
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())

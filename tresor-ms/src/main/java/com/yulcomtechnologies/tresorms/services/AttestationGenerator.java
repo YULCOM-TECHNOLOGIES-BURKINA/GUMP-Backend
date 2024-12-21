@@ -47,7 +47,7 @@ public class AttestationGenerator {
 
         var attestation = Attestation.builder()
             .expirationDate(LocalDate.now().plusMonths(VALIDITY_PERIOD_IN_MONTHS).atTime(23, 59, 59))
-            .documentRequest(DocumentRequest.builder().id(documentRequestId).build())
+            .documentRequest(documentRequest)
             .number(UUID.randomUUID().toString())
             .uuid(UUID.randomUUID().toString())
             .documentRequest(documentRequest)
