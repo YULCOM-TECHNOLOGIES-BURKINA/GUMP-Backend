@@ -44,5 +44,7 @@ public class PaymentSuccessListener {
             documentRequest.setStatus(COMPANY_HAS_DEBT_WAITING_FOR_MANUAL_REVIEW.toString());
             eventPublisher.dispatch(new DocumentRequestChanged(documentRequest.getId()));
         }
+
+        documentRequestRepository.save(documentRequest);
     }
 }
