@@ -27,6 +27,8 @@ public class SecurityConfig {
             .authorizeExchange(exchange ->
                 exchange.pathMatchers(
                     "/api/get-ifu/**",
+                    "/api/users/*/find",
+                    "api/demandes/*/update-payment-status",
                     "/api/regions/**",
                     "/api/verify_esyntax/**",
                     "/api/verify-document/**",
