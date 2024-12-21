@@ -26,12 +26,7 @@ public class PaymentSuccessListener {
     public void handle(PaymentSucceeded event) {
         log.info("Payment succeeded: " + event.getPaymentId());
         log.info("Document request id: " + event.getDocumentRequestId());
-        /*try {
-            System.out.println(documentRequestRepository.findById(event.getDocumentRequestId()).orElse(null));
-        }
-        catch (Exception e) {
-            System.out.println(e);
-        }*/
+
 
         var documentRequest = documentRequestRepository.findById(event.getDocumentRequestId()).orElseThrow();
 

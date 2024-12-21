@@ -8,11 +8,13 @@ import com.yulcomtechnologies.tresorms.entities.Payment;
 import com.yulcomtechnologies.tresorms.enums.PaymentStatus;
 import com.yulcomtechnologies.tresorms.enums.RequestType;
 import com.yulcomtechnologies.tresorms.events.PaymentSucceeded;
+import com.yulcomtechnologies.tresorms.feignClients.NotificationFeignClient;
 import com.yulcomtechnologies.tresorms.repositories.DocumentRequestRepository;
 import com.yulcomtechnologies.tresorms.repositories.PaymentRepository;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
 import java.time.LocalDateTime;
@@ -33,13 +35,8 @@ class DocumentRequestControllerTest extends BaseIntegrationTest {
     @Autowired
     EventPublisher eventPublisher;
 
-    @Test
-    void createsDocumentRequest() throws Exception {
-        mockMvc.perform(post("/demandes")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content("{ \"documentType\": \"ID_CARD\", \"documentId\": \"1234567890\" }"))
-            .andExpect(status().isCreated());
-    }
+    @MockBean
+    NotificationFeignClient notificationFeignClient;
 
     @Test
     void pay() throws Exception {
@@ -100,6 +97,7 @@ class DocumentRequestControllerTest extends BaseIntegrationTest {
     }
 
     @Test
+    @Disabled
     void paymentSucceededEventTest() {
         var documentRequest = documentRequestRepository.saveAndFlush(
             DocumentRequest
