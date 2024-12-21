@@ -67,7 +67,8 @@ import java.util.Map;
                                 "        \"code\": 404,\n" +
                                 "        \"message\": \"Contribuable non adhérant ou IFU désactivé.\",\n" +
                                 "        \"message_code\": \"Erreur NES ou ifu désactivé\"\n" +
-                                "    }");
+                                "    }" +
+                                "}");
             }
         } catch (Exception e) {
             e.printStackTrace();
