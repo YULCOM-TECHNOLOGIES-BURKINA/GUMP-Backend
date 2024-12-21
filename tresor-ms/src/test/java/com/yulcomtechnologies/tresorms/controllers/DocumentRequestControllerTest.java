@@ -1,11 +1,13 @@
 package com.yulcomtechnologies.tresorms.controllers;
 
+import com.yulcomtechnologies.sharedlibrary.events.EventPublisher;
 import com.yulcomtechnologies.tresorms.BaseIntegrationTest;
 import com.yulcomtechnologies.tresorms.dtos.PayRequest;
 import com.yulcomtechnologies.tresorms.entities.DocumentRequest;
 import com.yulcomtechnologies.tresorms.entities.Payment;
 import com.yulcomtechnologies.tresorms.enums.PaymentStatus;
 import com.yulcomtechnologies.tresorms.enums.RequestType;
+import com.yulcomtechnologies.tresorms.events.PaymentSucceeded;
 import com.yulcomtechnologies.tresorms.repositories.DocumentRequestRepository;
 import com.yulcomtechnologies.tresorms.repositories.PaymentRepository;
 import org.junit.jupiter.api.Disabled;
@@ -27,6 +29,9 @@ class DocumentRequestControllerTest extends BaseIntegrationTest {
 
     @Autowired
     DocumentRequestRepository documentRequestRepository;
+
+    @Autowired
+    EventPublisher eventPublisher;
 
     @Test
     void createsDocumentRequest() throws Exception {
@@ -92,5 +97,36 @@ class DocumentRequestControllerTest extends BaseIntegrationTest {
 
         var updatedPayment = paymentRepository.findById(payment.getId()).get();
         assertEquals(PaymentStatus.SUCCEEDED.toString(), updatedPayment.getStatus());
+    }
+
+    @Test
+    void paymentSucceededEventTest() {
+        var documentRequest = documentRequestRepository.saveAndFlush(
+            DocumentRequest
+                .builder()
+                .requesterId("1")
+                .isForPublicContract(false)
+                .requestType(RequestType.LIQUIDATION)
+                .createdAt(LocalDateTime.now())
+                .isPaid(false)
+                .status("PENDING")
+                .build()
+        );
+
+        var payment = paymentRepository.saveAndFlush(
+            Payment.builder()
+                .id(UUID.randomUUID().toString())
+                .documentRequestId(documentRequest.getId())
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .amount(1500.)
+                .paymentDate(LocalDateTime.now())
+                .status(PaymentStatus.PENDING.toString())
+                .build()
+        );
+
+        eventPublisher.dispatch(
+            new PaymentSucceeded(payment.getId(), documentRequest.getId())
+        );
     }
 }

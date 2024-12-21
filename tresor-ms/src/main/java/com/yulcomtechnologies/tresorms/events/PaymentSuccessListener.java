@@ -14,7 +14,6 @@ import static com.yulcomtechnologies.tresorms.enums.DocumentRequestStatus.COMPAN
 
 @Service
 @Slf4j
-@Async
 @AllArgsConstructor
 public class PaymentSuccessListener {
     private final DocumentRequestRepository documentRequestRepository;
@@ -23,13 +22,18 @@ public class PaymentSuccessListener {
     private final EventPublisher eventPublisher;
 
     @EventListener
-    @Async
+    //@Async
     public void handle(PaymentSucceeded event) {
         log.info("Payment succeeded: " + event.getPaymentId());
         log.info("Document request id: " + event.getDocumentRequestId());
+        /*try {
+            System.out.println(documentRequestRepository.findById(event.getDocumentRequestId()).orElse(null));
+        }
+        catch (Exception e) {
+            System.out.println(e);
+        }*/
 
         var documentRequest = documentRequestRepository.findById(event.getDocumentRequestId()).orElseThrow();
-
 
         var totalDebt = debiteurRepository.findTotalDebtByIfu(documentRequest.getIfuNumber());
 

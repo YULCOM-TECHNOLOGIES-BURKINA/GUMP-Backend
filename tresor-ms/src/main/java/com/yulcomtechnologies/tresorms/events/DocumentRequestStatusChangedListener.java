@@ -19,7 +19,7 @@ public class DocumentRequestStatusChangedListener {
     private final DocumentRequestRepository documentRequestRepository;
 
     @EventListener
-    @Async
+    //@Async
     public void handleDocumentRequestStatusChanged(DocumentRequestChanged event) {
         log.info("Document request status changed: " + event.getDocumentRequestId());
         var documentRequest = documentRequestRepository.findById(event.getDocumentRequestId()).orElseThrow();
