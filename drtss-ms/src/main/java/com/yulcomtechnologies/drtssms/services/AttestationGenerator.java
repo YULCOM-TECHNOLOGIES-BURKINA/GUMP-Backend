@@ -50,6 +50,7 @@ public class AttestationGenerator {
         var map = new HashMap<String, Object>();
         var userData = usersFeignClient.getUsernameOrKeycloakId(documentRequest.getRequesterId());
         var company = userData.getCompany();
+        fileRepository.save(file);
 
         var attestation = Attestation.builder()
             .expirationDate(LocalDate.now().plusMonths(
@@ -88,7 +89,6 @@ public class AttestationGenerator {
 
         try {
             var fileBytes = pdfQRCodeService.addQRCodeToPDF(templateProcessor.htmlToPdf(filledTemplate), "QR code content");
-            fileRepository.save(file);
             fileStorageService.saveFile(fileBytes, filePath);
         } catch (Exception e) {
             e.printStackTrace();
