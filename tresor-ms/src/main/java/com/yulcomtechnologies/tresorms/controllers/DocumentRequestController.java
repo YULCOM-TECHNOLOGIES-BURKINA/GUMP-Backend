@@ -49,8 +49,11 @@ public class DocumentRequestController {
     }
 
     @GetMapping("demandes")
-    public ResponseEntity<Page<GetDocumentRequestDto>> getDocumentRequests(Pageable pageable) {
-        var documentRequests = documentRequestService.getPaginatedDocumentRequests(pageable);
+    public ResponseEntity<Page<GetDocumentRequestDto>> getDocumentRequests(
+        Pageable pageable,
+        @RequestParam(required = false) String publicContractNumber
+    ) {
+        var documentRequests = documentRequestService.getPaginatedDocumentRequests(pageable, publicContractNumber);
         return ResponseEntity.ok(documentRequests);
     }
 

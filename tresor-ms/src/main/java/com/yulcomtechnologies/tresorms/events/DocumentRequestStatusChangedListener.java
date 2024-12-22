@@ -7,7 +7,6 @@ import com.yulcomtechnologies.tresorms.repositories.DocumentRequestRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,7 +18,7 @@ public class DocumentRequestStatusChangedListener {
     private final DocumentRequestRepository documentRequestRepository;
 
     @EventListener
-    @Async
+    //@Async
     public void handleDocumentRequestStatusChanged(DocumentRequestChanged event) {
         log.info("Document request status changed: " + event.getDocumentRequestId());
         var documentRequest = documentRequestRepository.findById(event.getDocumentRequestId()).orElseThrow();

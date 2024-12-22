@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.UUID;
@@ -47,10 +48,11 @@ public class AttestationGenerator {
 
         var attestation = Attestation.builder()
             .expirationDate(LocalDate.now().plusMonths(VALIDITY_PERIOD_IN_MONTHS).atTime(23, 59, 59))
-            .documentRequest(DocumentRequest.builder().id(documentRequestId).build())
+            .documentRequest(documentRequest)
             .number(UUID.randomUUID().toString())
             .uuid(UUID.randomUUID().toString())
             .documentRequest(documentRequest)
+            .createdAt(LocalDateTime.now())
             .file(file)
             .build();
 
