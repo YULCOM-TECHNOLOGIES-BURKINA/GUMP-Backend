@@ -80,7 +80,7 @@ public class AttestationGenerator {
         map.put("location", company.getLocation());
         map.put("address", company.getAddress());
         map.put("bp", company.getPostalAddress());
-        map.put("region", userData.getRegion());
+        map.put("region", userData.getRegion().replace("_", ""));
         map.put("logo", fileStorageService.getPath(applicationConfigRepository.get().getLogo()));
         map.put("telephone", company.getPhone());
 

@@ -11,6 +11,7 @@ import com.yulcomtechnologies.tresorms.repositories.AttestationRepository;
 import com.yulcomtechnologies.tresorms.repositories.DocumentRequestRepository;
 import com.yulcomtechnologies.tresorms.repositories.FileRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -22,6 +23,7 @@ import java.util.UUID;
 //@Async
 @Service
 @AllArgsConstructor
+@Slf4j
 public class AttestationGenerator {
     public static final int VALIDITY_PERIOD_IN_MONTHS = 3;
     private final AttestationRepository attestationRepository;
@@ -31,6 +33,7 @@ public class AttestationGenerator {
     private final TemplateProcessor templateProcessor;
     private final PdfQRCodeService pdfQRCodeService;
     private final PdfFiligraneService pdfFiligraneService;
+    private final NumberGeneratorService numberGeneratorService;
 
     public void generateDocument(
         Long documentRequestId
@@ -45,11 +48,14 @@ public class AttestationGenerator {
 
         fileRepository.save(file);
 
+        var number = numberGeneratorService.generateNumber();
+
+        log.info("Generated number: {}", number);
 
         var attestation = Attestation.builder()
             .expirationDate(LocalDate.now().plusMonths(VALIDITY_PERIOD_IN_MONTHS).atTime(23, 59, 59))
             .documentRequest(documentRequest)
-            .number(UUID.randomUUID().toString())
+            .number(number)
             .uuid(UUID.randomUUID().toString())
             .documentRequest(documentRequest)
             .createdAt(LocalDateTime.now())
@@ -59,7 +65,7 @@ public class AttestationGenerator {
         attestationRepository.save(attestation);
 
         var map = new HashMap<String, Object>();
-        map.put("documentNumber", attestation.getNumber());
+        map.put("documentNumber", number);
         map.put("identity", documentRequest.getOrganizationName());
         map.put("contractOwner", documentRequest.getContractingOrganizationName());
         map.put("address", documentRequest.getAddress());
