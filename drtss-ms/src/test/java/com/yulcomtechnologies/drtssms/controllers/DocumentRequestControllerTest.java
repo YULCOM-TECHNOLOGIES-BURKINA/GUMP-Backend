@@ -1,6 +1,7 @@
 package com.yulcomtechnologies.drtssms.controllers;
 
 import com.yulcomtechnologies.drtssms.BaseIntegrationTest;
+import com.yulcomtechnologies.drtssms.dtos.ApproveDocumentRequestDto;
 import com.yulcomtechnologies.drtssms.dtos.CompanyDto;
 import com.yulcomtechnologies.drtssms.dtos.PayRequest;
 import com.yulcomtechnologies.drtssms.dtos.UserDto;
@@ -37,6 +38,38 @@ class DocumentRequestControllerTest extends BaseIntegrationTest {
 
     @MockBean
     UsersFeignClient usersFeignClient;
+
+    @Test
+    @Disabled
+    void approvesSuccessfully() throws Exception {
+        var document = documentRequestRepository.save(
+            DocumentRequest
+                .builder()
+                .requesterId("5")
+                .isPaid(true)
+                .isForPublicContract(true)
+                .region("CENTRE")
+                .createdAt(LocalDateTime.now())
+                .status(DocumentRequestStatus.PENDING.name())
+                .publicContractNumber("1234")
+                .build()
+        );
+
+        mockMvc.perform(
+            post("/demandes/" + document.getId() +"/approve")
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(
+                    new ApproveDocumentRequestDto(
+                        "123",
+                        "123",
+                        LocalDate.now(),
+                        LocalDate.now(
+                    )
+                )))
+                .header("X-User-Id", "5")
+        )
+        .andExpect(status().isOk());
+    }
 
     @Test
     void getDocumentRequests() throws Exception {

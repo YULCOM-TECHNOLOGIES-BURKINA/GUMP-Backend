@@ -183,15 +183,22 @@ public class DocumentRequestService {
         log.info("Approving document request with id {}", id);
         var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
 
+        log.info("currentUser: {}", currentUser);
+
+        System.out.println(documentRequestRepository.findById(id).orElseThrow());
 
         DocumentRequest documentRequest = documentRequestRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("DocumentRequest not found"));
 
+        log.info("documentRequest: {}", documentRequest);
+
         if (documentRequest.isApproved()) {
+            log.error("Document déjà approuvé");
             throw new BadRequestException("Document déjà approuvé");
         }
 
         if (!documentRequest.getIsPaid()) {
+            log.error("Document non payé");
             throw new BadRequestException("Document non payé");
         }
 
