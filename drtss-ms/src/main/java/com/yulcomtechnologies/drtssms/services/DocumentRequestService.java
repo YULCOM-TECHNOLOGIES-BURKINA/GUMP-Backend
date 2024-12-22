@@ -96,15 +96,21 @@ public class DocumentRequestService {
         return fileRepository.save(fileEntity);
     }
 
-    public Page<DocumentRequestDto> getPaginatedDocumentRequests(Pageable pageable) {
+    public Page<DocumentRequestDto> getPaginatedDocumentRequests(Pageable pageable, String publicContractNumber) {
         var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
         var role = UserRole.valueOf(currentUser.getRole());
         var userData = usersFeignClient.getUsernameOrKeycloakId(currentUser.getKeycloakUserId());
 
         log.info("Role: {}", role);
 
+        //TODO: Refactor later for better solution
+
         if (role == UserRole.ADMIN) {
-            return documentRequestRepository.findAll(pageable).map(
+            var data = publicContractNumber != null ?
+                documentRequestRepository.findAllByPublicContractNumber(publicContractNumber, pageable) :
+                documentRequestRepository.findAll(pageable);
+
+            return data.map(
                 documentRequest -> documentRequestMapper.toDto(
                     documentRequest,
                     applicationConfigRepository.get()
@@ -113,7 +119,11 @@ public class DocumentRequestService {
         }
 
         if (role == UserRole.USER) {
-            return documentRequestRepository.findAllByRequesterId(currentUser.getKeycloakUserId(), pageable).map(
+            var data = publicContractNumber != null ?
+                documentRequestRepository.findAllByRequesterIdAndPublicContractNumber(currentUser.getKeycloakUserId(), publicContractNumber, pageable) :
+                documentRequestRepository.findAllByRequesterId(currentUser.getKeycloakUserId(), pageable);
+
+            return data.map(
                 documentRequest -> documentRequestMapper.toDto(
                     documentRequest,
                     applicationConfigRepository.get()
@@ -122,7 +132,11 @@ public class DocumentRequestService {
         }
 
         if (role == UserRole.DRTSS_AGENT || role == UserRole.DRTSS_REGIONAL_MANAGER) {
-            return documentRequestRepository.findAllByRegion(userData.getRegion(), pageable).map(
+            var data = publicContractNumber != null ?
+                documentRequestRepository.findAllByRegionAndPublicContractNumber(userData.getRegion(), publicContractNumber, pageable) :
+                documentRequestRepository.findAllByRegion(userData.getRegion(), pageable);
+
+            return data.map(
                 documentRequest -> documentRequestMapper.toDto(
                     documentRequest,
                     applicationConfigRepository.get()
@@ -178,7 +192,7 @@ public class DocumentRequestService {
         }
 
         if (!documentRequest.getIsPaid()) {
-            //throw new BadRequestException("Document non payé");
+            throw new BadRequestException("Document non payé");
         }
 
         documentRequest.setStatus(DocumentRequestStatus.APPROVED.name());
@@ -194,8 +208,8 @@ public class DocumentRequestService {
     }
 
     public PaymentRequestResponse pay(Long id, PayRequest payRequest) {
-        /*var documentRequest = documentRequestRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Document request not found"));*/
+        var documentRequest = documentRequestRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Document request not found"));
 
         var paymentId = UUID.randomUUID().toString();
 

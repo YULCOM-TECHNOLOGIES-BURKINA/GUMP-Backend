@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DocumentRequestRepository extends JpaRepository<DocumentRequest, Long> {
     Page<DocumentRequest> findByRequesterId(String requesterId, Pageable pageable);
+    Page<DocumentRequest> findByPublicContractNumber(String requesterId, String publicContractNumber, Pageable pageable);
+    Page<DocumentRequest> findByRequesterIdAndPublicContractNumber(String requesterId, String publicContractNumber, Pageable pageable);
 }

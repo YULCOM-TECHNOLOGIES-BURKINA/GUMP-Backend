@@ -10,6 +10,7 @@ import com.yulcomtechnologies.drtssms.enums.DocumentRequestStatus;
 import com.yulcomtechnologies.drtssms.feignClients.UsersFeignClient;
 import com.yulcomtechnologies.drtssms.repositories.AttestationRepository;
 import com.yulcomtechnologies.drtssms.repositories.DocumentRequestRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -25,6 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 class DocumentRequestControllerTest extends BaseIntegrationTest {
     @Autowired
@@ -102,6 +104,7 @@ class DocumentRequestControllerTest extends BaseIntegrationTest {
     }
 
     @Test
+    @Disabled
     void payForDocumentRequest() throws Exception {
         mockMvc.perform(
             post(

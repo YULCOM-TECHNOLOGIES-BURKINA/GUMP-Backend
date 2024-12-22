@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.UUID;
@@ -51,6 +52,7 @@ public class AttestationGenerator {
             .number(UUID.randomUUID().toString())
             .uuid(UUID.randomUUID().toString())
             .documentRequest(documentRequest)
+            .createdAt(LocalDateTime.now())
             .file(file)
             .build();
 

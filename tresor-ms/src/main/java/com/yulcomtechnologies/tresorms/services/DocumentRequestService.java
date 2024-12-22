@@ -63,15 +63,23 @@ public class DocumentRequestService {
         return repository.save(documentRequest);
     }
 
-    public Page<GetDocumentRequestDto> getPaginatedDocumentRequests(Pageable pageable) {
+    public Page<GetDocumentRequestDto> getPaginatedDocumentRequests(Pageable pageable, String publicContractNumber) {
         var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
         var role = UserRole.valueOf(currentUser.getRole());
 
         if (role == UserRole.USER) {
-            return repository.findByRequesterId(currentUser.getKeycloakUserId(), pageable).map(documentRequestMapper::toDto);
+            var data = publicContractNumber != null
+                ? repository.findByRequesterIdAndPublicContractNumber(currentUser.getKeycloakUserId(), publicContractNumber, pageable)
+                : repository.findByRequesterId(currentUser.getKeycloakUserId(), pageable);
+
+            return data.map(documentRequestMapper::toDto);
         }
         else if (role == UserRole.TRESOR_AGENT) {
-            return repository.findAll(pageable).map(documentRequestMapper::toDto);
+            var data = publicContractNumber != null
+                ? repository.findByPublicContractNumber(publicContractNumber, publicContractNumber, pageable)
+                : repository.findAll(pageable);
+
+            return data.map(documentRequestMapper::toDto);
         }
 
         throw new BadRequestException("Cannot get document requests");
