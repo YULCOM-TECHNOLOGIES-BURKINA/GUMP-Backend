@@ -185,7 +185,7 @@ public class DocumentRequestService {
 
 
         DocumentRequest documentRequest = documentRequestRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("DocumentRequest not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("DocumentRequest not found"));
 
         if (documentRequest.isApproved()) {
             throw new BadRequestException("Document déjà approuvé");
