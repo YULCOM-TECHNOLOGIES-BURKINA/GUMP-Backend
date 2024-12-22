@@ -121,7 +121,7 @@ import java.util.Map;
      * @return
      */
     @PostMapping(path = "/historique", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, Object> historiqueDemandes(@RequestBody AsfResquestDto params) {
+    public Map<String, Object> historiqueDemandes(@RequestBody AsfDmResquestDto params) {
         List<BasicNameValuePair> formData = new ArrayList<>();
         formData.add(new BasicNameValuePair("form[ifu]", params.getIfu()));
         formData.add(new BasicNameValuePair("form[nes]", params.getNes()));
