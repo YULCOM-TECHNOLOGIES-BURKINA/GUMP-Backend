@@ -198,4 +198,20 @@ import java.util.Map;
         return apiService.callApi(url, formData);
     }
 
+    /**
+     * verifdocs  Asf
+     * @param params
+     * @return
+     */
+    @PostMapping(path = "/verifdocs", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> verifdocs(@RequestBody AsfControlResquestDto params) {
+        List<BasicNameValuePair> formData = new ArrayList<>();
+        formData.add(new BasicNameValuePair("form[ifu]", params.getIfu()));
+        formData.add(new BasicNameValuePair("form[nes]", params.getNes()));
+        formData.add(new BasicNameValuePair("form[attestation]", params.getAttestation()));
+
+        String url =  e_sintax_url+"rest/asf/verifdocs";
+        return apiService.callApi(url, formData);
+    }
+
 }
