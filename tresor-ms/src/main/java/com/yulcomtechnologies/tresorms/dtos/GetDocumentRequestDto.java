@@ -21,8 +21,10 @@ public class GetDocumentRequestDto {
     private String contractingOrganizationName;
     private String organizationAddress;
     private String organizationPhone;
+    private String organizationName;
     private String status;
     private int remainingDaysBeforeDueDate;
     private AttestationDto attestation;
     private LocalDateTime createdAt;
+    private Boolean isPaid;
 }
