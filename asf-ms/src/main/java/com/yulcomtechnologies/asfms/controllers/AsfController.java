@@ -2,10 +2,7 @@ package com.yulcomtechnologies.asfms.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yulcomtechnologies.asfms.dtos.AsfControlResquestDto;
-import com.yulcomtechnologies.asfms.dtos.AsfDmResquestDto;
-import com.yulcomtechnologies.asfms.dtos.AsfResquestDto;
-import com.yulcomtechnologies.asfms.dtos.DocumentRequestDto;
+import com.yulcomtechnologies.asfms.dtos.*;
 import com.yulcomtechnologies.asfms.enums.AuthRequestValue;
 import com.yulcomtechnologies.asfms.services.ApiService;
 import com.yulcomtechnologies.asfms.services.AsfService;
@@ -158,7 +155,7 @@ import java.util.Map;
      * @return
      */
     @PostMapping(path = "/verifier", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> verifierAsf(@RequestBody AsfControlResquestDto params) {
+    public ResponseEntity<?> verifierAsf(@RequestBody AsfVerifyResquestDto params) {
         List<BasicNameValuePair> formData = new ArrayList<>();
         formData.add(new BasicNameValuePair("form[ifu]", params.getIfu()));
         formData.add(new BasicNameValuePair("form[nes]", params.getNes()));
@@ -204,7 +201,7 @@ import java.util.Map;
      * @return
      */
     @PostMapping(path = "/verifdocs", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, Object> verifdocs(@RequestBody AsfControlResquestDto params) {
+    public Map<String, Object> verifdocs(@RequestBody AsfVerifyResquestDto params) {
         List<BasicNameValuePair> formData = new ArrayList<>();
         formData.add(new BasicNameValuePair("form[ifu]", params.getIfu()));
         formData.add(new BasicNameValuePair("form[nes]", params.getNes()));
