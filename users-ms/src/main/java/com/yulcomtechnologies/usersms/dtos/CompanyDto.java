@@ -17,4 +17,5 @@ public class CompanyDto {
     private String representantLastname;
     private String representantFirstname;
     private String representantPhone;
+    private String representantNip;
 }
