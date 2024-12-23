@@ -47,6 +47,9 @@ public class Company {
     @Column(name = "representant_phone")
     private String representantPhone;
 
+    @Column(name = "representant_nip")
+    private String representantNip;
+
     @ManyToOne
     @JoinColumn(name = "id_document_id", referencedColumnName = "id")
     private File idDocument;

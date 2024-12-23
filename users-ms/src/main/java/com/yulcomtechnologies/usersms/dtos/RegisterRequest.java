@@ -50,4 +50,8 @@ public class RegisterRequest {
     @NotNull
     @NotBlank
     private String representantPhone;
+
+    @NotBlank
+    @NotNull
+    private String representantNip;
 }
