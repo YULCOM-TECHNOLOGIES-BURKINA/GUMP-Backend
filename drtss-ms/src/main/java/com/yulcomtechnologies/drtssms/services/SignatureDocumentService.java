@@ -263,7 +263,7 @@ public class SignatureDocumentService {
                 .orElseThrow(() -> new IllegalArgumentException("Demande non trouvé"));
 
 
-        SignatureScanner signatory = signatureScannerRepository.findById(signatoryId)
+        SignatureScanner signatory = signatureScannerRepository.findSignatureScannerByUserId(signatoryId)
                 .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
 
         UserDto userInfo = usersFeignClient.findUserByEmail(signatory.getEmail());
@@ -304,7 +304,7 @@ public class SignatureDocumentService {
 
             // Ajouter l'image de signature au fichier
             certificateService.addSignatureImgToFile(
-                    attestationFile, signatoryFileImg, 75, 85,
+                    attestationFile, signatoryFileImg, 70, 85,
                     signatureLocation.getWidth(), signatureLocation.getHeight(),
                     signatureLocation.getPageSelect(), userInfo.getForename() + " " + userInfo.getLastname(), userInfo.getTitre_honorifique()
             );
@@ -312,7 +312,7 @@ public class SignatureDocumentService {
             // Chemin vers le fichier de certificat
             File keyStoreFile = new File(signatory.getSignatureCertificat().getCheminCertificat());
             if (!keyStoreFile.exists() || !keyStoreFile.canRead()) {
-                String jsonError = "{\"error\": \"Fichier de certificat introuvable ou non lisible : uploads/signatures_electronique/certificats/ngolo.3.p12\"}";
+                String jsonError = "{\"error\": \"Fichier de certificat introuvable ou non lisible : \"}";
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(jsonError.getBytes());
@@ -404,7 +404,6 @@ public class SignatureDocumentService {
      * @throws IOException
      */
     public    File  getSignatoryCertificat( Long signataireId) throws IOException {
-
 
         SignatureScanner signatureInfo=signatureScannerRepository.findById(signataireId).get();
         String certificatPath=signatureInfo.getSignatureCertificat().getCheminCertificat();
