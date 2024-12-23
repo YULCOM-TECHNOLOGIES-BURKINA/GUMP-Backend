@@ -1,5 +1,6 @@
 package com.yulcomtechnologies.drtssms.entities;
 
+import com.yulcomtechnologies.drtssms.enums.DocumentRequestStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -74,6 +75,6 @@ public class DocumentRequest {
     private Attestation attestation;
 
     public boolean isApproved() {
-        return "APPROVED".equals(status);
+        return DocumentRequestStatus.APPROVED.name().equals(status);
     }
 }

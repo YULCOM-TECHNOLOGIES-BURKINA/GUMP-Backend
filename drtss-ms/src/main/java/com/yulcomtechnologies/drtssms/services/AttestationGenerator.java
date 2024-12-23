@@ -50,6 +50,7 @@ public class AttestationGenerator {
         var map = new HashMap<String, Object>();
         var userData = usersFeignClient.getUsernameOrKeycloakId(documentRequest.getRequesterId());
         var company = userData.getCompany();
+        fileRepository.save(file);
 
         var attestation = Attestation.builder()
             .expirationDate(LocalDate.now().plusMonths(
@@ -79,7 +80,7 @@ public class AttestationGenerator {
         map.put("location", company.getLocation());
         map.put("address", company.getAddress());
         map.put("bp", company.getPostalAddress());
-        map.put("region", userData.getRegion());
+        map.put("region", userData.getRegion().replace("_", ""));
         map.put("logo", fileStorageService.getPath(applicationConfigRepository.get().getLogo()));
         map.put("telephone", company.getPhone());
 
@@ -88,9 +89,9 @@ public class AttestationGenerator {
 
         try {
             var fileBytes = pdfQRCodeService.addQRCodeToPDF(templateProcessor.htmlToPdf(filledTemplate), "QR code content");
-            fileRepository.save(file);
             fileStorageService.saveFile(fileBytes, filePath);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
 
