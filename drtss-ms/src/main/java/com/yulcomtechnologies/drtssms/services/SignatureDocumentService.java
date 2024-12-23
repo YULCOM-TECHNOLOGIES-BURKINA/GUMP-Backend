@@ -195,7 +195,7 @@ public class SignatureDocumentService {
 
             // Charger le Certifaicat  de signature du signataire
             File _keyStoreFile=getSignatoryCertificat(signatoryId);
-            if (_keyStoreFile == null || !_keyStoreFile.exists()) {
+           if (_keyStoreFile == null || !_keyStoreFile.exists()) {
                 String jsonError = "{\"error\": \"Le Certificat de signature introuvable pour le signataire ID : " + signatoryId + "\"}";
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -227,7 +227,7 @@ public class SignatureDocumentService {
 
 
             // Certifier le document avec le certificat du signataire
-            certificateService.certifyThedocument(attestationFile, _keyStoreFile, keyStorePassword, _alias);
+            certificateService.certifyThedocument(attestationFile, _keyStoreFile, keyStorePassword, alias);
 
             try (FileInputStream fis = new FileInputStream(attestationFile)) {
                 byte[] data = fis.readAllBytes();

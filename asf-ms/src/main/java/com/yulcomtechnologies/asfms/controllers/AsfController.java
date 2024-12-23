@@ -76,30 +76,6 @@ import java.util.Map;
     }
 
     /**
-     *  Telecharger document asf
-     * @param params
-     * @return
-     */
-    @PostMapping(path = "/telecharger", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<byte[]> telechargerAsf(@RequestBody AsfResquestDto params) {
-        List<BasicNameValuePair> formData = new ArrayList<>();
-        formData.add(new BasicNameValuePair("form[ifu]", params.getIfu()));
-        formData.add(new BasicNameValuePair("form[nes]", params.getNes()));
-        formData.add(new BasicNameValuePair("form[reference]", params.getReference()));
-
-        String url = e_sintax_url+"rest/asf/docs";
-        byte[] pdfData = apiService.callApiForPdf(url, formData);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDispositionFormData("attachment", "document.pdf");
-
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body(pdfData);
-    }
-
-    /**
      * Consultation statut asf
      * @param params
      * @return
@@ -121,7 +97,7 @@ import java.util.Map;
      * @return
      */
     @PostMapping(path = "/historique", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, Object> historiqueDemandes(@RequestBody AsfResquestDto params) {
+    public Map<String, Object> historiqueDemandes(@RequestBody AsfDmResquestDto params) {
         List<BasicNameValuePair> formData = new ArrayList<>();
         formData.add(new BasicNameValuePair("form[ifu]", params.getIfu()));
         formData.add(new BasicNameValuePair("form[nes]", params.getNes()));
@@ -148,37 +124,6 @@ import java.util.Map;
 
 
 
-
-    /**
-     * Verifier demandes asf
-     * @param params
-     * @return
-     */
-    @PostMapping(path = "/verifier", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> verifierAsf(@RequestBody AsfVerifyResquestDto params) {
-        List<BasicNameValuePair> formData = new ArrayList<>();
-        formData.add(new BasicNameValuePair("form[ifu]", params.getIfu()));
-        formData.add(new BasicNameValuePair("form[nes]", params.getNes()));
-        formData.add(new BasicNameValuePair("form[attestation]", params.getAttestation()));
-
-        String url = e_sintax_url + "rest/asf/verifdocs";
-
-         byte[] pdfData = apiService.callApiForPdf(url, formData);
-
-         if (pdfData == null || pdfData.length == 0) {
-             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", "Le document PDF est introuvable."));
-        }
-
-         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDispositionFormData("attachment", "document.pdf");
-
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body(pdfData);
-    }
-
     /**
      * Detail Asf
      * @param params
@@ -200,15 +145,30 @@ import java.util.Map;
      * @param params
      * @return
      */
-    @PostMapping(path = "/verifdocs", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, Object> verifdocs(@RequestBody AsfVerifyResquestDto params) {
+    @PostMapping(path = "/verify_asf_doc", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> verifierAsfDoc(@RequestBody AsfResquestDto params) {
         List<BasicNameValuePair> formData = new ArrayList<>();
         formData.add(new BasicNameValuePair("form[ifu]", params.getIfu()));
         formData.add(new BasicNameValuePair("form[nes]", params.getNes()));
-        formData.add(new BasicNameValuePair("form[attestation]", params.getAttestation()));
+        formData.add(new BasicNameValuePair("form[reference]", params.getReference()));
 
-        String url =  e_sintax_url+"rest/asf/verifdocs";
-        return apiService.callApi(url, formData);
+        String url = e_sintax_url + "rest/asf/docs";
+
+        byte[] pdfData = apiService.callApiForPdf(url, formData);
+
+        if (pdfData == null || pdfData.length < 500) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Le document PDF est introuvable."));
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("attachment", "document.pdf");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(pdfData);
     }
+
 
 }
