@@ -103,42 +103,38 @@ public class signatureElectroniqueController {
     }
 
 
+
     /**
-     *Signe attestation
+     * Signer attestation DRTPS
      * @param attestationPath
      * @param signatoryId
-     * @param keyStore
-     * @param keyStorePassword
-     * @param alias
+     * @param id
      * @return
      */
-
-    @PostMapping(path = "/sign_attestation", consumes = MediaType.ALL_VALUE)
-    public ResponseEntity<byte[]> signDocumentActe(
+    @PostMapping(path = "/sign_attestation", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> signAttestation(
             @RequestParam("attestationPath") String attestationPath,
             @RequestParam("signatoryId") Long signatoryId,
-            @RequestParam("keyStore") MultipartFile keyStore,
-            @RequestParam(value = "keyStorePassword", defaultValue = "password") String keyStorePassword,
-            @RequestParam(value = "x",defaultValue = "70") float x,
-            @RequestParam(value = "y",defaultValue = "85") float y,
-            @RequestParam(value = "alias", defaultValue = "mykey") String alias) {
+            @RequestParam("requestId") Long id
+    ) {
 
-        File keyStoreFile = null;
         try {
-
-            keyStoreFile = convertMultiPartToFile(keyStore);
-
-           return   signatureDocumentService.signAttestation(attestationPath, signatoryId, keyStoreFile, keyStorePassword, alias,x,y);
-
-         } catch (Exception e) {
-            return null;
-        } finally {
-            // Supprimer le fichier temporaire
-            if (keyStoreFile != null && keyStoreFile.exists()) {
-                keyStoreFile.delete();
-            }
+            return signatureDocumentService.signAttestation2(attestationPath, signatoryId,id);
+        } catch (IllegalArgumentException e) {
+            String errorResponse = "{\"error\": \"" + e.getMessage() + "\"}";
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(errorResponse.getBytes());
+        } catch (Exception e) {
+            String errorResponse = "{\"error\": \"Erreur inattendue : " + e.getMessage() + "\"}";
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(errorResponse.getBytes());
         }
     }
+
+
+
 
     /**
      * Liste des Signataires
@@ -229,66 +225,7 @@ public class signatureElectroniqueController {
 
 
 
-    @PostMapping(path = "/sign_attestation_test", consumes = MediaType.ALL_VALUE)
-    public ResponseEntity<?> signDocumentActe2(
-            @RequestParam("attestationPath") String attestationPath,
-            @RequestParam("signatoryId") Long signatoryId,
-            @RequestParam("keyStore") MultipartFile keyStore,
-            @RequestParam(value = "alias", defaultValue = "mykey") String alias) {
-
-        if (attestationPath == null || attestationPath.isBlank()) {
-            return ResponseEntity.badRequest().body("Le chemin de l'attestation est requis.");
-        }
-
-        if (signatoryId == null) {
-            return ResponseEntity.badRequest().body("L'identifiant du signataire est requis.");
-        }
-
-        if (keyStore == null || keyStore.isEmpty()) {
-            return ResponseEntity.badRequest().body("Le fichier de stockage de clés (keyStore) est requis.");
-        }
-
-        File keyStoreFile = null;
-        try {
-            // Convertir MultipartFile en fichier temporaire
-            keyStoreFile = convertMultiPartToFile(keyStore);
-
-            // Appeler le service de signature
-            ResponseEntity signedDocument = signatureDocumentService.signAttestation2(
-                    attestationPath, signatoryId, keyStoreFile, "password", alias, 70, 85);
-
-            // Retourner le document signé
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"signed_document.pdf\"")
-                    .body(signedDocument);
-
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("Erreur de validation des paramètres : " + e.getMessage());
-        } catch (Exception e) {
-            // Log d'erreur
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Une erreur s'est produite lors de la signature du document.");
-        } finally {
-            // Supprimer le fichier temporaire
-            if (keyStoreFile != null && keyStoreFile.exists()) {
-                boolean deleted = keyStoreFile.delete();
-                if (!deleted) {
-                    System.err.println("Échec de la suppression du fichier temporaire.");
-                }
-            }
-        }
-    }
 
 
-    @PostMapping(path = "/sign_test", consumes = MediaType.ALL_VALUE)
-    public File  signDocumentActe_test(
-            @RequestParam("cheminCertificat")  Path   cheminCertificat) throws java.io.IOException {
-
-
-        return   signatureDocumentService.loadFileByPath(cheminCertificat);
-
-
-    }
 
 }

@@ -3,13 +3,12 @@ package com.yulcomtechnologies.drtssms.services;
 import com.yulcomtechnologies.drtssms.dtos.SignataireCertificatDto;
 import com.yulcomtechnologies.drtssms.dtos.SignatureLocationDto;
 import com.yulcomtechnologies.drtssms.dtos.UserDto;
+import com.yulcomtechnologies.drtssms.entities.DocumentRequest;
 import com.yulcomtechnologies.drtssms.entities.SignatureScanner;
+import com.yulcomtechnologies.drtssms.entities.UtilisateursDrtss;
 import com.yulcomtechnologies.drtssms.enums.FileStoragePath;
 import com.yulcomtechnologies.drtssms.feignClients.UsersFeignClient;
-import com.yulcomtechnologies.drtssms.repositories.FileRepository;
-import com.yulcomtechnologies.drtssms.repositories.SignatureCertificatRepository;
-import com.yulcomtechnologies.drtssms.repositories.SignatureScannerRepository;
-import com.yulcomtechnologies.drtssms.repositories.UtilisateursDrtssRepository;
+import com.yulcomtechnologies.drtssms.repositories.*;
 import com.yulcomtechnologies.sharedlibrary.enums.UserRole;
 import com.yulcomtechnologies.sharedlibrary.exceptions.ResourceNotFoundException;
 import lombok.AllArgsConstructor;
@@ -46,11 +45,14 @@ public class SignatureDocumentService {
     private SignatureCertificatRepository signatureCertificatRepository;
     private SignatureScannerRepository signatureScannerRepository;
     private FileRepository fileRepository;
+    private DocumentRequestRepository documentRequestRepository;
 
     @Autowired
     private CertificateService certificateService;
     @Autowired
     private UsersFeignClient usersFeignClient;
+    @Autowired
+    private DocumentRequestService documentRequestService;
 
     /**
      *
@@ -253,18 +255,18 @@ public class SignatureDocumentService {
     }
 
 
+
     @Transactional
-    public ResponseEntity<byte[]> signAttestation2(String attestationPath, Long signatoryId, File keyStoreFile, String keyStorePassword, String alias, float x, float y) {
+    public ResponseEntity<byte[]> signAttestation2(String attestationPath, Long signatoryId,Long id ) {
+
+       DocumentRequest requestInfo= documentRequestRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Demande non trouvé"));
 
 
         SignatureScanner signatory = signatureScannerRepository.findById(signatoryId)
                 .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
 
         UserDto userInfo = usersFeignClient.findUserByEmail(signatory.getEmail());
-        SignatureScanner signatureInfo=signatureScannerRepository.findById(signatoryId).orElseThrow(() -> new IllegalArgumentException("Signataire info  non trouvé"));
-
-
-        String _alias=signatureInfo.getSignatureCertificat().getAlias();
 
         if (!signatory.getSignatureCertificat().isActif()) {
             String jsonError = "{\"error\": \"Utilisateur inactif, signature non autorisée\"}";
@@ -278,15 +280,6 @@ public class SignatureDocumentService {
             File attestationFile = loadFileByPath(Path.of(attestationPath));
             if (!attestationFile.exists() || !attestationFile.canRead()) {
                 String jsonError = "{\"error\": \"Fichier d'attestation introuvable ou non lisible : " + attestationPath + "\"}";
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .body(jsonError.getBytes());
-            }
-
-            // Charger le Certifaicat  de signature du signataire
-            File _keyStoreFile=getSignatoryCertificat(signatoryId);
-            if (_keyStoreFile == null || !_keyStoreFile.exists()) {
-                String jsonError = "{\"error\": \"Le Certificat de signature introuvable pour le signataire ID : " + signatoryId + "\"}";
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(jsonError.getBytes());
@@ -309,17 +302,27 @@ public class SignatureDocumentService {
                         .body(jsonError.getBytes());
             }
 
+            // Ajouter l'image de signature au fichier
             certificateService.addSignatureImgToFile(
-                    attestationFile, signatoryFileImg, x, y,
+                    attestationFile, signatoryFileImg, 75, 85,
                     signatureLocation.getWidth(), signatureLocation.getHeight(),
                     signatureLocation.getPageSelect(), userInfo.getForename() + " " + userInfo.getLastname(), userInfo.getTitre_honorifique()
-                    // signatureLocation.getPageSelect(), signatory.getNom() + " " + signatory.getPrenom(), signatory.getTitre_honorifique()
             );
 
+            // Chemin vers le fichier de certificat
+            File keyStoreFile = new File(signatory.getSignatureCertificat().getCheminCertificat());
+            if (!keyStoreFile.exists() || !keyStoreFile.canRead()) {
+                String jsonError = "{\"error\": \"Fichier de certificat introuvable ou non lisible : uploads/signatures_electronique/certificats/ngolo.3.p12\"}";
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(jsonError.getBytes());
+            }
 
             // Certifier le document avec le certificat du signataire
-            certificateService.certifyThedocument(attestationFile, _keyStoreFile, keyStorePassword, alias);
-
+            certificateService.certifyThedocument(attestationFile, keyStoreFile, "password", signatory.getSignatureCertificat().getAlias());
+            // Mise a jour status demande
+            documentRequestService.signedDocumentRequest(id,signatory.getEmail());
+            // Lire le fichier certifié et le retourner
             try (FileInputStream fis = new FileInputStream(attestationFile)) {
                 byte[] data = fis.readAllBytes();
                 return ResponseEntity.ok()
@@ -342,15 +345,7 @@ public class SignatureDocumentService {
     }
 
 
-    public SignatureScanner verifSignator(Long signatoryId){
 
-        SignatureScanner signatory = signatureScannerRepository.findById(signatoryId)
-                .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
-
-         UserDto userInfo = usersFeignClient.findUserByEmail(signatory.getEmail());
-
-        return  signatory;
-    }
 
     /**
      * Telecharger un fichier par le file Path
