@@ -5,4 +5,5 @@ public enum DocumentRequestStatus {
     PROCESSING,
     APPROVED,
     REJECTED,
+    SIGNED,
 }

@@ -55,6 +55,7 @@ public class DocumentRequestStatusChangedListener {
             case APPROVED -> NotificationStatus.APPROVED;
             case REJECTED -> NotificationStatus.REJECTED;
             case PENDING -> NotificationStatus.PENDING;
+            case SIGNED -> NotificationStatus.PENDING;
         };
     }
 }
