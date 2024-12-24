@@ -220,11 +220,8 @@ public class signatureElectroniqueController {
     }
 
     @GetMapping("demandes/{id}/signed")
-    public ResponseEntity<?> approveDocumentRequest(
-            @PathVariable Long id
-     ) throws java.io.IOException {
-        documentRequestService.signedDocumentRequest(id,"SIGNATAIRE DRTPS");
-        return ResponseEntity.ok().build();
+    public void signedDocumentRequest(@PathVariable Long id) throws java.io.IOException {
+        documentRequestService.signedDocumentRequest(id, "SIGNATAIRE DRTPS");
     }
 
 
