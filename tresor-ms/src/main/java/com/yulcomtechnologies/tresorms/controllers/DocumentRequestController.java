@@ -36,6 +36,22 @@ public class DocumentRequestController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("demandes/{id}/review")
+    public ResponseEntity<Void> reviewDocumentRequest(
+        @PathVariable Long id
+    ) {
+        documentRequestService.rejectDocumentRequest(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("demandes/{id}/reject")
+    public ResponseEntity<Void> rejectDocumentRequest(
+        @PathVariable Long id
+    ) {
+        documentRequestService.rejectDocumentRequest(id);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("demandes")
     public ResponseEntity<CreatedResource> submitDocumentRequest(
         @RequestBody @Validated DocumentRequestDto documentRequestDto,
