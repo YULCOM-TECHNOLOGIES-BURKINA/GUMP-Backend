@@ -32,6 +32,8 @@ jobs:
       - name: Build ${{matrix.ms}}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MAVEN_TOKEN: ${{ secrets.MAVEN_TOKEN }}
+          
         run: mvn clean install -s ../settings.xml
 
       - name: Log in to registry
