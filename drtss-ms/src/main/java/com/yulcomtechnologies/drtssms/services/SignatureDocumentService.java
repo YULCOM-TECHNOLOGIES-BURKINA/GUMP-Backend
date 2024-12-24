@@ -400,6 +400,7 @@ public class SignatureDocumentService {
                     signatureLocation.getPageSelect(), userInfo.getForename() + " " + userInfo.getLastname(), userInfo.getTitre_honorifique()
             );
 
+
             if (!keyStoreFile.exists() || !keyStoreFile.canRead()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .contentType(MediaType.APPLICATION_JSON)

@@ -3,9 +3,9 @@ package com.yulcomtechnologies.drtssms.enums;
 public enum FileStoragePath {
 
 
-    SCAN_SIGN_PATH("./uploads/signatures_electronique/signatures_img"),
+    SCAN_SIGN_PATH("uploads/signatures_electronique/signatures_img"),
 
-    CERTIFICAT_PATH("./uploads/signatures_electronique/certificats");
+    CERTIFICAT_PATH("uploads/signatures_electronique/certificats");
 
     private String path;
 
