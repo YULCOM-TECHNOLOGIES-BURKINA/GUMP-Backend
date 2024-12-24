@@ -49,11 +49,19 @@ public class DocumentRequest {
     @Column(name = "approved_by")
     private String approvedBy;
 
+    @Column(name = "signed_by")
+    private String signedBy;
+
+
+
     @Column(name = "is_for_public_contract", nullable = false)
     private Boolean isForPublicContract;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(name = "signed_at", nullable = true)
+    private LocalDateTime signedAt;
 
     @ManyToOne
     @JoinColumn(name = "generated_document_id", referencedColumnName = "id")

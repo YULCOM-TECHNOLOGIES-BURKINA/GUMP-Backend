@@ -1,9 +1,12 @@
 package com.yulcomtechnologies.drtssms.controllers;
 
 import com.itextpdf.io.IOException;
+import com.yulcomtechnologies.drtssms.dtos.ApproveDocumentRequestDto;
 import com.yulcomtechnologies.drtssms.dtos.DocumentRequestDto;
 import com.yulcomtechnologies.drtssms.dtos.FileDto;
+import com.yulcomtechnologies.drtssms.dtos.UserDto;
 import com.yulcomtechnologies.drtssms.entities.SignatureScanner;
+import com.yulcomtechnologies.drtssms.services.DocumentRequestService;
 import com.yulcomtechnologies.drtssms.services.SignatureDocumentService;
 import com.yulcomtechnologies.drtssms.services.UtilisateurService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,6 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,6 +47,9 @@ public class signatureElectroniqueController {
 
     @Autowired
     private SignatureDocumentService signatureDocumentService;
+
+    @Autowired
+    private DocumentRequestService documentRequestService;
 
 
 
@@ -102,42 +109,27 @@ public class signatureElectroniqueController {
     }
 
 
+
     /**
-     *Signe attestation
+     * Signer attestation DRTPS
      * @param attestationPath
      * @param signatoryId
-     * @param keyStore
-     * @param keyStorePassword
-     * @param alias
+     * @param id
      * @return
      */
-
-    @PostMapping(path = "/sign_attestation", consumes = MediaType.ALL_VALUE)
-    public ResponseEntity<byte[]> signDocumentActe(
+    @PostMapping(path = "/sign_attestation", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> signAttestation(
             @RequestParam("attestationPath") String attestationPath,
             @RequestParam("signatoryId") Long signatoryId,
-            @RequestParam("keyStore") MultipartFile keyStore,
-            @RequestParam(value = "keyStorePassword", defaultValue = "password") String keyStorePassword,
-            @RequestParam(value = "x",defaultValue = "70") float x,
-            @RequestParam(value = "y",defaultValue = "85") float y,
-            @RequestParam(value = "alias", defaultValue = "mykey") String alias) {
+            @RequestParam("requestId") Long id
+    ) throws Exception {
 
-        File keyStoreFile = null;
-        try {
+        return signatureDocumentService.signAttestation2(attestationPath, signatoryId,id);
 
-            keyStoreFile = convertMultiPartToFile(keyStore);
-
-           return   signatureDocumentService.signAttestation(attestationPath, signatoryId, keyStoreFile, keyStorePassword, alias,x,y);
-
-         } catch (Exception e) {
-            return null;
-        } finally {
-            // Supprimer le fichier temporaire
-            if (keyStoreFile != null && keyStoreFile.exists()) {
-                keyStoreFile.delete();
-            }
-        }
     }
+
+
+
 
     /**
      * Liste des Signataires
@@ -151,6 +143,9 @@ public class signatureElectroniqueController {
             @RequestParam(defaultValue = "50") int size) {
         return signatureDocumentService.listSignatory(page,size);
     }
+
+
+
 
 
     @GetMapping("download_certificate/signatoryId")
@@ -223,4 +218,13 @@ public class signatureElectroniqueController {
         }
         return convFile;
     }
+
+    @GetMapping("demandes/{id}/signed")
+    public void signedDocumentRequest(@PathVariable Long id) throws java.io.IOException {
+        documentRequestService.signedDocumentRequest(id, "SIGNATAIRE DRTPS");
+    }
+
+
+
+
 }

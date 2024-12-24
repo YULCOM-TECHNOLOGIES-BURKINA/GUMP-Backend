@@ -6,7 +6,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-public class GatewayAndFiltersApplication {
+public class 	GatewayAndFiltersApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(GatewayAndFiltersApplication.class, args);
