@@ -87,6 +87,12 @@ public class DebiteurController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping
+    public ResponseEntity<DebiteurEntity> createDebiteur(@Valid @RequestBody DebiteurEntity debiteur) {
+        debiteurRepository.save(debiteur);
+        return ResponseEntity.ok(debiteur);
+    }
+
     // Handle validation errors
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
