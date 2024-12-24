@@ -116,49 +116,15 @@ public class signatureElectroniqueController {
             @RequestParam("attestationPath") String attestationPath,
             @RequestParam("signatoryId") Long signatoryId,
             @RequestParam("requestId") Long id
-    ) {
+    ) throws Exception {
 
-        try {
-            return signatureDocumentService.signAttestation2(attestationPath, signatoryId,id);
-        } catch (IllegalArgumentException e) {
-            String errorResponse = "{\"error\": \"" + e.getMessage() + "\"}";
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(errorResponse.getBytes());
-        } catch (Exception e) {
-            String errorResponse = "{\"error\": \"Erreur inattendue : " + e.getMessage() + "\"}";
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(errorResponse.getBytes());
-        }
+        return signatureDocumentService.signAttestation2(attestationPath, signatoryId,id);
+
     }
 
 
 
 
-    @PostMapping("/sign")
-    public ResponseEntity<byte[]> signDocumentActe(
-            @RequestParam("attestationPath") String attestationPath,
-            @RequestParam("signatoryId") Long signatoryId,
-            @RequestParam("keyStore") MultipartFile keyStore,
-            @RequestParam(value = "alias", defaultValue = "mykey") String alias) {
-
-        File keyStoreFile = null;
-        try {
-
-            keyStoreFile = convertMultiPartToFile(keyStore);
-
-            return   signatureDocumentService.signAttestation(attestationPath, signatoryId, keyStoreFile, "password", alias,70,85);
-
-        } catch (Exception e) {
-            return null;
-        } finally {
-            // Supprimer le fichier temporaire
-            if (keyStoreFile != null && keyStoreFile.exists()) {
-                keyStoreFile.delete();
-            }
-        }
-    }
     /**
      * Liste des Signataires
      * @param page
