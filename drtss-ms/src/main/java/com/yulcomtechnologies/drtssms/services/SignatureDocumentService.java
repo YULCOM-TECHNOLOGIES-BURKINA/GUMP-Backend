@@ -352,7 +352,7 @@ public class SignatureDocumentService {
 
 
     @Transactional
-    public ResponseEntity<byte[]> signAttestation3(String attestationPath, Long signatoryId, Long id, File keyStoreFile) {
+    public ResponseEntity<String> signAttestation3(String attestationPath, Long signatoryId, Long id, File keyStoreFile) {
         try {
             // Charger la demande
             DocumentRequest requestInfo = documentRequestRepository.findById(id)
@@ -365,10 +365,9 @@ public class SignatureDocumentService {
             UserDto userInfo = usersFeignClient.findUserByEmail(signatory.getEmail());
 
             if (!signatory.getSignatureCertificat().isActif()) {
-                String jsonError = "{\"error\": \"Utilisateur inactif, signature non autorisée\"}";
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .body(jsonError.getBytes());
+                        .body("{\"error\": \"Utilisateur inactif, signature non autorisée\"}");
             }
 
             Path basePath = Paths.get(System.getProperty("user.dir"));
@@ -376,26 +375,23 @@ public class SignatureDocumentService {
             File attestationFile = absoluteAttestationPath.toFile();
 
             if (!attestationFile.exists() || !attestationFile.canRead()) {
-                String jsonError = "{\"error\": \"Fichier d'attestation introuvable ou non lisible : " + absoluteAttestationPath + "\"}";
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .body(jsonError.getBytes());
+                        .body("{\"error\": \"Fichier d'attestation introuvable ou non lisible : " + absoluteAttestationPath + "\"}");
             }
 
             File signatoryFileImg = getSignatoryFileImg(signatoryId);
             if (signatoryFileImg == null || !signatoryFileImg.exists()) {
-                String jsonError = "{\"error\": \"Fichier de signature introuvable pour le signataire ID : " + signatoryId + "\"}";
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .body(jsonError.getBytes());
+                        .body("{\"error\": \"Fichier de signature introuvable pour le signataire ID : " + signatoryId + "\"}");
             }
 
             SignatureLocationDto signatureLocation = signatureLocation(attestationFile);
             if (signatureLocation == null) {
-                String jsonError = "{\"error\": \"Emplacement de signature non trouvé dans le fichier PDF\"}";
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .body(jsonError.getBytes());
+                        .body("{\"error\": \"Emplacement de signature non trouvé dans le fichier PDF\"}");
             }
 
             certificateService.addSignatureImgToFile(
@@ -405,10 +401,9 @@ public class SignatureDocumentService {
             );
 
             if (!keyStoreFile.exists() || !keyStoreFile.canRead()) {
-                String jsonError = "{\"error\": \"Fichier de certificat introuvable ou non lisible : " + keyStoreFile.getAbsolutePath() + "\"}";
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .body(jsonError.getBytes());
+                        .body("{\"error\": \"Fichier de certificat introuvable ou non lisible : " + keyStoreFile.getAbsolutePath() + "\"}");
             }
 
             certificateService.certifyThedocument(
@@ -420,27 +415,20 @@ public class SignatureDocumentService {
 
             documentRequestService.signedDocumentRequest(id, signatory.getEmail());
 
-            try (FileInputStream fis = new FileInputStream(attestationFile)) {
-                byte[] data = fis.readAllBytes();
-                return ResponseEntity.ok()
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attestationFile.getName() + "\"")
-                        .contentType(MediaType.APPLICATION_PDF)
-                        .body(data);
-            }
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body("{\"message\": \"L'attestation a été signée avec succès.\"}");
 
         } catch (IOException e) {
-            String jsonError = "{\"error\": \"Erreur lors du chargement du fichier d'attestation : " + e.getMessage() + "\"}";
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .body(jsonError.getBytes());
+                    .body("{\"error\": \"Erreur lors du chargement du fichier d'attestation : " + e.getMessage() + "\"}");
         } catch (Exception e) {
-            String jsonError = "{\"error\": \"Erreur lors de la signature de l'attestation : " + e.getMessage() + "\"}";
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .body(jsonError.getBytes());
+                    .body("{\"error\": \"Erreur lors de la signature de l'attestation : " + e.getMessage() + "\"}");
         }
     }
-
 
 
     /**

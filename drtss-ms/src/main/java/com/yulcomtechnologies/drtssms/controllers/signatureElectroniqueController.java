@@ -137,31 +137,25 @@ public class signatureElectroniqueController {
 
 
     @PostMapping("/sign")
-    public ResponseEntity<byte[]> signAttestation(
-            @RequestParam("attestationPath") String attestationPath,
-            @RequestParam("signatoryId") Long signatoryId,
-            @RequestParam("requestId") Long requestId,
-            @RequestParam("keyStoreFile") MultipartFile keyStoreFile) {
-
+     public ResponseEntity<String> signAttestation(
+            @RequestParam String attestationPath,
+            @RequestParam Long signatoryId,
+            @RequestParam Long requestId,
+            @RequestParam String keyStorePath
+    ) {
         try {
-            // Convertir le fichier Multipart en objet File
-            File tempKeyStoreFile = File.createTempFile("keystore-", ".pfx");
-            keyStoreFile.transferTo(tempKeyStoreFile);
+            File keyStoreFile = new File(keyStorePath);
 
-            ResponseEntity<byte[]> response = signatureDocumentService.signAttestation3(
-                    attestationPath, signatoryId, requestId, tempKeyStoreFile);
+            if (!keyStoreFile.exists() || !keyStoreFile.canRead()) {
+                return ResponseEntity.badRequest()
+                        .body("{\"error\": \"Fichier KeyStore introuvable ou non lisible : " + keyStorePath + "\"}");
+            }
 
-            // Supprimer le fichier temporaire après usage
-            tempKeyStoreFile.delete();
+            return signatureDocumentService.signAttestation3(attestationPath, signatoryId, requestId, keyStoreFile);
 
-            return response;
-        } catch (IOException e) {
-            String jsonError = "{\"error\": \"Erreur lors du traitement du fichier keyStore : " + e.getMessage() + "\"}";
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(jsonError.getBytes());
-        } catch (java.io.IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            return ResponseEntity.status(500)
+                    .body("{\"error\": \"Erreur interne : " + e.getMessage() + "\"}");
         }
     }
 
