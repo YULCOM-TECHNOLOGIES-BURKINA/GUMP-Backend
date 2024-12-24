@@ -1,10 +1,12 @@
 package com.yulcomtechnologies.drtssms.controllers;
 
 import com.itextpdf.io.IOException;
+import com.yulcomtechnologies.drtssms.dtos.ApproveDocumentRequestDto;
 import com.yulcomtechnologies.drtssms.dtos.DocumentRequestDto;
 import com.yulcomtechnologies.drtssms.dtos.FileDto;
 import com.yulcomtechnologies.drtssms.dtos.UserDto;
 import com.yulcomtechnologies.drtssms.entities.SignatureScanner;
+import com.yulcomtechnologies.drtssms.services.DocumentRequestService;
 import com.yulcomtechnologies.drtssms.services.SignatureDocumentService;
 import com.yulcomtechnologies.drtssms.services.UtilisateurService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,6 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,6 +47,9 @@ public class signatureElectroniqueController {
 
     @Autowired
     private SignatureDocumentService signatureDocumentService;
+
+    @Autowired
+    private DocumentRequestService documentRequestService;
 
 
 
@@ -141,6 +147,7 @@ public class signatureElectroniqueController {
 
 
 
+
     @GetMapping("download_certificate/signatoryId")
     public File downloadCertificate(@RequestParam("signatoryId") Long signatoryId) throws java.io.IOException {
         HttpHeaders headers = new HttpHeaders();
@@ -212,7 +219,13 @@ public class signatureElectroniqueController {
         return convFile;
     }
 
-
+    @GetMapping("demandes/{id}/signed")
+    public ResponseEntity<?> approveDocumentRequest(
+            @PathVariable Long id
+     ) throws java.io.IOException {
+        documentRequestService.signedDocumentRequest(id,"SIGNATAIRE DRTPS");
+        return ResponseEntity.ok().build();
+    }
 
 
 
