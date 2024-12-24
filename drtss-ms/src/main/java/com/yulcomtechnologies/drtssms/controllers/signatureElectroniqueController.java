@@ -136,6 +136,35 @@ public class signatureElectroniqueController {
 
 
 
+    @PostMapping("/sign")
+    public ResponseEntity<byte[]> signAttestation(
+            @RequestParam("attestationPath") String attestationPath,
+            @RequestParam("signatoryId") Long signatoryId,
+            @RequestParam("requestId") Long requestId,
+            @RequestParam("keyStoreFile") MultipartFile keyStoreFile) {
+
+        try {
+            // Convertir le fichier Multipart en objet File
+            File tempKeyStoreFile = File.createTempFile("keystore-", ".pfx");
+            keyStoreFile.transferTo(tempKeyStoreFile);
+
+            ResponseEntity<byte[]> response = signatureDocumentService.signAttestation3(
+                    attestationPath, signatoryId, requestId, tempKeyStoreFile);
+
+            // Supprimer le fichier temporaire après usage
+            tempKeyStoreFile.delete();
+
+            return response;
+        } catch (IOException e) {
+            String jsonError = "{\"error\": \"Erreur lors du traitement du fichier keyStore : " + e.getMessage() + "\"}";
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(jsonError.getBytes());
+        } catch (java.io.IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * Liste des Signataires
      * @param page
