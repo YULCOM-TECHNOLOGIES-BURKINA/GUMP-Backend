@@ -137,28 +137,28 @@ public class signatureElectroniqueController {
 
 
     @PostMapping("/sign")
-     public ResponseEntity<String> signAttestation(
-            @RequestParam String attestationPath,
-            @RequestParam Long signatoryId,
-            @RequestParam Long requestId,
-            @RequestParam String keyStorePath
-    ) {
+    public ResponseEntity<byte[]> signDocumentActe(
+            @RequestParam("attestationPath") String attestationPath,
+            @RequestParam("signatoryId") Long signatoryId,
+            @RequestParam("keyStore") MultipartFile keyStore,
+            @RequestParam(value = "alias", defaultValue = "mykey") String alias) {
+
+        File keyStoreFile = null;
         try {
-            File keyStoreFile = new File(keyStorePath);
 
-            if (!keyStoreFile.exists() || !keyStoreFile.canRead()) {
-                return ResponseEntity.badRequest()
-                        .body("{\"error\": \"Fichier KeyStore introuvable ou non lisible : " + keyStorePath + "\"}");
-            }
+            keyStoreFile = convertMultiPartToFile(keyStore);
 
-            return signatureDocumentService.signAttestation3(attestationPath, signatoryId, requestId, keyStoreFile);
+            return   signatureDocumentService.signAttestation(attestationPath, signatoryId, keyStoreFile, "password", alias,70,85);
 
         } catch (Exception e) {
-            return ResponseEntity.status(500)
-                    .body("{\"error\": \"Erreur interne : " + e.getMessage() + "\"}");
+            return null;
+        } finally {
+            // Supprimer le fichier temporaire
+            if (keyStoreFile != null && keyStoreFile.exists()) {
+                keyStoreFile.delete();
+            }
         }
     }
-
     /**
      * Liste des Signataires
      * @param page
