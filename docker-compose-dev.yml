@@ -5,6 +5,9 @@ services:
     volumes:
       - ./uploads:/uploads
       - ./attestations:/attestations
+      - ./uploads/signatures_electronique/certificats:/uploads/signatures_electronique/certificats
+      - ./uploads/signatures_electronique/signatures_img:/uploads/signatures_electronique/signatures_img
+
     depends_on:
       - drtss-database
       - eureka-server
