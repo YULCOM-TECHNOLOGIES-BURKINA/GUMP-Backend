@@ -53,7 +53,7 @@ public class DocumentRequestMapper {
             )
         );
 
-        if (documentRequest.isApproved()|| DocumentRequestStatus.SIGNED.equals(documentRequest.getStatus())) {
+        if (documentRequest.isApproved()|| DocumentRequestStatus.SIGNED.toString().equals(documentRequest.getStatus())) {
             var attestation = documentRequest.getAttestation();
 
             dto.setAttestation(
