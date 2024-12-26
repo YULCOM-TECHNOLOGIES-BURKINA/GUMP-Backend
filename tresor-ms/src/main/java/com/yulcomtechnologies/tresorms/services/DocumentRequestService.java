@@ -56,7 +56,7 @@ public class DocumentRequestService {
         documentRequest.setIsForPublicContract(true);
         documentRequest.setRccmReference(company.getRccm());
         documentRequest.setIfuNumber(company.getIfu());
-      
+
         if (documentRequest.getAddress() == null) {
             documentRequest.setAddress(company.getAddress());
         }
@@ -64,7 +64,8 @@ public class DocumentRequestService {
         documentRequest.setBusinessDomain(documentRequest.getBusinessDomain());
 
         if (documentRequest.getAddress() == null) {
-             documentRequest.setIsPaid(false);
+            documentRequest.setIsPaid(false);
+        }
         documentRequest.setStatus(DocumentRequestStatus.PENDING.toString());
         documentRequest.setRequesterId(authenticatedUser.getKeycloakUserId());
         return repository.save(documentRequest);
