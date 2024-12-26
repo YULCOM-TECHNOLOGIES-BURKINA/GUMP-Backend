@@ -259,4 +259,17 @@ public class DocumentRequestService {
         documentRequestRepository.save(documentRequest);
         eventPublisher.dispatch(new DocumentRequestChanged(documentRequest.getId()));
     }
+
+    public void rollbackRejecttion(Long id) {
+        var documentRequest = documentRequestRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Document request not found"));
+
+        if (!documentRequest.getStatus().equals(DocumentRequestStatus.REJECTED.name())) {
+            throw new BadRequestException("Document request is not rejected");
+        }
+
+        documentRequest.setStatus(DocumentRequestStatus.PENDING.name());
+        documentRequest.setRejectionReason(null);
+        documentRequest.setReviewedBy(null);
+    }
 }

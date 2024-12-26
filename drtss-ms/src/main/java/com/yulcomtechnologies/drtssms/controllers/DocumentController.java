@@ -103,5 +103,13 @@ public class DocumentController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("demandes/{id}/rollback-rejection")
+    public ResponseEntity<?> rollbackRejection(
+            @PathVariable Long id
+    ) {
+        documentRequestService.rollbackRejecttion(id);
+        return ResponseEntity.ok().build();
+    }
+
 
 }
