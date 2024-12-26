@@ -52,7 +52,6 @@ public class AccountStateChangedListener {
             );
 
             var company = user.getCompany();
-            companyRepository.delete(company);
 
             userRepository.delete(user);
 
@@ -64,6 +63,7 @@ public class AccountStateChangedListener {
                 fileRepository.delete(company.getIdDocument());
             }
 
+            companyRepository.delete(company);
             ssoProvider.deleteUser(user.getKeycloakUserId());
         }
     }
