@@ -4,14 +4,13 @@ import com.yulcomtechnologies.sharedlibrary.services.FileStorageService;
 import com.yulcomtechnologies.sharedlibrary.services.PdfQRCodeService;
 import com.yulcomtechnologies.sharedlibrary.services.TemplateProcessor;
 import com.yulcomtechnologies.tresorms.entities.Attestation;
-import com.yulcomtechnologies.tresorms.entities.DocumentRequest;
 import com.yulcomtechnologies.tresorms.entities.File;
 import com.yulcomtechnologies.tresorms.enums.RequestType;
 import com.yulcomtechnologies.tresorms.repositories.AttestationRepository;
 import com.yulcomtechnologies.tresorms.repositories.DocumentRequestRepository;
 import com.yulcomtechnologies.tresorms.repositories.FileRepository;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -22,7 +21,6 @@ import java.util.UUID;
 
 //@Async
 @Service
-@AllArgsConstructor
 @Slf4j
 public class AttestationGenerator {
     public static final int VALIDITY_PERIOD_IN_MONTHS = 3;
@@ -34,6 +32,19 @@ public class AttestationGenerator {
     private final PdfQRCodeService pdfQRCodeService;
     private final PdfFiligraneService pdfFiligraneService;
     private final NumberGeneratorService numberGeneratorService;
+    private final String appFrontUrl;
+
+    public AttestationGenerator(AttestationRepository attestationRepository, DocumentRequestRepository documentRequestRepository, FileStorageService fileStorageService, FileRepository fileRepository, TemplateProcessor templateProcessor, PdfQRCodeService pdfQRCodeService, PdfFiligraneService pdfFiligraneService, NumberGeneratorService numberGeneratorService, @Value("${app.url}") String appFrontUrl) {
+        this.attestationRepository = attestationRepository;
+        this.documentRequestRepository = documentRequestRepository;
+        this.fileStorageService = fileStorageService;
+        this.fileRepository = fileRepository;
+        this.templateProcessor = templateProcessor;
+        this.pdfQRCodeService = pdfQRCodeService;
+        this.pdfFiligraneService = pdfFiligraneService;
+        this.numberGeneratorService = numberGeneratorService;
+        this.appFrontUrl = appFrontUrl;
+    }
 
     public void generateDocument(
         Long documentRequestId
@@ -80,9 +91,7 @@ public class AttestationGenerator {
         var typeResquest= documentRequest.getRequestType().toString();
 
         try {
-
-
-            var fileBytes = pdfQRCodeService.addQRCodeToPDF(templateProcessor.htmlToPdf(filledTemplate), "QR code content");
+            var fileBytes = pdfQRCodeService.addQRCodeToPDF(templateProcessor.htmlToPdf(filledTemplate), appFrontUrl + "/api/verify-document/" + attestation.getNumber() + "/public?service=tresor-ms");
             var filigraneTexte="Agence judiciaire de l'Etat - Valable pour (03 mois)";
 
             if (typeResquest.equals(RequestType.LIQUIDATION.name())){

@@ -57,6 +57,12 @@ public class DocumentRequestService {
         documentRequest.setRccmReference(company.getRccm());
         documentRequest.setIfuNumber(company.getIfu());
         documentRequest.setOrganizationName(company.getName());
+
+        if (documentRequest.getAddress() == null) {
+            documentRequest.setAddress(company.getAddress());
+        }
+
+        documentRequest.setBusinessDomain(documentRequest.getBusinessDomain());
         documentRequest.setIsPaid(false);
         documentRequest.setStatus(DocumentRequestStatus.PENDING.toString());
         documentRequest.setRequesterId(authenticatedUser.getKeycloakUserId());

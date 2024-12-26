@@ -11,6 +11,7 @@ import com.yulcomtechnologies.tresorms.events.PaymentSucceeded;
 import com.yulcomtechnologies.tresorms.feignClients.NotificationFeignClient;
 import com.yulcomtechnologies.tresorms.repositories.DocumentRequestRepository;
 import com.yulcomtechnologies.tresorms.repositories.PaymentRepository;
+import com.yulcomtechnologies.tresorms.services.AttestationGenerator;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,6 +39,9 @@ class DocumentRequestControllerTest extends BaseIntegrationTest {
 
     @MockBean
     NotificationFeignClient notificationFeignClient;
+
+    @Autowired
+    AttestationGenerator attestationGenerator;
 
     @Test
     void pay() throws Exception {
@@ -59,6 +64,36 @@ class DocumentRequestControllerTest extends BaseIntegrationTest {
 
         var payment = paymentRepository.findAll().get(0);
         assertEquals(documentRequest.getId(), payment.getDocumentRequestId());
+    }
+
+    @Test
+    void generatesDocument() {
+        var documentRequests = documentRequestRepository.saveAll(
+            List.of(
+                DocumentRequest
+                    .builder()
+                    .requesterId("1")
+                    .isForPublicContract(false)
+                    .requestType(RequestType.SOUMISSION)
+                    .createdAt(LocalDateTime.now())
+                    .isPaid(false)
+                    .status("PENDING")
+                    .build(),
+                DocumentRequest
+                    .builder()
+                    .requesterId("1")
+                    .isForPublicContract(false)
+                    .requestType(RequestType.LIQUIDATION)
+                    .createdAt(LocalDateTime.now())
+                    .isPaid(false)
+                    .status("PENDING")
+                    .build()
+            )
+        );
+
+        attestationGenerator.generateDocument(documentRequests.get(0).getId());
+        attestationGenerator.generateDocument(documentRequests.get(1).getId());
+
     }
 
     @Test

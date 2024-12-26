@@ -9,11 +9,10 @@ import com.yulcomtechnologies.drtssms.repositories.ApplicationConfigRepository;
 import com.yulcomtechnologies.drtssms.repositories.AttestationRepository;
 import com.yulcomtechnologies.drtssms.repositories.DocumentRequestRepository;
 import com.yulcomtechnologies.drtssms.repositories.FileRepository;
-import com.yulcomtechnologies.sharedlibrary.auth.AuthenticatedUserService;
 import com.yulcomtechnologies.sharedlibrary.services.FileStorageService;
 import com.yulcomtechnologies.sharedlibrary.services.PdfQRCodeService;
 import com.yulcomtechnologies.sharedlibrary.services.TemplateProcessor;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -23,7 +22,6 @@ import java.util.UUID;
 
 //@Async
 @Service
-@AllArgsConstructor
 public class AttestationGenerator {
     private final AttestationRepository attestationRepository;
     private final DocumentRequestRepository documentRequestRepository;
@@ -34,6 +32,23 @@ public class AttestationGenerator {
     private final ApplicationConfigRepository applicationConfigRepository;
     private final UsersFeignClient usersFeignClient;
     private final NumberGeneratorService numberGeneratorService;
+    private final String appFrontUrl;
+
+
+    public AttestationGenerator(AttestationRepository attestationRepository, DocumentRequestRepository documentRequestRepository, FileStorageService fileStorageService, FileRepository fileRepository, TemplateProcessor templateProcessor, PdfQRCodeService pdfQRCodeService, ApplicationConfigRepository applicationConfigRepository, UsersFeignClient usersFeignClient, NumberGeneratorService numberGeneratorService,
+        @Value("${app.url}") String appFrontUrl
+    ) {
+        this.attestationRepository = attestationRepository;
+        this.documentRequestRepository = documentRequestRepository;
+        this.fileStorageService = fileStorageService;
+        this.fileRepository = fileRepository;
+        this.templateProcessor = templateProcessor;
+        this.pdfQRCodeService = pdfQRCodeService;
+        this.applicationConfigRepository = applicationConfigRepository;
+        this.usersFeignClient = usersFeignClient;
+        this.numberGeneratorService = numberGeneratorService;
+        this.appFrontUrl = appFrontUrl;
+    }
 
     public void generateDocument(
         ApproveDocumentRequestDto approveDocumentRequestDto,
@@ -88,7 +103,7 @@ public class AttestationGenerator {
         var filledTemplate = templateProcessor.fillVariables("attestation.html", map);
 
         try {
-            var fileBytes = pdfQRCodeService.addQRCodeToPDF(templateProcessor.htmlToPdf(filledTemplate), "QR code content");
+            var fileBytes = pdfQRCodeService.addQRCodeToPDF(templateProcessor.htmlToPdf(filledTemplate), appFrontUrl + "/api/verify-document/" + attestation.getNumber() + "/public?service=drtss-ms");
             fileStorageService.saveFile(fileBytes, filePath);
         } catch (Exception e) {
             e.printStackTrace();

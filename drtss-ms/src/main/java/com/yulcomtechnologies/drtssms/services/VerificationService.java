@@ -18,7 +18,7 @@ public class VerificationService {
 
     public VerifyDocumentResponseDto verifyDocument(String number) {
         var attestation = attestationRepository.findByNumber(number).orElseThrow(
-            () -> new ResourceNotFoundException("Attestation not found")
+            () -> new ResourceNotFoundException("Attestation inexistante, ce document n'est pas valide")
         );
 
         var user = usersFeignClient.getUsernameOrKeycloakId(attestation.getDocumentRequest().getRequesterId());

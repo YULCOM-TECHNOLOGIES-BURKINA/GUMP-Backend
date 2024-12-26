@@ -1,5 +1,6 @@
 package com.yulcomtechnologies.tresorms.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yulcomtechnologies.tresorms.BaseIntegrationTest;
 import com.yulcomtechnologies.tresorms.entities.DebiteurEntity;
 import com.yulcomtechnologies.tresorms.repositories.DebiteurRepository;
@@ -17,8 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -121,6 +121,32 @@ class DebiteurControllerTest extends BaseIntegrationTest {
         var updatedDebiteur = debiteurRepository.findById(debiteur.getId()).get();
 
         assertEquals("John Doe updated", updatedDebiteur.getDebiteur());
+        assertEquals(11000.50, updatedDebiteur.getMontantDu());
+    }
+
+    @Test
+    void createsDebiteur() throws Exception {
+
+        mockMvc.perform(post("/debiteurs")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(DebiteurEntity.builder()
+                    .debiteur("John Doe")
+                    .promoteur("ABC Corp")
+                    .numeroIFU("123456789")
+                    .numeroImmatriculation("987654321")
+                    .registreCommerce("RC12345")
+                    .contacts("john.doe@example.com")
+                    .dateNaissance("1985-01-01")
+                    .numeroCNIB("CNIB12345")
+                    .numeroCheque("CHK98765")
+                    .montantDu(11000.50)
+                    .build()))
+            )
+            .andExpect(status().isOk());
+
+        var updatedDebiteur = debiteurRepository.findByNumeroIFU("123456789").get();
+
+        assertEquals("John Doe", updatedDebiteur.getDebiteur());
         assertEquals(11000.50, updatedDebiteur.getMontantDu());
     }
 

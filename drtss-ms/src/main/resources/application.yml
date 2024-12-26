@@ -27,4 +27,6 @@ server:
     context-path: /api
 
 app:
+  front:
+    url: https://gump.yulpay.com
   url: http://localhost:8082/api

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vérification document</title>
+</head>
+<body>
+<div style="margin-left:45px; margin-right:45px;">
+  <p> <h2>Vérification attestion DRTPS numéro: <span th:text="${attestation.documentNumber}"></span></h2></p>
+  <hr>
+  <p>
+  <h4>Détenteur: <span th:text="${attestation.documentOwner}"></span></h4>
+  <h4>Date d'expiration: <span th:text="${attestation.documentExpirationDate}"></span></h4>
+  <h4>Statut document:
+    <span th:if="${attestation.isDocumentValid}">En cours de validité</span>
+    <span th:unless="${attestation.isDocumentValid}">Expiré</span>
+  </h4>
+  </p>
+
+</div>
+</body>
+</html>
