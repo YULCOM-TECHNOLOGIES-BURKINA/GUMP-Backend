@@ -55,6 +55,7 @@ public class UserService {
             .email(createUserRequest.getEmail())
             .keycloakUserId(ssoUserId)
             .isActive(true)
+            .isPendingForActivation(false)
             .forename(createUserRequest.getForename())
             .lastname(createUserRequest.getLastname())
             .region(createUserRequest.getRegion())
@@ -97,6 +98,11 @@ public class UserService {
 
     public Page<UserDto> getInactiveUsers(Pageable pageable) {
         var users = userRepository.findAllByIsActiveFalse(pageable);
+        return users.map(this::mapUser);
+    }
+
+    public Page<UserDto> getPendingForActivationUsers(Pageable pageable) {
+        var users = userRepository.findAllByIsPendingForActivationActiveFalse(pageable);
         return users.map(this::mapUser);
     }
 

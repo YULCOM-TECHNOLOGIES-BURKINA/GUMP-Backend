@@ -16,6 +16,7 @@ public class UserDto {
     private String region;
     private String username;
     private Boolean isActive;
+    private Boolean isPendingForActivation;
     private CompanyDto company;
 
     private String matricule;

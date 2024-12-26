@@ -47,7 +47,4 @@ public class CreateUserRequest {
     private String titre_honorifique;
 
     private String tel;
-
-
-
 }

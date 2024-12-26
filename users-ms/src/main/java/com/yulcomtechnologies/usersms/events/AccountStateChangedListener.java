@@ -7,12 +7,14 @@ import com.yulcomtechnologies.usersms.repositories.FileRepository;
 import com.yulcomtechnologies.usersms.repositories.UserRepository;
 import com.yulcomtechnologies.usersms.services.SsoProvider;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class AccountStateChangedListener {
     private final NotificationFeignClient notificationFeignClient;
     private final UserRepository userRepository;
@@ -22,8 +24,9 @@ public class AccountStateChangedListener {
 
 
     @EventListener
-    @Async
     public void handle(AccountStateChanged event) {
+        log.info("Handling account state changed event");
+
         var user = userRepository.findById(event.userId).orElseThrow(
             () -> new ResourceNotFoundException("User not found")
         );
@@ -39,6 +42,7 @@ public class AccountStateChangedListener {
         }
 
         else {
+            log.info("User account not approved, deleting user and company");
             notificationFeignClient.sendNotification(
                 user.getEmail(),
                 "Statut de votre compte",

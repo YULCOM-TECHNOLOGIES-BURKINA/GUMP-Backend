@@ -66,6 +66,7 @@ public class AuthControllerTest extends BaseIntegrationTest {
         assertEquals("arnaud.bakyono@gmail.com", user.getEmail());
         assertEquals(UserType.USER, user.getUserType());
         assertEquals(UserRole.USER, user.getRole());
+        assertTrue(user.getIsPendingForActivation());
         assertEquals("LUPIN", company.getRepresentantLastname());
         assertEquals("Arsène", company.getRepresentantFirstname());
         assertEquals("12345678", company.getRepresentantPhone());

@@ -78,6 +78,13 @@ public class UsersController {
         return ResponseEntity.ok(userService.getInactiveUsers(pageable));
     }
 
+    @GetMapping("pending-for-activation-users")
+    public ResponseEntity<Page<UserDto>> getPendingForActivationUsers(
+        Pageable pageable
+    ) {
+        return ResponseEntity.ok(userService.getInactiveUsers(pageable));
+    }
+
     @GetMapping("users/{id}")
     public ResponseEntity<UserDto> getUser(
         @PathVariable Long id

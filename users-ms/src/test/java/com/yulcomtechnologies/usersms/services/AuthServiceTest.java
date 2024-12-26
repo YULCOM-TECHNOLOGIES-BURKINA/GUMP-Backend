@@ -21,6 +21,7 @@ import org.springframework.mock.web.MockMultipartFile;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -28,7 +29,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @Disabled
-public class AuthServiceTest {
+class AuthServiceTest {
     @InjectMocks
     AuthService authService;
 
@@ -128,6 +129,7 @@ public class AuthServiceTest {
         authService.validatePendingUserAccount(userId);
 
         assertTrue(user.getIsActive());
+        assertFalse(user.getIsPendingForActivation());
 
         verify(userRepository).save(user);
         verify(ssoProvider).activateUser("OMEGA_LAMBDA_7_XL_9");

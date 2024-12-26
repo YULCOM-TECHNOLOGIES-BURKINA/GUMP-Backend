@@ -44,6 +44,7 @@ public class AuthService {
 
         ssoProvider.activateUser(user.getKeycloakUserId());
         user.setIsActive(true);
+        user.setIsPendingForActivation(false);
         userRepository.save(user);
         eventPublisher.dispatch(new AccountStateChanged(user.getId()));
     }
@@ -100,6 +101,7 @@ public class AuthService {
             .email(registerRequest.getEmail())
             .role(UserRole.USER)
             .isActive(false)
+            .isPendingForActivation(true)
             .region(registerRequest.region)
             .username(registerRequest.getIfuNumber())
             .cnssNumber(registerRequest.getCnssNumber())
