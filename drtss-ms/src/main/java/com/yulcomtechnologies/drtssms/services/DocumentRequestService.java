@@ -214,27 +214,21 @@ public class DocumentRequestService {
         eventPublisher.dispatch(new DocumentRequestChanged(documentRequest.getId()));
     }
 
-    public void signedDocumentRequest(Long id,String signatory) throws IOException {
-        log.info("Approving document request with id {}", id);
+    public void signedDocumentRequest  (Long id, String signatory) {
       //  var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
 
-     //   log.info("currentUser: {}", currentUser);
-
-        System.out.println(documentRequestRepository.findById(id).orElseThrow());
-
         DocumentRequest documentRequest = documentRequestRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("DocumentRequest not found"));
-
-        log.info("documentRequest: {}", documentRequest);
-
-
-
+                .orElseThrow(() -> new ResourceNotFoundException("DocumentRequest not found for ID: " + id));
         documentRequest.setStatus(DocumentRequestStatus.SIGNED.name());
         documentRequest.setSignedBy(signatory);
         documentRequest.setSignedAt(LocalDateTime.now());
+     DocumentRequest  savedocumentRequest = documentRequestRepository.save(documentRequest);
+     eventPublisher.dispatch(new DocumentRequestChanged(documentRequest.getId()));
 
-        documentRequestRepository.save(documentRequest);
-     }
+        System.out.println("DocumentRequest signed successfully: " + savedocumentRequest);
+    }
+
+
 
     public PaymentRequestResponse pay(Long id, PayRequest payRequest) {
         var documentRequest = documentRequestRepository.findById(id)

@@ -206,7 +206,7 @@ public class CertificateService {
             // Enregistrer le document signé
             try (FileOutputStream outputStream = new FileOutputStream(pdfFile)) {
                 document.saveIncremental(outputStream);
-                signedDocumentRequest(idRequest,signerName);
+              //  signedDocumentRequest(idRequest,signerName);
             }
         }
     }

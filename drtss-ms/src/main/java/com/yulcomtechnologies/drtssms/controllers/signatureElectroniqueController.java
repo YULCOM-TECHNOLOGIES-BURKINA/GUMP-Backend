@@ -205,9 +205,9 @@ public class signatureElectroniqueController {
         return convFile;
     }
 
-    @GetMapping("demandes/{id}/signed")
-    public void signedDocumentRequest(@PathVariable Long id) throws java.io.IOException {
-        documentRequestService.signedDocumentRequest(id, "SIGNATAIRE DRTPS");
+    @GetMapping("demandes/{id}/signed/{signed}")
+    public void signedDocumentRequest(@PathVariable Long id,@PathVariable String signed) throws java.io.IOException {
+        documentRequestService.signedDocumentRequest(id, signed);
     }
 
 

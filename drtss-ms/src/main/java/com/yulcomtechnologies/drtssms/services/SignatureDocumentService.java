@@ -230,7 +230,6 @@ public class SignatureDocumentService {
 
         certificateService.certifyThedocument(attestationFile, _keyStoreFile, "password", signatory.getSignatureCertificat().getAlias(),signatory.getEmail(),idRequest);
         // Mise a jour status demande
-        //  documentRequestService.signedDocumentRequest(id,signatory.getEmail());
         // Lire le fichier certifié et le retourner
         try (FileInputStream fis = new FileInputStream(attestationFile)) {
             byte[] data = fis.readAllBytes();
