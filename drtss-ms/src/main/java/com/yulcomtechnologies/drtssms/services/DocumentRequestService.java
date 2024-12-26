@@ -233,11 +233,8 @@ public class DocumentRequestService {
         documentRequest.setSignedBy(signatory);
         documentRequest.setSignedAt(LocalDateTime.now());
 
-
-
         documentRequestRepository.save(documentRequest);
-        eventPublisher.dispatch(new DocumentRequestChanged(documentRequest.getId()));
-    }
+     }
 
     public PaymentRequestResponse pay(Long id, PayRequest payRequest) {
         var documentRequest = documentRequestRepository.findById(id)
