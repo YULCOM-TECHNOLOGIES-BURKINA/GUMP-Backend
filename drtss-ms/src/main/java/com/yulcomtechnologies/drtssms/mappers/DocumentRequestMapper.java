@@ -6,6 +6,7 @@ import com.yulcomtechnologies.drtssms.dtos.FileDto;
 import com.yulcomtechnologies.drtssms.entities.ApplicationConfig;
 import com.yulcomtechnologies.drtssms.entities.DocumentRequest;
 import com.yulcomtechnologies.drtssms.entities.File;
+import com.yulcomtechnologies.drtssms.enums.DocumentRequestStatus;
 import com.yulcomtechnologies.drtssms.feignClients.UsersFeignClient;
 import com.yulcomtechnologies.sharedlibrary.services.FileStorageService;
 import lombok.AllArgsConstructor;
@@ -52,7 +53,7 @@ public class DocumentRequestMapper {
             )
         );
 
-        if (documentRequest.isApproved()) {
+        if (documentRequest.isApproved()|| DocumentRequestStatus.SIGNED.equals(documentRequest.getStatus())) {
             var attestation = documentRequest.getAttestation();
 
             dto.setAttestation(
