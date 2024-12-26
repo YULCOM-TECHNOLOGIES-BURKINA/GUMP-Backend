@@ -66,7 +66,7 @@ jobs:
         with:
           host: ${{ vars.REMOTE_HOST }}
           username: ${{ vars.REMOTE_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          password: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd gump
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u gump-ci --password-stdin
