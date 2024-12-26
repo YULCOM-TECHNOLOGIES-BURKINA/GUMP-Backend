@@ -185,4 +185,12 @@ public class DocumentRequestService {
         documentRequest.setStatus(DocumentRequestStatus.REJECTED.toString());
         repository.save(documentRequest);
     }
+
+    public void rollbackRejection(Long id) {
+        var documentRequest = repository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Document request not found"));
+
+        documentRequest.setStatus(DocumentRequestStatus.COMPANY_HAS_DEBT_WAITING_FOR_MANUAL_REVIEW.toString());
+        repository.save(documentRequest);
+    }
 }
