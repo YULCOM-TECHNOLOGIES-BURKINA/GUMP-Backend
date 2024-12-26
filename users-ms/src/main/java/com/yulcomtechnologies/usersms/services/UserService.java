@@ -102,7 +102,7 @@ public class UserService {
     }
 
     public Page<UserDto> getPendingForActivationUsers(Pageable pageable) {
-        var users = userRepository.findAllByIsPendingForActivationActiveFalse(pageable);
+        var users = userRepository.findAllByIsPendingForActivationFalse(pageable);
         return users.map(this::mapUser);
     }
 

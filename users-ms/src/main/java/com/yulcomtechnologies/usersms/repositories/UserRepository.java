@@ -26,7 +26,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsernameOrKeycloakUserId(String usernameOrSsoUserId);
 
     Page<User> findAllByIsActiveFalse(Pageable pageable);
-    Page<User> findAllByIsPendingForActivationActiveFalse(Pageable pageable);
+    Page<User> findAllByIsPendingForActivationFalse(Pageable pageable);
 
     @Query("SELECT u FROM User u WHERE u.userType = :userType")
     List<User> findByuserType(UserType userType);
