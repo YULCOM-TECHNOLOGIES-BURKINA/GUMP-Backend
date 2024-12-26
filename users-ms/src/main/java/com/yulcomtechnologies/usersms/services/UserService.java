@@ -211,7 +211,7 @@ public class UserService {
             () -> new ResourceNotFoundException("User not found")
         );
 
-        user.setIsActive(false);
+        user.setIsActive(isActive);
         userRepository.save(user);
         ssoProvider.toggleUserAccount(user.getKeycloakUserId(), isActive);
     }
