@@ -220,7 +220,6 @@ public class DocumentRequestService {
 
      //   log.info("currentUser: {}", currentUser);
 
-
         System.out.println(documentRequestRepository.findById(id).orElseThrow());
 
         DocumentRequest documentRequest = documentRequestRepository.findById(id)

@@ -143,7 +143,7 @@ public class CertificateService {
 
             if (titleSignatory!=null){
              contentStream.newLineAtOffset(xPosition-90, yPosition-100);
-             contentStream.showText(titleSignatory+" MCT");
+             contentStream.showText(titleSignatory);
 
             }
 
