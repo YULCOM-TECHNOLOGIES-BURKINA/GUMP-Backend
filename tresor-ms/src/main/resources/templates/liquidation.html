@@ -1,162 +1,171 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 800px;
-      margin: 20px auto;
-      padding: 20px;
-    }
-
-    .header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .ministry-name {
-      font-size: 14px;
-      margin-bottom: 5px;
-    }
-
-    .logo-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 20px 0;
-    }
-
-    .logo {
-      width: 80px;
-      height: 80px;
-      border: 2px solid #000;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: white;
-    }
-
-    .document-number {
-      text-align: right;
-      margin: 20px 0;
-    }
-
-    .title {
-      text-align: center;
-      font-size: 18px;
-      font-weight: bold;
-      margin: 30px 0;
-      text-transform: uppercase;
-    }
-
-    .form-field {
-      margin: 15px 0;
-      border-bottom: 1px dotted #000;
-      padding: 5px 0;
-    }
-
-    .form-label {
-      font-weight: bold;
-    }
-
-    .footer {
-      margin-top: 40px;
-      font-size: 12px;
-    }
- .watermark {
-      position: absolute;
-       left: 50%;
-        top:65%;
-      transform: translate(-50%, -50%) rotate(-50deg);
-      font-size: 40px;
-      font-weight: 700;
-      color: rgba(0, 0, 0, 0.1);
-      font-weight: bold;
-      white-space: nowrap;
-      z-index: -1;
-    }
-
-    .content {
-      position: relative;
-      z-index: 1;
-    }
-
-    @media print {
+  <head>
+    <meta charset="UTF-8" />
+    <style>
       body {
-        background-color: white;
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .ministry-name {
+        font-size: 14px;
+        margin-bottom: 5px;
+      }
+
+      .logo-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 20px 0;
+      }
+
+      .logo {
+        width: 80px;
+        height: 80px;
+        border: 2px solid #000;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+      }
+
+      .document-number {
+        text-align: right;
+        margin: 20px 0;
+      }
+
+      .title {
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        margin: 30px 0;
+        text-transform: uppercase;
+      }
+
+      .form-field {
+        margin: 15px 0;
+        border-bottom: 1px dotted #000;
+        padding: 5px 0;
+      }
+
+      .form-label {
+        font-weight: bold;
+      }
+
+      .footer {
+        margin-top: 40px;
+        font-size: 12px;
       }
       .watermark {
-        display: none;
+        position: absolute;
+        left: 50%;
+        top: 65%;
+        transform: translate(-50%, -50%) rotate(-50deg);
+        font-size: 40px;
+        font-weight: 700;
+        color: rgba(0, 0, 0, 0.1);
+        font-weight: bold;
+        white-space: nowrap;
+        z-index: -1;
       }
-    }
-  </style>
-</head>
-<body>
-<div></div>
-<div class="header">
-  <div class="ministry-name">MINISTERE DE L'ECONOMIE,<br>DES FINANCES ET DE LA<br>PROSPECTIVE</div>
-  <div class="ministry-name">BURKINAFASO<br>Unité - Progrès - Justice</div>
-  <div class="ministry-name">----------</div>
-  <div class="ministry-name">CABINET</div>
-  <div class="ministry-name">----------</div>
-  <div class="ministry-name">AGENCE JUDICIAIRE DE L'ETAT</div>
-</div>
 
+      .content {
+        position: relative;
+        z-index: 1;
+      }
 
-<div class="logo-container">
-  <div class="logo">
-    <img class="logo"
-         src="https://kulturman-yelen-trash.s3.eu-west-3.amazonaws.com/LOGO+AJE.jpeg"
-         alt="AJE">
-  </div>
-</div>
+      @media print {
+        body {
+          background-color: white;
+        }
+        .watermark {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div></div>
+    <div class="header">
+      <div class="ministry-name">
+        MINISTERE DE L'ECONOMIE,<br />DES FINANCES ET DE LA<br />PROSPECTIVE
+      </div>
+      <div class="ministry-name">
+        BURKINAFASO<br />La Patrie ou la mort, nous vaincrons
+      </div>
+      <div class="ministry-name">----------</div>
+      <div class="ministry-name">CABINET</div>
+      <div class="ministry-name">----------</div>
+      <div class="ministry-name">AGENCE JUDICIAIRE DE L'ETAT</div>
+    </div>
 
-<div class="document-number">
-  Numéro: N° <span th:text="${documentNumber}">0069501</span>
-</div>
+    <div class="logo-container">
+      <div class="logo">
+        <img
+          class="logo"
+          src="https://kulturman-yelen-trash.s3.eu-west-3.amazonaws.com/LOGO+AJE.jpeg"
+          alt="AJE"
+        />
+      </div>
+    </div>
 
-<div class="title">
-  ATTESTATION DE NON ENGAGEMENT AJE
-</div>
+    <div class="document-number">
+      Numéro: N° <span th:text="${documentNumber}">0069501</span>
+    </div>
 
-<div class="content">
-  <p>Sous réserves de contrôles approfondis,</p>
-  <p>Je soussigné, Agent Judiciaire de l'Etat (AJE)</p>
-  <p>Atteste que :</p>
+    <div class="title">ATTESTATION DE NON ENGAGEMENT AJE</div>
 
-  <div class="form-field">
-    <span class="form-label">Identité/raison sociale:</span>
-    <span th:text="${identity}"></span>
-  </div>
+    <div class="content">
+      <p>Sous réserves de contrôles approfondis,</p>
+      <p>Je soussigné, Agent Judiciaire de l'Etat (AJE)</p>
+      <p>Atteste que :</p>
 
-  <div class="form-field">
-    <span class="form-label">Profession/domaine d'activité:</span>
-    <span th:text="${profession}"></span>
-  </div>
+      <div class="form-field">
+        <span class="form-label">Identité/raison sociale:</span>
+        <span th:text="${identity}"></span>
+      </div>
 
-  <div class="form-field">
-    <span class="form-label">Adresse:</span>
-    <span th:text="${address}"></span>
-  </div>
+      <div class="form-field">
+        <span class="form-label">Profession/domaine d'activité:</span>
+        <span th:text="${profession}"></span>
+      </div>
 
-  <p>Ne figure pas sur la liste des débiteurs de l'Etat.</p>
+      <div class="form-field">
+        <span class="form-label">Adresse:</span>
+        <span th:text="${address}"></span>
+      </div>
 
-  <p>En foi de quoi, la présente attestation est établie pour servir et valoir ce que de droit</p>
-</div>
+      <p>Ne figure pas sur la liste des débiteurs de l'Etat.</p>
 
-<div class="footer">
-  <p>Fait à Ouagadougou le <span th:text="${dateCreated}">...</span></p>
-  <p>P/l'Agent Judiciaire de l'Etat P.D.¹/P.O.²</p>
-  <p style="font-size: 10px; margin-top: 40px;">
-    NB : La présente attestation n'est valable qu'à son original, pour un seul objet et dans le cadre d'une commande publique. En conséquence, aucune copie, légalisée ou authentifiée ne pourra être utilisée par le soumissionnaire.
-  </p>
-  <p style="font-size: 10px;">
-    Immeuble DIAWARA, Avenue Hamado Paul YUGBARE<br>
-    Arrondissement n°3 de Ouagadougou (secteur n°29, quartier songtaaba)<br>
-    Tel : 25 38 68 67 / email : contactaje@aje.gov.bf
-  </p>
-</div>
-</body>
+      <p>
+        En foi de quoi, la présente attestation est établie pour servir et
+        valoir ce que de droit
+      </p>
+    </div>
+
+    <div class="footer">
+      <p>Fait à Ouagadougou le <span th:text="${dateCreated}">...</span></p>
+      <p>P/l'Agent Judiciaire de l'Etat P.D.¹/P.O.²</p>
+      <p style="font-size: 10px; margin-top: 40px">
+        NB : La présente attestation n'est valable qu'à son original, pour un
+        seul objet et dans le cadre d'une commande publique. En conséquence,
+        aucune copie, légalisée ou authentifiée ne pourra être utilisée par le
+        soumissionnaire.
+      </p>
+      <p style="font-size: 10px">
+        Immeuble DIAWARA, Avenue Hamado Paul YUGBARE<br />
+        Arrondissement n°3 de Ouagadougou (secteur n°29, quartier songtaaba)<br />
+        Tel : 25 38 68 67 / email : contactaje@aje.gov.bf
+      </p>
+    </div>
+  </body>
 </html>
