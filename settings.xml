@@ -6,7 +6,7 @@
     <server>
       <id>github</id>
       <username>maven-token</username>
-      <password>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</password>
+      <password>${env.MAVEN_TOKEN}</password>
     </server>
   </servers>
 </settings>

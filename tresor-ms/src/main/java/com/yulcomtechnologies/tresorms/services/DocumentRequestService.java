@@ -56,34 +56,36 @@ public class DocumentRequestService {
         documentRequest.setIsForPublicContract(true);
         documentRequest.setRccmReference(company.getRccm());
         documentRequest.setIfuNumber(company.getIfu());
-        documentRequest.setOrganizationName(company.getName());
-
+      
         if (documentRequest.getAddress() == null) {
             documentRequest.setAddress(company.getAddress());
         }
 
         documentRequest.setBusinessDomain(documentRequest.getBusinessDomain());
-        documentRequest.setIsPaid(false);
+
+        if (documentRequest.getAddress() == null) {
+             documentRequest.setIsPaid(false);
         documentRequest.setStatus(DocumentRequestStatus.PENDING.toString());
         documentRequest.setRequesterId(authenticatedUser.getKeycloakUserId());
         return repository.save(documentRequest);
     }
 
     public Page<GetDocumentRequestDto> getPaginatedDocumentRequests(Pageable pageable, String publicContractNumber) {
-        var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
+        var currentUser = authenticatedUserService.getAuthenticatedUserData()
+                .orElseThrow(() -> new BadRequestException("User not found"));
         var role = UserRole.valueOf(currentUser.getRole());
 
         if (role == UserRole.USER) {
             var data = publicContractNumber != null
-                ? repository.findByRequesterIdAndPublicContractNumber(currentUser.getKeycloakUserId(), publicContractNumber, pageable)
-                : repository.findByRequesterId(currentUser.getKeycloakUserId(), pageable);
+                    ? repository.findByRequesterIdAndPublicContractNumber(currentUser.getKeycloakUserId(),
+                            publicContractNumber, pageable)
+                    : repository.findByRequesterId(currentUser.getKeycloakUserId(), pageable);
 
             return data.map(documentRequestMapper::toDto);
-        }
-        else if (role == UserRole.TRESOR_AGENT) {
+        } else if (role == UserRole.TRESOR_AGENT) {
             var data = publicContractNumber != null
-                ? repository.findByPublicContractNumber(publicContractNumber, publicContractNumber, pageable)
-                : repository.findAll(pageable);
+                    ? repository.findByPublicContractNumber(publicContractNumber, publicContractNumber, pageable)
+                    : repository.findAll(pageable);
 
             return data.map(documentRequestMapper::toDto);
         }
@@ -92,14 +94,16 @@ public class DocumentRequestService {
     }
 
     public GetDocumentRequestDto getDocumentRequest(String id) {
-        var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
+        var currentUser = authenticatedUserService.getAuthenticatedUserData()
+                .orElseThrow(() -> new BadRequestException("User not found"));
         var role = UserRole.valueOf(currentUser.getRole());
-        var document = repository.findById(Long.parseLong(id)).orElseThrow(() -> new ResourceNotFoundException("Document request not found"));
+        var document = repository.findById(Long.parseLong(id))
+                .orElseThrow(() -> new ResourceNotFoundException("Document request not found"));
 
         if (role.equals(UserRole.TRESOR_AGENT) || document.getRequesterId().equals(currentUser.getKeycloakUserId())) {
             return repository.findById(Long.parseLong(id))
-                .map(documentRequestMapper::toDto)
-                .orElseThrow(() -> new IllegalArgumentException("Document request not found"));
+                    .map(documentRequestMapper::toDto)
+                    .orElseThrow(() -> new IllegalArgumentException("Document request not found"));
         }
 
         throw new BadRequestException("Cannot get document request");
@@ -107,7 +111,7 @@ public class DocumentRequestService {
 
     public void approveDocumentRequest(Long id) throws IOException {
         var documentRequest = repository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Document request not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Document request not found"));
 
         documentRequest.setStatus(DocumentRequestStatus.APPROVED.toString());
         attestationGenerator.generateDocument(id);
@@ -116,24 +120,22 @@ public class DocumentRequestService {
 
     public PaymentRequestResponse pay(Long id, PayRequest payRequest) {
         var documentRequest = documentRequestRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Document request not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Document request not found"));
 
         var price = 1500.0;
 
         var paymentId = UUID.randomUUID().toString();
 
         paymentRepository.save(
-            Payment.builder()
-                .id(paymentId)
-                .documentRequestId(documentRequest.getId())
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .amount(price)
-                .paymentDate(LocalDateTime.now())
-                .status(PaymentStatus.PENDING.toString())
-                .build()
-        );
-
+                Payment.builder()
+                        .id(paymentId)
+                        .documentRequestId(documentRequest.getId())
+                        .createdAt(LocalDateTime.now())
+                        .updatedAt(LocalDateTime.now())
+                        .amount(price)
+                        .paymentDate(LocalDateTime.now())
+                        .status(PaymentStatus.PENDING.toString())
+                        .build());
 
         var url = Base64.getEncoder().encodeToString(payRequest.getCallbackUrl().getBytes());
         log.info("Encoded URL: {}", url);
@@ -141,26 +143,24 @@ public class DocumentRequestService {
         log.info("Payment request received for document request with id {}", id);
 
         return new PaymentRequestResponse(
-            String.format(
-                "https://pgw-test.fasoarzeka.bf/AvepayPaymentGatewayUI/avepay-payment/app/validorder?amount=%s&merchantid=%s&securedAccessToken=eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI0UDdJNkI0Uzc5IiwiaWF0IjoxNzI5MDA3NTgyLCJzdWIiOiIyMjYwMDAwMDAzMyIsImlzcyI6ImFyemVrYSIsIlBBWUxPQUQiOiJhY2Nlc3NfdG9rZW4iLCJleHAiOjE3OTIwNzk1ODJ9.N_XttQtoOyacQwylkSWR_we5wo96Ise_3vi6O_IJUIXDqenOmWZ0xtczb_FwD2vsgqCzwEK8oxdQs8w3CheWVg&mappedOrderId=%s&linkBackToCallingWebsite=%s",
-                (int) price,
-                356,
-                paymentId,
-                url
-            )
-        );
+                String.format(
+                        "https://pgw-test.fasoarzeka.bf/AvepayPaymentGatewayUI/avepay-payment/app/validorder?amount=%s&merchantid=%s&securedAccessToken=eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI0UDdJNkI0Uzc5IiwiaWF0IjoxNzI5MDA3NTgyLCJzdWIiOiIyMjYwMDAwMDAzMyIsImlzcyI6ImFyemVrYSIsIlBBWUxPQUQiOiJhY2Nlc3NfdG9rZW4iLCJleHAiOjE3OTIwNzk1ODJ9.N_XttQtoOyacQwylkSWR_we5wo96Ise_3vi6O_IJUIXDqenOmWZ0xtczb_FwD2vsgqCzwEK8oxdQs8w3CheWVg&mappedOrderId=%s&linkBackToCallingWebsite=%s",
+                        (int) price,
+                        356,
+                        paymentId,
+                        url));
 
     }
 
     public void updatePaymentStatus(Long id, String paymentId) {
         var documentRequest = documentRequestRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Document request not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Document request not found"));
 
         var payment = paymentRepository.findById(paymentId)
-            .orElseThrow(() -> new ResourceNotFoundException("Payment not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Payment not found"));
 
-        //Get payment status from payment gateway
-        //If payment is successful, update the document
+        // Get payment status from payment gateway
+        // If payment is successful, update the document
 
         if (true) {
             payment.setStatus(PaymentStatus.SUCCEEDED.toString());
@@ -171,20 +171,17 @@ public class DocumentRequestService {
             documentRequestRepository.save(documentRequest);
 
             eventPublisher.dispatch(
-                new PaymentSucceeded(
-                    paymentId,
-                    documentRequest.getId()
-                )
-            );
+                    new PaymentSucceeded(
+                            paymentId,
+                            documentRequest.getId()));
         }
     }
 
     public void rejectDocumentRequest(Long id) {
         var documentRequest = repository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Document request not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Document request not found"));
 
         documentRequest.setStatus(DocumentRequestStatus.REJECTED.toString());
         repository.save(documentRequest);
     }
 }
-

@@ -1,19 +1,10 @@
 package com.yulcomtechnologies.drtssms.controllers;
 
 import com.itextpdf.io.IOException;
-import com.yulcomtechnologies.drtssms.dtos.ApproveDocumentRequestDto;
-import com.yulcomtechnologies.drtssms.dtos.DocumentRequestDto;
-import com.yulcomtechnologies.drtssms.dtos.FileDto;
-import com.yulcomtechnologies.drtssms.dtos.UserDto;
 import com.yulcomtechnologies.drtssms.entities.SignatureScanner;
 import com.yulcomtechnologies.drtssms.services.DocumentRequestService;
 import com.yulcomtechnologies.drtssms.services.SignatureDocumentService;
 import com.yulcomtechnologies.drtssms.services.UtilisateurService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
@@ -23,18 +14,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.cert.Certificate;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @AllArgsConstructor
@@ -124,7 +110,7 @@ public class signatureElectroniqueController {
             @RequestParam("requestId") Long id
     ) throws Exception {
 
-        return signatureDocumentService.signAttestation2(attestationPath, signatoryId,id);
+        return signatureDocumentService.signAttestation(attestationPath, signatoryId,id);
 
     }
 
@@ -219,9 +205,9 @@ public class signatureElectroniqueController {
         return convFile;
     }
 
-    @GetMapping("demandes/{id}/signed")
-    public void signedDocumentRequest(@PathVariable Long id) throws java.io.IOException {
-        documentRequestService.signedDocumentRequest(id, "SIGNATAIRE DRTPS");
+    @GetMapping("demandes/{id}/signed/{signed}")
+    public void signedDocumentRequest(@PathVariable Long id,@PathVariable String signed) throws java.io.IOException {
+        documentRequestService.signedDocumentRequest(id, signed);
     }
 
 

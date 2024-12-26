@@ -1,8 +1,13 @@
 package com.yulcomtechnologies.drtssms.services;
 
 import com.yulcomtechnologies.drtssms.dtos.SignataireCertificatDto;
+import com.yulcomtechnologies.drtssms.entities.DocumentRequest;
+import com.yulcomtechnologies.drtssms.enums.DocumentRequestStatus;
 import com.yulcomtechnologies.drtssms.enums.FileStoragePath;
+import com.yulcomtechnologies.drtssms.repositories.DocumentRequestRepository;
+import com.yulcomtechnologies.drtssms.repositories.FileRepository;
 import com.yulcomtechnologies.drtssms.repositories.SignatureCertificatRepository;
+import com.yulcomtechnologies.sharedlibrary.exceptions.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -47,6 +52,7 @@ import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -60,6 +66,9 @@ import java.util.List;
 public class CertificateService {
 
     private SignatureCertificatRepository signataireCertificatRepository;
+
+    private final FileRepository fileRepository;
+    private final DocumentRequestRepository documentRequestRepository;
 
     public byte[] generateP12Certificate(SignataireCertificatDto certificateDTO) throws Exception {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
@@ -143,7 +152,7 @@ public class CertificateService {
 
             if (titleSignatory!=null){
              contentStream.newLineAtOffset(xPosition-90, yPosition-100);
-             contentStream.showText(titleSignatory+" MCT");
+             contentStream.showText(titleSignatory);
 
             }
 
@@ -167,7 +176,7 @@ public class CertificateService {
      * @param alias
      * @throws Exception
      */
-    public void certifyThedocument(File pdfFile, File keyStoreFile, String keyStorePassword, String alias) throws Exception {
+    public void certifyThedocument(File pdfFile, File keyStoreFile, String keyStorePassword, String alias,String signerName,Long idRequest) throws Exception {
         // Charger le KeyStore et obtenir la clé privée et le certificat
         KeyStore keyStore = KeyStore.getInstance("PKCS12");
         PrivateKey privateKey;
@@ -186,7 +195,7 @@ public class CertificateService {
         // Charger le document PDF
         try (PDDocument document = PDDocument.load(pdfFile)) {
             // Initialiser la signature PDF
-            PDSignature pdSignature = createPDSignature("TEST", "Certifier par le Guichet unique des marchés publics",
+            PDSignature pdSignature = createPDSignature("GUMP DRTPS:"+signerName, "Certifier par le Guichet unique des marchés publics",
                     "Validation & Certification du document, GUMP");
 
             // Ajouter la signature
@@ -197,6 +206,7 @@ public class CertificateService {
             // Enregistrer le document signé
             try (FileOutputStream outputStream = new FileOutputStream(pdfFile)) {
                 document.saveIncremental(outputStream);
+              //  signedDocumentRequest(idRequest,signerName);
             }
         }
     }
@@ -235,5 +245,16 @@ public class CertificateService {
             }
         };
     }
+
+    private void signedDocumentRequest(Long id, String signatory) {
+         DocumentRequest documentRequest = documentRequestRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("DocumentRequest not found for ID: " + id));
+        documentRequest.setStatus(DocumentRequestStatus.SIGNED.name());
+        documentRequest.setSignedBy(signatory);
+        documentRequest.setSignedAt(LocalDateTime.now());
+        documentRequestRepository.save(documentRequest);
+         System.out.println("DocumentRequest signed successfully: " + documentRequest);
+    }
+
 
 }

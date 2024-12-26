@@ -199,4 +199,14 @@ public class UserService {
     public boolean isUserWithRoleInRegion(UserRole role, String region) {
         return userRepository.existsUserByRoleAndRegion(role, region);
     }
+
+    public void toggleUserAccount(Long id, boolean isActive) {
+        var user = userRepository.findById(id).orElseThrow(
+            () -> new ResourceNotFoundException("User not found")
+        );
+
+        user.setIsActive(false);
+        userRepository.save(user);
+        ssoProvider.toggleUserAccount(user.getKeycloakUserId(), isActive);
+    }
 }

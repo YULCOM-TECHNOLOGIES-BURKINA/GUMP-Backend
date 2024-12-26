@@ -52,28 +52,28 @@ public class DocumentRequestService {
     private final ApplicationEventPublisher eventPublish;
 
     public DocumentRequest submitDocumentRequest(
-        MultipartFile attestationCnss, MultipartFile attestationAnpe,
-        String publicContractNumber, Boolean isForPublicContract,
-        String contractPurpose, String contractingOrganizationName
-    ) throws IOException {
+            MultipartFile attestationCnss, MultipartFile attestationAnpe,
+            String publicContractNumber, Boolean isForPublicContract,
+            String contractPurpose, String contractingOrganizationName) throws IOException {
         File cnssAttestation = saveFile(attestationCnss, "Attestation CNSS");
         File anpeAttestation = saveFile(attestationAnpe, "Attestation ANPE");
-        var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
+        var currentUser = authenticatedUserService.getAuthenticatedUserData()
+                .orElseThrow(() -> new BadRequestException("User not found"));
         log.info("currentUser: {}", currentUser);
         var userData = usersFeignClient.getUsernameOrKeycloakId(currentUser.getKeycloakUserId());
         log.info("userData: {}", userData);
 
         var documentRequest = DocumentRequest.builder()
-            .requesterId(currentUser.getKeycloakUserId())
-            .isPaid(false)
-            .contractPurpose(contractPurpose)
-            .contractingOrganizationName(contractingOrganizationName)
-            .region(userData.getRegion())
-            .isForPublicContract(isForPublicContract)
-            .createdAt(LocalDateTime.now())
-            .contractPurpose(contractPurpose)
-            .publicContractNumber(publicContractNumber)
-            .status(DocumentRequestStatus.PENDING.name()).build();
+                .requesterId(currentUser.getKeycloakUserId())
+                .isPaid(false)
+                .contractPurpose(contractPurpose)
+                .contractingOrganizationName(contractingOrganizationName)
+                .region(userData.getRegion())
+                .isForPublicContract(isForPublicContract)
+                .createdAt(LocalDateTime.now())
+                .contractPurpose(contractPurpose)
+                .publicContractNumber(publicContractNumber)
+                .status(DocumentRequestStatus.PENDING.name()).build();
 
         // Set the files in the document request
         Set<File> files = new HashSet<>();
@@ -97,79 +97,75 @@ public class DocumentRequestService {
     }
 
     public Page<DocumentRequestDto> getPaginatedDocumentRequests(Pageable pageable, String publicContractNumber) {
-        var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
+        var currentUser = authenticatedUserService.getAuthenticatedUserData()
+                .orElseThrow(() -> new BadRequestException("User not found"));
         var role = UserRole.valueOf(currentUser.getRole());
         var userData = usersFeignClient.getUsernameOrKeycloakId(currentUser.getKeycloakUserId());
 
         log.info("Role: {}", role);
 
-        //TODO: Refactor later for better solution
+        // TODO: Refactor later for better solution
 
         if (role == UserRole.ADMIN) {
-            var data = publicContractNumber != null ?
-                documentRequestRepository.findAllByPublicContractNumber(publicContractNumber, pageable) :
-                documentRequestRepository.findAll(pageable);
+            var data = publicContractNumber != null
+                    ? documentRequestRepository.findAllByPublicContractNumber(publicContractNumber, pageable)
+                    : documentRequestRepository.findAll(pageable);
 
             return data.map(
-                documentRequest -> documentRequestMapper.toDto(
-                    documentRequest,
-                    applicationConfigRepository.get()
-                )
-            );
+                    documentRequest -> documentRequestMapper.toDto(
+                            documentRequest,
+                            applicationConfigRepository.get()));
         }
 
         if (role == UserRole.USER) {
-            var data = publicContractNumber != null ?
-                documentRequestRepository.findAllByRequesterIdAndPublicContractNumber(currentUser.getKeycloakUserId(), publicContractNumber, pageable) :
-                documentRequestRepository.findAllByRequesterId(currentUser.getKeycloakUserId(), pageable);
+            var data = publicContractNumber != null
+                    ? documentRequestRepository.findAllByRequesterIdAndPublicContractNumber(
+                            currentUser.getKeycloakUserId(), publicContractNumber, pageable)
+                    : documentRequestRepository.findAllByRequesterId(currentUser.getKeycloakUserId(), pageable);
 
             return data.map(
-                documentRequest -> documentRequestMapper.toDto(
-                    documentRequest,
-                    applicationConfigRepository.get()
-                )
-            );
+                    documentRequest -> documentRequestMapper.toDto(
+                            documentRequest,
+                            applicationConfigRepository.get()));
         }
 
         if (role == UserRole.DRTSS_AGENT || role == UserRole.DRTSS_REGIONAL_MANAGER) {
-            var data = publicContractNumber != null ?
-                documentRequestRepository.findAllByRegionAndPublicContractNumber(userData.getRegion(), publicContractNumber, pageable) :
-                documentRequestRepository.findAllByRegion(userData.getRegion(), pageable);
+            var data = publicContractNumber != null
+                    ? documentRequestRepository.findAllByRegionAndPublicContractNumber(userData.getRegion(),
+                            publicContractNumber, pageable)
+                    : documentRequestRepository.findAllByRegion(userData.getRegion(), pageable);
 
             return data.map(
-                documentRequest -> documentRequestMapper.toDto(
-                    documentRequest,
-                    applicationConfigRepository.get()
-                )
-            );
+                    documentRequest -> documentRequestMapper.toDto(
+                            documentRequest,
+                            applicationConfigRepository.get()));
         }
 
-        //Later throw 401
+        // Later throw 401
         throw new BadRequestException("Vous ne pouvez pas accéder à cette ressource");
     }
 
     public DocumentRequestDto getDocumentRequest(String id) {
         return documentRequestRepository.findById(Long.parseLong(id))
-            .map(documentRequest -> documentRequestMapper.toDto(
-                documentRequest,
-                applicationConfigRepository.get()
-            ))
-            .orElseThrow(() -> new IllegalArgumentException("Document request not found"));
+                .map(documentRequest -> documentRequestMapper.toDto(
+                        documentRequest,
+                        applicationConfigRepository.get()))
+                .orElseThrow(() -> new IllegalArgumentException("Document request not found"));
     }
 
     public void reviewDocumentRequest(
-        Long id,
-        DocumentRequestStatus status,
-        String rejectionReason
-    ) {
-        var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
+            Long id,
+            DocumentRequestStatus status,
+            String rejectionReason) {
+        var currentUser = authenticatedUserService.getAuthenticatedUserData()
+                .orElseThrow(() -> new BadRequestException("User not found"));
 
         if (status == DocumentRequestStatus.REJECTED && rejectionReason == null) {
             throw new BadRequestException("Vous devenez fournir un motif de rejet");
         }
 
         DocumentRequest documentRequest = documentRequestRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("DocumentRequest not found"));
+                .orElseThrow(() -> new RuntimeException("DocumentRequest not found"));
 
         documentRequest.setStatus(status.name());
         documentRequest.setRejectionReason(rejectionReason);
@@ -179,16 +175,18 @@ public class DocumentRequestService {
         eventPublisher.dispatch(new DocumentRequestChanged(documentRequest.getId()));
     }
 
-    public void approveDocumentRequest(Long id, ApproveDocumentRequestDto approveDocumentRequestDto) throws IOException {
+    public void approveDocumentRequest(Long id, ApproveDocumentRequestDto approveDocumentRequestDto)
+            throws IOException {
         log.info("Approving document request with id {}", id);
-        var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
+        var currentUser = authenticatedUserService.getAuthenticatedUserData()
+                .orElseThrow(() -> new BadRequestException("User not found"));
 
         log.info("currentUser: {}", currentUser);
 
         System.out.println(documentRequestRepository.findById(id).orElseThrow());
 
         DocumentRequest documentRequest = documentRequestRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("DocumentRequest not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("DocumentRequest not found"));
 
         log.info("documentRequest: {}", documentRequest);
 
@@ -206,73 +204,59 @@ public class DocumentRequestService {
         documentRequest.setApprovedBy(currentUser.getKeycloakUserId());
 
         attestationGenerator.generateDocument(
-            approveDocumentRequestDto,
-            documentRequest.getId()
-        );
+                approveDocumentRequestDto,
+                documentRequest.getId());
 
         documentRequestRepository.save(documentRequest);
         eventPublisher.dispatch(new DocumentRequestChanged(documentRequest.getId()));
     }
 
-    public void signedDocumentRequest(Long id,String signatory) throws IOException {
-        log.info("Approving document request with id {}", id);
-      //  var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
-
-     //   log.info("currentUser: {}", currentUser);
-
-
-        System.out.println(documentRequestRepository.findById(id).orElseThrow());
+    public void signedDocumentRequest(Long id, String signatory) {
+        // var currentUser =
+        // authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new
+        // BadRequestException("User not found"));
 
         DocumentRequest documentRequest = documentRequestRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("DocumentRequest not found"));
-
-        log.info("documentRequest: {}", documentRequest);
-
-
-
+                .orElseThrow(() -> new ResourceNotFoundException("DocumentRequest not found for ID: " + id));
         documentRequest.setStatus(DocumentRequestStatus.SIGNED.name());
         documentRequest.setSignedBy(signatory);
         documentRequest.setSignedAt(LocalDateTime.now());
-
-
-
-        documentRequestRepository.save(documentRequest);
+        DocumentRequest savedocumentRequest = documentRequestRepository.save(documentRequest);
         eventPublisher.dispatch(new DocumentRequestChanged(documentRequest.getId()));
+
+        // System.out.println("DocumentRequest signed successfully: " +
+        // savedocumentRequest);
     }
 
     public PaymentRequestResponse pay(Long id, PayRequest payRequest) {
         var documentRequest = documentRequestRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Document request not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Document request not found"));
 
         var paymentId = UUID.randomUUID().toString();
-
 
         var url = Base64.getEncoder().encodeToString(payRequest.getCallbackUrl().getBytes());
         log.info("Encoded URL: {}", url);
 
         log.info("Payment request received for document request with id {}", id);
         return new PaymentRequestResponse(
-            String.format(
-                "https://pgw-test.fasoarzeka.bf/AvepayPaymentGatewayUI/avepay-payment/app/validorder?amount=%s&merchantid=%s&securedAccessToken=eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI0UDdJNkI0Uzc5IiwiaWF0IjoxNzI5MDA3NTgyLCJzdWIiOiIyMjYwMDAwMDAzMyIsImlzcyI6ImFyemVrYSIsIlBBWUxPQUQiOiJhY2Nlc3NfdG9rZW4iLCJleHAiOjE3OTIwNzk1ODJ9.N_XttQtoOyacQwylkSWR_we5wo96Ise_3vi6O_IJUIXDqenOmWZ0xtczb_FwD2vsgqCzwEK8oxdQs8w3CheWVg&mappedOrderId=%s&linkBackToCallingWebsite=%s",
-                1500,
-                356,
-                paymentId,
-                url
-            )
-        );
+                String.format(
+                        "https://pgw-test.fasoarzeka.bf/AvepayPaymentGatewayUI/avepay-payment/app/validorder?amount=%s&merchantid=%s&securedAccessToken=eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI0UDdJNkI0Uzc5IiwiaWF0IjoxNzI5MDA3NTgyLCJzdWIiOiIyMjYwMDAwMDAzMyIsImlzcyI6ImFyemVrYSIsIlBBWUxPQUQiOiJhY2Nlc3NfdG9rZW4iLCJleHAiOjE3OTIwNzk1ODJ9.N_XttQtoOyacQwylkSWR_we5wo96Ise_3vi6O_IJUIXDqenOmWZ0xtczb_FwD2vsgqCzwEK8oxdQs8w3CheWVg&mappedOrderId=%s&linkBackToCallingWebsite=%s",
+                        1500,
+                        356,
+                        paymentId,
+                        url));
 
     }
 
     public void updatePaymentStatus(Long id, String paymentId) {
         var documentRequest = documentRequestRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Document request not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Document request not found"));
 
-        //Get payment status from payment gateway
-        //If payment is successful, update the document request
+        // Get payment status from payment gateway
+        // If payment is successful, update the document request
 
         documentRequest.setIsPaid(true);
         documentRequestRepository.save(documentRequest);
         eventPublisher.dispatch(new DocumentRequestChanged(documentRequest.getId()));
     }
 }
-

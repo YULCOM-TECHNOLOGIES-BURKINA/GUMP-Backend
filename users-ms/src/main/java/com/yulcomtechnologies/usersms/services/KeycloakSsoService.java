@@ -114,7 +114,6 @@ public class KeycloakSsoService implements SsoProvider {
     @Override
     public void activateUser(String ssoUserId) {
         var headers = getHeaders();
-        System.out.println(getAdminToken().getBody().accessToken());
         headers.set("Authorization", "Bearer " + Objects.requireNonNull(getAdminToken().getBody()).accessToken());
         HttpEntity<String> request = new HttpEntity<>(
             "{\"enabled\": true}",

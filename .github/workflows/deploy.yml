@@ -32,6 +32,8 @@ jobs:
       - name: Build ${{matrix.ms}}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MAVEN_TOKEN: ${{ secrets.MAVEN_TOKEN }}
+          
         run: mvn clean install -s ../settings.xml
 
       - name: Log in to registry
@@ -55,7 +57,7 @@ jobs:
         with:
           host: ${{ vars.REMOTE_HOST }}
           username: ${{ vars.REMOTE_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          password: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "docker-compose-dev.yml,realm-config,keycloak.yml"
           target: "/home/${{ vars.REMOTE_USER }}/gump"
       - run: ls
@@ -64,7 +66,7 @@ jobs:
         with:
           host: ${{ vars.REMOTE_HOST }}
           username: ${{ vars.REMOTE_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          password: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd gump
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u gump-ci --password-stdin
