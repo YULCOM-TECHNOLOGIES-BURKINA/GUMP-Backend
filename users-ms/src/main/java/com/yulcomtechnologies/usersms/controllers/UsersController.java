@@ -27,6 +27,22 @@ public class UsersController {
     private final UserService userService;
     private final AuthService authService;
 
+    @PostMapping("users/{id}/deactivate")
+    public ResponseEntity<Void> deactivateUser(
+        @PathVariable Long id
+    ) {
+        userService.toggleUserAccount(id, false);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("users/{id}/activate")
+    public ResponseEntity<Void> activateUser(
+        @PathVariable Long id
+    ) {
+        userService.toggleUserAccount(id, true);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("get-ifu/{ifu}")
     public ResponseEntity<CorporationData> getUsers(
         @PathVariable String ifu
