@@ -190,6 +190,10 @@ public class DocumentRequestService {
         var documentRequest = repository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Document request not found"));
 
+        if (!documentRequest.getStatus().equals(DocumentRequestStatus.REJECTED.toString())) {
+            throw new BadRequestException("Document request is not rejected");
+        }
+
         documentRequest.setStatus(DocumentRequestStatus.COMPANY_HAS_DEBT_WAITING_FOR_MANUAL_REVIEW.toString());
         repository.save(documentRequest);
     }
