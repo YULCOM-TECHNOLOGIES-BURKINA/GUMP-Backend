@@ -33,7 +33,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MAVEN_TOKEN: ${{ secrets.MAVEN_TOKEN }}
-          
+
         run: mvn clean install -s ../settings.xml
 
       - name: Log in to registry
@@ -75,5 +75,7 @@ jobs:
             echo VPN_USERNAME=${{ secrets.VPN_USERNAME }} >> .env
             echo VPN_SERVER=${{ secrets.VPN_SERVER }} >> .env
             echo SERVER_CERT=${{ secrets.SERVER_CERT }} >> .env
+            echo JUSTICE_SERVICE_USERNAME=${{ secrets.JUSTICE_SERVICE_USERNAME }} >> .env
+            echo JUSTICE_SERVICE_PASSWORD=${{ secrets.JUSTICE_SERVICE_PASSWORD }} >> .env
             docker-compose -f docker-compose-dev.yml down
             docker-compose -f docker-compose-dev.yml up -d --build
