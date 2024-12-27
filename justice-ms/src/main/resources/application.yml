@@ -22,5 +22,10 @@ server:
   servlet:
     context-path: /api
 
+justice-service:
+  url: ${JUSTICE_SERVICE_URL:http://10.52.134.14:7000}
+  username: ${JUSTICE_SERVICE_USERNAME:admin}
+  password: ${JUSTICE_SERVICE_PASSWORD:admin}
+
 app:
   url: http://localhost:8085/api

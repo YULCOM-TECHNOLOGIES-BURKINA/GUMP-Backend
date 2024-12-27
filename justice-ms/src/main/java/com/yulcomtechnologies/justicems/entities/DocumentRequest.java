@@ -21,6 +21,9 @@ public class DocumentRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "external_id")
+    private Long externalId;
+
     @Column(name = "requester_id", nullable = false, length = 255)
     private String requesterId;
 

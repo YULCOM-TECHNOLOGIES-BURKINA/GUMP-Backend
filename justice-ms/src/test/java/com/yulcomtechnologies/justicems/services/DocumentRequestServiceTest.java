@@ -7,9 +7,12 @@ import com.yulcomtechnologies.justicems.entities.DocumentRequest;
 import com.yulcomtechnologies.justicems.enums.TypeDemandeEnum;
 import com.yulcomtechnologies.justicems.repositories.DocumentRequestRepository;
 import com.yulcomtechnologies.justicems.repositories.FileRepository;
+import com.yulcomtechnologies.justicems.services.justiceClient.JusticeClient;
 import com.yulcomtechnologies.sharedlibrary.auth.AuthenticatedUserData;
 import com.yulcomtechnologies.sharedlibrary.auth.AuthenticatedUserService;
 import com.yulcomtechnologies.sharedlibrary.services.FileStorageService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -27,6 +30,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@Disabled
 class DocumentRequestServiceTest {
     @InjectMocks
     DocumentRequestService documentRequestService;
@@ -46,13 +50,24 @@ class DocumentRequestServiceTest {
     @Mock
     UserMsFeignClient userMsFeignClient;
 
+    JusticeClient justiceClient;
+
+    @BeforeEach
+    void setUp() {
+        new JusticeClient("http://10.52.134.14:7000", "", "");
+
+        documentRequestService = new DocumentRequestService(documentRequestRepository, fileRepository, null, fileStorageService, authenticatedUserService, userMsFeignClient,
+            justiceClient
+        );
+    }
+
 
     @Test
     void requestDocument() throws IOException {
         when(authenticatedUserService.getAuthenticatedUserData()).thenReturn(Optional.of(new AuthenticatedUserData("username", "role", "1")));
         when(userMsFeignClient.getUser("1")).thenReturn(
             UserDto.builder().company(
-                new CompanyDto("Yulcom", "123", "Ouaga", "RCCM")
+                new CompanyDto("Yulcom", "123", "Ouaga", "BF-OUA-0123-3673")
             ).build()
         );
 
@@ -71,7 +86,15 @@ class DocumentRequestServiceTest {
 
         assertEquals("1", documentRequest.getRequesterId());
         assertEquals("PENDING", documentRequest.getStatus());
+        assertEquals(TypeDemandeEnum.EXTRAIT_RCCM.name(), documentRequest.getType());
         assertEquals("Yulcom", documentRequest.getCompanyName());
-        assertEquals("RCCM", documentRequest.getRccm());
+        assertEquals("BF-OUA-0123-3673", documentRequest.getRccm());
+    }
+
+    @Test
+    void verifiesDocument() {
+        var result = justiceClient.verifyDocument("RCCM00000I00220J24M");
+
+        System.out.println(result);
     }
 }

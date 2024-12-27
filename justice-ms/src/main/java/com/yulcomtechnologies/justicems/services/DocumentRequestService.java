@@ -1,6 +1,7 @@
 package com.yulcomtechnologies.justicems.services;
 
 import com.yulcomtechnologies.feignClients.UserMsFeignClient;
+import com.yulcomtechnologies.feignClients.dtos.UserDto;
 import com.yulcomtechnologies.justicems.dtos.DocumentRequestDto;
 import com.yulcomtechnologies.justicems.entities.DocumentRequest;
 import com.yulcomtechnologies.justicems.entities.File;
@@ -8,6 +9,7 @@ import com.yulcomtechnologies.justicems.enums.TypeDemandeEnum;
 import com.yulcomtechnologies.justicems.mappers.DocumentRequestMapper;
 import com.yulcomtechnologies.justicems.repositories.DocumentRequestRepository;
 import com.yulcomtechnologies.justicems.repositories.FileRepository;
+import com.yulcomtechnologies.justicems.services.justiceClient.JusticeClient;
 import com.yulcomtechnologies.justicems.services.justiceClient.dtos.Demande;
 import com.yulcomtechnologies.justicems.services.justiceClient.dtos.Demandeur;
 import com.yulcomtechnologies.justicems.services.justiceClient.dtos.TypeActeDerive;
@@ -26,6 +28,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -40,19 +43,26 @@ public class DocumentRequestService {
     private final FileStorageService fileStorageService;
     private final AuthenticatedUserService authenticatedUserService;
     private final UserMsFeignClient userMsFeignClient;
+    private final JusticeClient justiceClient;
 
     public DocumentRequest submitDocumentRequest(MultipartFile extraitRccm, MultipartFile statutEntreprise, LocalDate immatriculationDate, TypeDemandeEnum typeDemande) throws IOException {
         //Call e-service here
+        var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
+        var currentUserInfo = userMsFeignClient.getUser(currentUser.getKeycloakUserId());
 
+        var demandeJustice = justiceClient.createDemandeWithFiles(createDemande(extraitRccm, statutEntreprise, immatriculationDate, typeDemande, currentUserInfo), extraitRccm, statutEntreprise).getBody();
+
+        log.info("Demande justice: {}", demandeJustice);
         File extraitRccmDocument = saveFile(extraitRccm, "Recepissé RCCM");
         File statutEntrepriseDocument = saveFile(statutEntreprise, "Statut Entreprise");
 
-        var currentUser = authenticatedUserService.getAuthenticatedUserData().orElseThrow(() -> new BadRequestException("User not found"));
-        var currentUserInfo = userMsFeignClient.getUser(currentUser.getKeycloakUserId());
+        assert demandeJustice != null;
 
         var documentRequest = DocumentRequest.builder()
             .requesterId(currentUser.getKeycloakUserId())
             .isPaid(false)
+            .number(demandeJustice.numero())
+            .externalId(demandeJustice.id())
             .createdAt(LocalDateTime.now())
             .status("PENDING").build();
 
@@ -65,6 +75,7 @@ public class DocumentRequestService {
         if (statutEntrepriseDocument != null) {
             files.add(statutEntrepriseDocument);
         }
+
         documentRequest.setFiles(files);
         documentRequest.setType(typeDemande.name());
         documentRequest.setCompanyName(currentUserInfo.getCompany().getName());
@@ -73,33 +84,40 @@ public class DocumentRequestService {
         return documentRequestRepository.save(documentRequest);
     }
 
-    private Demande createDemande(MultipartFile extraitRccm, MultipartFile statutEntreprise, LocalDate immatriculationDate) {
+    private Demande createDemande(
+        MultipartFile extraitRccm,
+        MultipartFile statutEntreprise,
+        LocalDate immatriculationDate,
+        TypeDemandeEnum typeDemande,
+        UserDto currentUserInfo
+    ) {
         Demande demande = new Demande();
-        demande.setNumeroRccm("BF-OUA-0123-3673");
-        demande.setNumero("RCCM00000K00010L24P");
+        demande.setCreated_date(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        var company = currentUserInfo.getCompany();
+
+        demande.setNumeroRccm(company.getRccm());
         demande.setDateImatriculation("2024-10-22");
-        demande.setDenominationSociete("Coris Bank");
-        demande.setAffected(true);
-        demande.setActeDownloaded(false);
-        demande.setActeExpired(false);
-        demande.setAffectedTo("usertc");
+        demande.setDenominationSociete(company.getName());
 
         TypeActeDerive typeActeDerive = new TypeActeDerive();
-        typeActeDerive.setId(1L);
-        typeActeDerive.setLibelle("Extrait du RCCM");
-        typeActeDerive.setStatut(true);
-        demande.setTypeActeDerive(typeActeDerive);
 
+        if (typeDemande == TypeDemandeEnum.EXTRAIT_RCCM) {
+            typeActeDerive.setId(1L);
+            typeActeDerive.setLibelle("Extrait du RCCM");
+            typeActeDerive.setStatut(true);
+        } else if (typeDemande == TypeDemandeEnum.CERTIFICAT_NON_FAILLITE) {
+            typeActeDerive.setId(2L);
+            typeActeDerive.setLibelle("Attestation de non faillite");
+            typeActeDerive.setStatut(true);
+        }
+
+        demande.setTypeActeDerive(typeActeDerive);
         // Set Demandeur
         Demandeur demandeur = new Demandeur();
-        demandeur.setNom("koura");
-        demandeur.setPrenom("ferdinand");
-        demandeur.setTelephone("56070917");
+        demandeur.setNom(company.getName());
+        demandeur.setPrenom(company.getName());
         demandeur.setTypeDemandeur("ADMINISTRATION");
         demande.setDemandeur(demandeur);
-
-        demande.setStatutDemande("NON_PAYE");
-        demande.setCreated_date("2024-10-31");
 
         return demande;
     }
