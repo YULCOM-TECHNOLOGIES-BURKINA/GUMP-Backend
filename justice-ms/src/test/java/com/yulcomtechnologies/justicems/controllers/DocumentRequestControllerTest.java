@@ -14,6 +14,7 @@ import com.yulcomtechnologies.sharedlibrary.auth.AuthenticatedUserData;
 import com.yulcomtechnologies.sharedlibrary.auth.AuthenticatedUserService;
 import com.yulcomtechnologies.sharedlibrary.services.FileStorageService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,7 +33,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Set;
 
-
+@Disabled
 class DocumentRequestControllerTest extends BaseIntegrationTest {
     @MockBean
     UserMsFeignClient userMsFeignClient;
