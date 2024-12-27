@@ -71,5 +71,9 @@ jobs:
             cd gump
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u gump-ci --password-stdin
             echo COMMIT_SHA=${{github.sha}} > .env
+            echo VPN_PASSWORD=${{ secrets.VPN_PASSWORD }} >> .env
+            echo VPN_USERNAME=${{ secrets.VPN_USERNAME }} >> .env
+            echo VPN_SERVER=${{ secrets.VPN_SERVER }} >> .env
+            echo SERVER_CERT=${{ secrets.SERVER_CERT }} >> .env
             docker-compose -f docker-compose-dev.yml down
             docker-compose -f docker-compose-dev.yml up -d --build
