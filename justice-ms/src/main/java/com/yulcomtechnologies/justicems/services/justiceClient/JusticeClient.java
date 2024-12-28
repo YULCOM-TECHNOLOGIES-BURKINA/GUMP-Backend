@@ -44,6 +44,8 @@ public class JusticeClient {
         MultipartFile extraitRccm,
         MultipartFile statutEntreprise
     ) {
+        log.info("Justice API URL: {}", justiceApiUrl);
+
         List<Document> documents = new ArrayList<>();
         demande.setUserConnected(username);
 
@@ -85,7 +87,7 @@ public class JusticeClient {
 
             HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
-            System.out.println(requestEntity.getBody());
+            log.info("Creating demande with files: {}", requestEntity.getBody());
 
             return restTemplate.exchange(
                 justiceApiUrl + "/rccm-demande/api/demande/create-with-files",
@@ -100,6 +102,8 @@ public class JusticeClient {
     }
 
     public ResponseEntity<AuthenticateResponse> authenticate() {
+        log.info("Authenticating with username: {}", username);
+
         var requestEntity = new HttpEntity<>(
             new AuthenticatedRequest(username, password)
         );
