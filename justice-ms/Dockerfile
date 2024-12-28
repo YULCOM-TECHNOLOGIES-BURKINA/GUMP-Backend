@@ -10,7 +10,10 @@ RUN apk add --no-cache \
     iptables \
     ip6tables \
     iproute2 \
-    procps
+    procps \
+    python3 \
+    curl \
+    py3-pip
 
 # Set environment variables
 ENV deploy_env=local
