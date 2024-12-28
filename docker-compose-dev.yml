@@ -38,7 +38,7 @@ services:
         - SPRING_MAIL_PASSWORD=admin
 
   justice:
-    image: justice-ms-test
+    image: ghcr.io/yulcom-technologies-burkina/gump-drtss-ms:$COMMIT_SHA
     privileged: true
     container_name: gump-justice-backend
     volumes:
