@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+  <!-- Création de la table attestation_config -->
+  <changeSet id="016.1" author="mandson">
+    <sql>
+      CREATE TABLE "attestation_config" (
+                                          "attestation_config_id" BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+                                          "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                                          "logo" VARCHAR(255) NOT NULL,
+                                          "icone" VARCHAR(255) NOT NULL,
+                                          "title" VARCHAR(255) NOT NULL,
+                                          "code" VARCHAR(255) NOT NULL,
+                                          "description" TEXT
+      );
+    </sql>
+  </changeSet>
+
+  <!-- Création de la table params_config_acte -->
+  <changeSet id="016.2" author="mandson">
+    <sql>
+      CREATE TABLE "params_config_acte" (
+                                          "params_config_acte_id" BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+                                           "param" VARCHAR(255) NOT NULL,
+                                          "labelle" VARCHAR(255) NOT NULL,
+                                          "value" VARCHAR(255) NOT NULL,
+                                          "attestation_config_id" BIGINT NOT NULL,
+                                          CONSTRAINT "fk_params_config_acte_attestation_config"
+                                            FOREIGN KEY ("attestation_config_id") REFERENCES "attestation_config" ("attestation_config_id") ON DELETE CASCADE
+      );
+    </sql>
+  </changeSet>
+
+  <!-- Insertion dans attestation_config -->
+  <changeSet id="016.3" author="mandson">
+    <sql>
+      INSERT INTO "attestation_config" ("logo", "icone", "title", "code", "description") VALUES
+        ('https://gump-gateway.yulpay.com/api/files/1/uploads-a8efd3de-c530-4826-9599-8207ec3fd6c6.png?service=drtss-ms',
+         'pi pi-briefcase',
+         'Attestation DRTPS',
+         'drtps',
+         'Informations sur l attestation de la Direction Régionale du Travail et de la Protection Sociale.'
+        );
+    </sql>
+  </changeSet>
+
+  <!-- Insertion dans params_config_acte -->
+  <changeSet id="016.4" author="mandson">
+    <sql>
+      INSERT INTO "params_config_acte" ("param", "labelle", "value", "attestation_config_id") VALUES
+                                                                                                ('drtps', 'validiteMois', '3', 1),
+                                                                                                ('drtps', 'validiteJours', '1', 1),
+                                                                                                ('drtps', 'delaiTraitement', '1', 1),
+                                                                                                ('drtps', 'prixActe', '1500', 1),
+                                                                                                ('drtps', 'description', 'Description de l’acte', 1),
+                                                                                                ('drtps', 'intitule', 'Intitulé de l’acte', 1),
+                                                                                                ('drtps', 'titreActe', 'Le titre des actes', 1),
+                                                                                                ('drtps', 'ministaire', 'Ministraire DRTPS', 1),
+                                                                                                ('drtps', 'devise', 'La Patrie ou la Mort, Nous Vaincrons.', 1),
+                                                                                                ('drtps', 'adressEntreprise', 'L’adresse de l’entreprise', 1),
+                                                                                                ('drtps', 'titreSignataire', 'Le Directeur Régional', 1),
+                                                                                                ('drtps', 'adressEmetrice', 'Adresse de la structure émétrice', 1),
+                                                                                                ('drtps', 'contactEmetrice', 'Contact de la structure émétrice', 1),
+                                                                                                ('drtps', 'vu1', 'Vue Decret 1', 1),
+                                                                                                ('drtps', 'vu2', 'Vue Decret 2', 1);
+    </sql>
+  </changeSet>
+
+</databaseChangeLog>
