@@ -23,16 +23,27 @@ public class AttestationConfigController {
         return attestationConfigService.getParamsConfigActe();
     }
 
-    @PostMapping("/attestation-params/update")
-    public ParamsConfigActeDto updateApplicationConfig(
-            @RequestPart("id") Long id,
-            @RequestPart("value") String value
-            ) {
-       UpdateParamsActeDto updateParamsActeDto=new UpdateParamsActeDto();
-       updateParamsActeDto.setId(id);
-       updateParamsActeDto.setValue(value);
-       return attestationConfigService.udpateParamActeConfig(updateParamsActeDto);
+    @PostMapping(path = "/attestation-params/update", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<ParamsConfigActeDto> updateApplicationConfig(
+            @RequestParam("id") Long id,
+            @RequestParam("value") String value) {
+        try {
+            // Création du DTO pour la mise à jour
+            UpdateParamsActeDto updateParamsActeDto = new UpdateParamsActeDto();
+            updateParamsActeDto.setId(id);
+            updateParamsActeDto.setValue(value);
+
+            // Appel du service pour effectuer la mise à jour
+            ParamsConfigActeDto updatedParam = attestationConfigService.udpateParamActeConfig(updateParamsActeDto);
+
+            // Retourner la réponse en cas de succès
+            return ResponseEntity.ok(updatedParam);
+        } catch (Exception e) {
+            // Gestion des erreurs
+            return ResponseEntity.status(500).body(null);
+        }
     }
+
 
 
     @PostMapping(path="/attestation-config/update",consumes = {MediaType.ALL_VALUE})
