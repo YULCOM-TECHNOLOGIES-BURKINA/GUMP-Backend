@@ -53,4 +53,38 @@ public class FileController {
             .contentType(MediaType.parseMediaType(contentType))
             .body(resource);
     }
+
+
+    @GetMapping("/files/{filename}")
+    public ResponseEntity<Resource> getFileById(@PathVariable String filename) {
+
+        if (filename == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Path filePath = Paths.get("uploads/", filename);
+        File file = filePath.toFile();
+
+        if (!file.exists()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        // Serve the file as a resource
+        Resource resource = new FileSystemResource(file);
+
+        // Determine the content type (optional, depending on your use case)
+        String contentType = "application/octet-stream"; // Default to binary
+
+        // Set response headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"");
+
+        // Return the file as a download
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentType(MediaType.parseMediaType(contentType))
+                .body(resource);
+    }
+
+
 }

@@ -41,11 +41,6 @@ public class AttestationConfigService {
         return attestationConfigRepository.findById(1L).orElse(null);
     }
 
-   /* public ParamsConfigActe getParamsConfigActe() {
-        return paramsConfigActeRepository.findById(1L).orElse(null);
-    }*/
-
-
     public List<ParamsConfigActeDto> findByLabelle(String labelle) {
         return paramsConfigActeRepository.findByLabelle(labelle).stream()
                 .map(acte -> new ParamsConfigActeDto(
