@@ -73,7 +73,7 @@ public class AttestationConfigController {
 
 
 
- /*   @PostMapping(path = "/attestation/test", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+ @PostMapping(path = "/attestation/test", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<ApproveDocumentRequestDto> updateApplicationConfig(
            @RequestBody ApproveDocumentRequestDto approveDocumentRequestDto
             ) {
@@ -84,7 +84,7 @@ public class AttestationConfigController {
         } catch (Exception e) {
             return ResponseEntity.status(500).body(null);
         }
-    }*/
+    }
 
 
 
