@@ -87,63 +87,6 @@ public class AttestationConfigController {
         }
     }
 
-
-
-    @PostMapping("/sign")
-    public ResponseEntity<byte[]> signPdf(
-            @RequestParam("pdfFile") MultipartFile pdfFile,
-            @RequestParam("signatureImage") MultipartFile signatureImage,
-            @RequestParam("xPosition") float xPosition,
-            @RequestParam("yPosition") float yPosition,
-            @RequestParam("width") float width,
-            @RequestParam("height") float height,
-            @RequestParam("page") int page, // Numéro de page 1-based fourni dans la requête
-            @RequestParam("signatoryName") String signatoryName,
-            @RequestParam(value = "titleSignatory", required = false) String titleSignatory) {
-
-        try {
-            // Convertir les fichiers reçus en fichiers temporaires
-            Path pdfPath = Files.createTempFile("temp", ".pdf");
-            Path signaturePath = Files.createTempFile("temp-signature", ".png");
-
-            Files.write(pdfPath, pdfFile.getBytes());
-            Files.write(signaturePath, signatureImage.getBytes());
-
-            File tempPdfFile = pdfPath.toFile();
-            File tempSignatureFile = signaturePath.toFile();
-
-            // Appeler le service pour signer le PDF
-            certificateService.addSignatureImgToFile(
-                    tempPdfFile,
-                    tempSignatureFile,
-                    xPosition,
-                    yPosition,
-                    width,
-                    height,
-                    page, // Page 1-based passée à la méthode
-                    signatoryName,
-                    titleSignatory
-            );
-
-            // Lire le fichier PDF signé et le retourner comme réponse
-            byte[] signedPdfBytes = Files.readAllBytes(pdfPath);
-
-            // Nettoyer les fichiers temporaires
-            tempPdfFile.delete();
-            tempSignatureFile.delete();
-
-            // Construire la réponse
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=signed.pdf");
-            headers.setContentType(MediaType.APPLICATION_PDF);
-
-            return new ResponseEntity<>(signedPdfBytes, headers, HttpStatus.OK);
-
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(("Erreur : " + e.getMessage()).getBytes());
-        }
-    }
 }
 
 
