@@ -1,8 +1,6 @@
 package com.yulcomtechnologies.drtssms.services;
 
 import com.yulcomtechnologies.drtssms.dtos.ApproveDocumentRequestDto;
-import com.yulcomtechnologies.drtssms.dtos.AttestationConfigDto;
-import com.yulcomtechnologies.drtssms.dtos.ParamsConfigActeDto;
 import com.yulcomtechnologies.drtssms.entities.Attestation;
 import com.yulcomtechnologies.drtssms.entities.AttestationConfig;
 import com.yulcomtechnologies.drtssms.entities.DocumentRequest;
@@ -13,15 +11,13 @@ import com.yulcomtechnologies.drtssms.repositories.AttestationRepository;
 import com.yulcomtechnologies.drtssms.repositories.DocumentRequestRepository;
 import com.yulcomtechnologies.drtssms.repositories.FileRepository;
 import com.yulcomtechnologies.sharedlibrary.services.FileStorageService;
-import com.yulcomtechnologies.sharedlibrary.services.PdfQRCodeService;
-import com.yulcomtechnologies.sharedlibrary.services.TemplateProcessor;
+ import com.yulcomtechnologies.sharedlibrary.services.TemplateProcessor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 //@Async
@@ -33,15 +29,15 @@ public class AttestationGenerator {
     private final FileStorageService fileStorageService;
     private final FileRepository fileRepository;
     private final TemplateProcessor templateProcessor;
-    private final PdfQRCodeService pdfQRCodeService;
+    private final PdfQrCodeService pdfQRCodeService;
     private final ApplicationConfigRepository applicationConfigRepository;
     private final UsersFeignClient usersFeignClient;
     private final NumberGeneratorService numberGeneratorService;
     private final String appFrontUrl;
 
 
-    public AttestationGenerator(AttestationConfigService attestationConfigService,AttestationRepository attestationRepository, DocumentRequestRepository documentRequestRepository, FileStorageService fileStorageService, FileRepository fileRepository, TemplateProcessor templateProcessor, PdfQRCodeService pdfQRCodeService, ApplicationConfigRepository applicationConfigRepository, UsersFeignClient usersFeignClient, NumberGeneratorService numberGeneratorService,
-        @Value("${app.url}") String appFrontUrl
+    public AttestationGenerator(AttestationConfigService attestationConfigService, AttestationRepository attestationRepository, DocumentRequestRepository documentRequestRepository, FileStorageService fileStorageService, FileRepository fileRepository, TemplateProcessor templateProcessor, PdfQrCodeService pdfQRCodeService, ApplicationConfigRepository applicationConfigRepository, UsersFeignClient usersFeignClient, NumberGeneratorService numberGeneratorService,
+                                @Value("${app.url}") String appFrontUrl
     ) {
         this.attestationRepository = attestationRepository;
         this.documentRequestRepository = documentRequestRepository;

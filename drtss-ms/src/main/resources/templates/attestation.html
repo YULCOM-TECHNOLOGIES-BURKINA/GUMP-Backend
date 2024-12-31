@@ -1,234 +1,202 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <style>
-      .center {
-        text-align: center;
-      }
+        .center {
+            text-align: center;
+        }
 
-      body {
-        font-family: Arial, sans-serif;
-        max-width: 800px;
-        margin: 20px auto;
-        padding: 20px;
-      }
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
 
-      .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 30px;
-      }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
 
-      .left-header {
-        flex: 1;
-      }
+        .left-header {
+            flex: 1;
+        }
 
-      .center-header {
-        flex: 1;
-        text-align: center;
-      }
+        .center-header {
+            flex: 1;
+            text-align: center;
+        }
 
-      .right-header {
-        flex: 1;
-        text-align: center;
-      }
+        .right-header {
+            flex: 1;
+            text-align: center;
+        }
 
-      .coat-of-arms {
-        width: 100px;
-        height: 100px;
-         margin: 0 auto;
-      }
+        .coat-of-arms {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+        }
 
-      .title {
-        text-align: center;
-        margin: 20px 0;
-        font-weight: bold;
-      }
+        .title {
+            text-align: center;
+            margin: 20px 0;
+            font-weight: bold;
+        }
 
-      .contact-info {
-        margin-bottom: 20px;
-        font-size: 0.9em;
-      }
+        .contact-info {
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
 
-      .main-content {
-        margin: 20px 0;
-      }
+        .main-content {
+            margin: 20px 0;
+        }
 
-      .form-row {
-        margin: 10px 0;
-        border-bottom: 1px solid transparent;
-        min-height: 25px;
-      }
+        .form-row {
+            margin: 10px 0;
+            border-bottom: 1px solid transparent;
+            min-height: 25px;
+        }
 
-      .footnote {
-        font-style: italic;
-        margin-top: 30px;
-        font-size: 0.9em;
-      }
+        .footnote {
+            font-style: italic;
+            margin-top: 30px;
+            font-size: 0.9em;
+        }
 
-      .signature-section {
-        text-align: right;
-        margin-top: 40px;
-      }
+        .signature-section {
+            position: relative;
+            text-align: center;
+            margin-top: 40px;
+            width: 200px;
+            margin-left: 400px!important;
+        }
 
-      #signature-pad {
-        border: 1px solid #000;
-        margin-top: 20px;
-      }
+        .signature-box {
+            width: 200px;
+            height: 90px;
+            margin-top: 5px;
+            text-align: center;
+            line-height: 50px;
+            color: #88888808;
+            font-style: italic;
+        }
 
-      .signature-controls {
-        margin-top: 10px;
-        text-align: right;
-      }
+        .signature-label {
+            font-size: 1em;
+            margin-top: 100px;
+        }
 
-      .button {
-        padding: 8px 12px;
-        margin-left: 10px;
-        cursor: pointer;
-      }
-
-      /* Zone de signature visuelle */
-      .signature-section {
-        position: relative;
-        right: 0% !important;
-        left: 60% !important;
-        bottom: 15%;
-        text-align: center;
-        margin-top: 40px;
-        width: 200px;
-      }
-
-      .signature-box {
-        width: 200px;
-        height: 90px;
-        margin-top: 5px;
-        text-align: center;
-        line-height: 50px;
-        color: #88888808;
-        font-style: italic;
-      }
-
-      .signature-label {
-        font-size: 1em;
-        margin-top: 100px;
-      }
-        .devise{
+        .devise {
             font-size: 12px;
             margin-left: 25px;
         }
-      /* Styles pour l'impression */
-      @media print {
-        .no-print {
-          display: none;
+
+        /* Styles pour l'impression */
+        @media print {
+            .no-print {
+                display: none;
+            }
         }
-      }
-      @media print {
-        .no-print {
-          display: none;
+
+        @media print {
+            .no-print {
+                display: none;
+            }
         }
-      }
     </style>
     <title></title>
-  </head>
-  <body>
-    <div class="header">
-      <div class="left-header">
+</head>
+
+<body>
+<div class="header">
+    <div class="left-header">
         <span th:text="${ministaire}"></span>
         <br />
         ************<br />
-        REGION DU  <span th:text="${region}">____________</span> <br />
+        REGION DU <span th:text="${region}">____________</span> <br />
         ************<br />
         DIRECTION REGIONALE DU TRAVAIL<br />
         ET DE LA PROTECTION SOCIALE
-      </div>
-      <div class="center-header">
+    </div>
+    <div class="center-header">
         <div class="coat-of-arms">
-          <img
-            style="width: 150px; height: 150px"
-            th:src="${logo}"
-            alt="Coat of Arms"
-          />
+            <img style="width: 150px; height: 150px" th:src="${logo}" alt="Coat of Arms" />
         </div>
-      </div>
-      <div class="right-header">
-          <span>BURKINA FASO</span>
-          <br>
-          <span  class="devise" th:text="${devise}">____________</span>
-
-      </div>
     </div>
-
-    <!--<div class="contact-info">
-  01 B.P.: 120 Ouagadougou 01<br/>
-  TEL.: 50 30 68 21 / 50 30 75 47<br/>
-  FAX: 50 33 21 21
-</div>-->
-
-    <div class="title"><br><br>
-      <span th:text="${title}"></span>
-    <!--  ATTESTATION<br />
-      DE SOUMISSION AUX MARCHES PUBLICS-->
+    <div class="right-header">
+        <span>BURKINA FASO</span>
+        <br>
+        <span class="devise" th:text="${devise}">____________</span>
     </div>
+</div>
 
-    <div class="main-content">
-      <div class="form-row center">
+<div class="title"><br><br>
+    <span th:text="${title}"></span>
+</div>
+
+<div class="main-content">
+    <div class="form-row center">
         N°<span th:text="${attestationNumber}"></span>/MTSS/RC/DRTPS
-      </div>
-      <div class="form-row center" style="margin-bottom: 30px">
+    </div>
+    <div class="form-row center" style="margin-bottom: 30px">
         (Valable pour <span th:text="${validiteMois}"></span> mois )
-      </div>
-      <div class="form-row">
-     <!--   Le Directeur Régional du Travail et de la Protection Sociale du-->
+    </div>
+    <div class="form-row">
         <span th:text="${titreSignataire}"></span> du Travail et de la Protection Sociale du,
         <span th:text="${region}">____________</span>,
-      </div>
-      <div class="form-row">
-       <!-- VU L'ATTESTATION N°-->
+    </div>
+    <div class="form-row">
         <span th:text="${vu1}"></span>
         <span th:text="${anpeNumber}">____________</span>/ANPE/DG du
         <span th:text="${anpeDate}">____________</span>
-      </div>
-      <div class="form-row">
-       <!-- VU L'ATTESTATION N°-->
+    </div>
+    <div class="form-row">
         <span th:text="${vu2}"></span>
         <span th:text="${cnssNumber}">____________</span>/CNSS/DG du
         <span th:text="${cnssDate}">____________</span>
-      </div>
-      <div class="form-row">
+    </div>
+    <div class="form-row">
         APRES VERIFICATION DE LA SITUATION DE L'ENTREPRISE en matière de
         législation du travail.
-      </div>
-      <div class="form-row">
+    </div>
+    <div class="form-row">
         Atteste que l'entreprise :
         <span th:text="${companyName}">________________________</span>
-      </div>
-      <div class="form-row">
+    </div>
+    <div class="form-row">
         Localisée à <span th:text="${location}">____________</span> Adresse
         <span th:text="${address}">____________</span>
-      </div>
-      <div class="form-row">
+    </div>
+    <div class="form-row">
         B.P <span th:text="${bp}">____________</span> Tel
         <span th:text="${telephone}">____________</span>
-      </div>
-      <div class="form-row">est en règle vis-à-vis de ses obligations.</div>
+    </div>
+    <div class="form-row">est en règle vis-à-vis de ses obligations.</div>
+</div>
+
+<div class="main-content">
+    En foi de quoi, la présente attestation lui est délivrée pour servir et
+    valoir ce que de droit.
+</div>
+
+<div class="footnote">
+    NB: la photocopie de cette attestation est sans valeur
+</div>
+
+<!-- Section de signature -->
+<div class="signature-section">
+    <div class="signature-label"><strong> <span th:text="${titreSignataire}"></span> </strong></div>
+    <div class="signature-box">
+
     </div>
 
-    <div class="main-content">
-      En foi de quoi, la présente attestation lui est délivrée pour servir et
-      valoir ce que de droit.
-    </div>
+</div>
+</body>
 
-    <div class="footnote">
-      NB: la photocopie de cette attestation est sans valeur
-    </div>
-    <!-- Section de signature -->
-    <div class="signature-section">
-      <div class="signature-label"><strong> <span th:text="${titreSignataire}"></span> </strong></div>
-      <div class="signature-box">
-        <span> </span>
-      </div>
-    </div>
-  </body>
 </html>

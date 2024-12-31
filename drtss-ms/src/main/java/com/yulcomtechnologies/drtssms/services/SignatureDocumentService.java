@@ -212,7 +212,7 @@ public class SignatureDocumentService {
 
         // Ajouter l'image de signature au fichier
         certificateService.addSignatureImgToFile(
-                attestationFile, signatoryFileImg, 70, 85,
+                attestationFile, signatoryFileImg, 400, 87,
                 signatureLocation.getWidth(), signatureLocation.getHeight(),
                 signatureLocation.getPageSelect(), userInfo.getForename() + " " + userInfo.getLastname(), userInfo.getTitre_honorifique()
         );
