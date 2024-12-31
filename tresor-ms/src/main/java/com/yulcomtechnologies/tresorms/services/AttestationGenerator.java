@@ -66,8 +66,13 @@ public class AttestationGenerator {
 
         log.info("Generated number: {}", number);
 
+        var validiteSoumission = attestationConfigService.findByLabelle("validiteSoumission").get(0).getValue();
+        var validiteLiquidation = attestationConfigService.findByLabelle("validiteLiquidation").get(0).getValue();
+
+        var validiteAttestation = documentRequest.getRequestType().equals(RequestType.LIQUIDATION) ? validiteLiquidation : validiteSoumission;
+
         var attestation = Attestation.builder()
-            .expirationDate(LocalDate.now().plusMonths(VALIDITY_PERIOD_IN_MONTHS).atTime(23, 59, 59))
+            .expirationDate(LocalDate.now().plusMonths(Long.parseLong(validiteAttestation)).atTime(23, 59, 59))
             .documentRequest(documentRequest)
             .number(number)
             .uuid(UUID.randomUUID().toString())
@@ -95,6 +100,7 @@ public class AttestationGenerator {
         map.put("contactEmetrice",attestationConfigService.findByLabelle("contactEmetrice").get(0).getValue());
         map.put("validiteSoumission",attestationConfigService.findByLabelle("validiteSoumission").get(0).getValue());
         map.put("validiteLiquidation",attestationConfigService.findByLabelle("validiteLiquidation").get(0).getValue());
+        map.put("libelleDeNonCreance",attestationConfigService.findByLabelle("libelleDeNonCreance").get(0).getValue());
 
 
         if (documentRequest.getIfuNumber() != null) {
@@ -120,90 +126,4 @@ public class AttestationGenerator {
         }
     }
 
-
-    public void generateDocumentTest(
-    ) {
-     var documentRequest = documentRequestRepository.findById(31L).orElseThrow();
-        var filePath = "attestations/" + UUID.randomUUID() + ".pdf";
-
-        var file = new File(
-                "Attestation",
-                filePath
-        );
-
-        fileRepository.save(file);
-
-        var number = numberGeneratorService.generateNumber();
-
-        log.info("Generated number: {}", number);
-
-        var attestation = Attestation.builder()
-                .expirationDate(LocalDate.now().plusMonths(VALIDITY_PERIOD_IN_MONTHS).atTime(23, 59, 59))
-                .documentRequest(documentRequest)
-                .number(number)
-                .uuid(UUID.randomUUID().toString())
-                .documentRequest(documentRequest)
-                .createdAt(LocalDateTime.now())
-                .file(file)
-                .build();
-
-        attestationRepository.save(attestation);
-        var map = new HashMap<String, Object>();
-        map.put("documentNumber", number);
-        map.put("identity", documentRequest.getOrganizationName());
-        map.put("contractOwner", documentRequest.getContractingOrganizationName());
-        map.put("address", documentRequest.getAddress());
-        map.put("profession", documentRequest.getBusinessDomain());
-        map.put("dateCreated", LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-
-
-
-        map.put("ifu", "1000002A");
-
-
-        /************
-         * New Params
-         */
-        AttestationConfig ajeAttestation= attestationConfigService.getAttestationConfig();
-        map.put("title",ajeAttestation.getTitle());
-        map.put("logo",attestationConfigService.getAttestationConfig().getLogo());
-        map.put("devise",attestationConfigService.findByLabelle("devise").get(0).getValue());
-        map.put("ministaire",attestationConfigService.findByLabelle("ministaire").get(0).getValue());
-
-        map.put("adressEmetrice",attestationConfigService.findByLabelle("adressEmetrice").get(0).getValue());
-        map.put("contactEmetrice",attestationConfigService.findByLabelle("contactEmetrice").get(0).getValue());
-        map.put("validiteSoumission",attestationConfigService.findByLabelle("validiteSoumission").get(0).getValue());
-        map.put("validiteLiquidation",attestationConfigService.findByLabelle("validiteLiquidation").get(0).getValue());
-
-     /*
-      map.put("validiteMois",attestationConfigService.findByLabelle("validiteMois").get(0).getValue());
-        map.put("validiteJours",attestationConfigService.findByLabelle("validiteJours").get(0).getValue());
-        map.put("delaiTraitement",attestationConfigService.findByLabelle("delaiTraitement").get(0).getValue());
-
-        map.put("prixActe",attestationConfigService.findByLabelle("prixActe").get(0).getValue());
-        map.put("intitule",attestationConfigService.findByLabelle("intitule").get(0).getValue());
-        map.put("titreSignataire",attestationConfigService.findByLabelle("titreSignataire").get(0).getValue());
-         map.put("vu1",attestationConfigService.findByLabelle("vu1").get(0).getValue());
-        map.put("vu2",attestationConfigService.findByLabelle("vu2").get(0).getValue());*/
-
-
-
-        var filledTemplate = templateProcessor.fillVariables("liquidation.html", map);
-        var typeResquest= "SOUMISSION";
-
-        try {
-            var fileBytes = pdfQRCodeService.addQRCodeToPDF(templateProcessor.htmlToPdf(filledTemplate), appFrontUrl + "/api/verify-document/" + attestation.getNumber() + "/public?service=tresor-ms");
-            var filigraneTexte="Agence judiciaire de l'Etat - Valable pour("+attestationConfigService.findByLabelle("validiteSoumission").get(0).getValue()+"mois)";
-
-            if (typeResquest.equals(RequestType.LIQUIDATION.name())){
-                filigraneTexte="Agence judiciaire de l'Etat - Valable pour ("+attestationConfigService.findByLabelle("validiteLiquidation").get(0).getValue()+"mois)";
-            }
-
-            var finalFileBytes = pdfFiligraneService.addFiligraneToPDF(fileBytes,filigraneTexte);
-
-            fileStorageService.saveFile(finalFileBytes, filePath);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
