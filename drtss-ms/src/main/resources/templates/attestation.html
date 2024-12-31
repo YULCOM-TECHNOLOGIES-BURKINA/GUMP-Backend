@@ -32,7 +32,7 @@
 
       .right-header {
         flex: 1;
-        text-align: right;
+        text-align: center;
       }
 
       .coat-of-arms {
@@ -115,7 +115,10 @@
         font-size: 0.9em;
         text-decoration: underline;
       }
-
+        .devise{
+            font-size: 12px;
+            margin-left: 25px;
+        }
       /* Styles pour l'impression */
       @media print {
         .no-print {
@@ -133,10 +136,10 @@
   <body>
     <div class="header">
       <div class="left-header">
-        MINISTERE DE LA FONCTION PUBLIQUE,<br />
-        DU TRAVAIL ET DE LA PROTECTION SOCIALE<br />
+        <span th:text="${ministaire}"></span>
+        <br />
         ************<br />
-        REGION DU CENTRE<br />
+        REGION DU  <span th:text="${region}">____________</span> <br />
         ************<br />
         DIRECTION REGIONALE DU TRAVAIL<br />
         ET DE LA PROTECTION SOCIALE
@@ -144,15 +147,17 @@
       <div class="center-header">
         <div class="coat-of-arms">
           <img
-            style="width: 200px; height: 200px"
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Coat_of_arms_of_Burkina_Faso.svg/640px-Coat_of_arms_of_Burkina_Faso.svg.png"
+            style="width: 150px; height: 150px"
+            th:src="${logo}"
             alt="Coat of Arms"
           />
         </div>
       </div>
       <div class="right-header">
-        BURKINA FASO<br />
-        La Patrie ou la mort, nous vaincrons
+          <span>BURKINA FASO</span>
+          <br>
+          <span  class="devise" th:text="${devise}">____________</span>
+
       </div>
     </div>
 
@@ -162,9 +167,10 @@
   FAX: 50 33 21 21
 </div>-->
 
-    <div class="title">
-      ATTESTATION<br />
-      DE SOUMISSION AUX MARCHES PUBLICS
+    <div class="title"><br><br>
+      <span th:text="${title}"></span>
+    <!--  ATTESTATION<br />
+      DE SOUMISSION AUX MARCHES PUBLICS-->
     </div>
 
     <div class="main-content">
@@ -172,19 +178,22 @@
         N°<span th:text="${attestationNumber}"></span>/MTSS/RC/DRTPS
       </div>
       <div class="form-row center" style="margin-bottom: 30px">
-        (Valable pour trois mois)
+        (Valable pour <span th:text="${validiteMois}"></span> mois )
       </div>
       <div class="form-row">
-        Le Directeur Régional du Travail et de la Protection Sociale du
+     <!--   Le Directeur Régional du Travail et de la Protection Sociale du-->
+        <span th:text="${titreSignataire}"></span> du Travail et de la Protection Sociale du,
         <span th:text="${region}">____________</span>,
       </div>
       <div class="form-row">
-        VU L'ATTESTATION N°
+       <!-- VU L'ATTESTATION N°-->
+        <span th:text="${vu1}"></span>
         <span th:text="${anpeNumber}">____________</span>/ANPE/DG du
         <span th:text="${anpeDate}">____________</span>
       </div>
       <div class="form-row">
-        VU L'ATTESTATION N°
+       <!-- VU L'ATTESTATION N°-->
+        <span th:text="${vu2}"></span>
         <span th:text="${cnssNumber}">____________</span>/CNSS/DG du
         <span th:text="${cnssDate}">____________</span>
       </div>
@@ -217,7 +226,7 @@
     </div>
     <!-- Section de signature -->
     <div class="signature-section">
-      <div class="signature-label"><strong>DIRECTEUR REGIONAL</strong></div>
+      <div class="signature-label"><strong> <span th:text="${titreSignataire}"></span> </strong></div>
       <div class="signature-box">
         <span> </span>
       </div>

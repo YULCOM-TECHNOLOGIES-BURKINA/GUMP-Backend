@@ -7,10 +7,18 @@ import com.yulcomtechnologies.drtssms.dtos.UpdateAttestationConfigDto;
 import com.yulcomtechnologies.drtssms.dtos.UpdateParamsActeDto;
 import com.yulcomtechnologies.drtssms.entities.AttestationConfig;
 import com.yulcomtechnologies.drtssms.entities.ParamsConfigActe;
+import com.yulcomtechnologies.drtssms.enums.FileStoragePath;
 import com.yulcomtechnologies.drtssms.repositories.AttestationConfigRepository;
 import com.yulcomtechnologies.drtssms.repositories.ParamsConfigActeRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -38,6 +46,16 @@ public class AttestationConfigService {
     }*/
 
 
+    public List<ParamsConfigActeDto> findByLabelle(String labelle) {
+        return paramsConfigActeRepository.findByLabelle(labelle).stream()
+                .map(acte -> new ParamsConfigActeDto(
+                        acte.getId(),
+                        acte.getParam(),
+                        acte.getLabelle(),
+                        acte.getValue()
+                ))
+                .collect(Collectors.toList());
+    }
 
     public List<AttestationConfigDto> getParamsConfigActe() {
         return attestationConfigRepository.findAll()
@@ -82,13 +100,16 @@ public class AttestationConfigService {
                     throw new RuntimeException("Le fichier doit être une image (png, jpg, jpeg).");
                 }
 
-                String uniqueFileName = UUID.randomUUID().toString() + "-" + fileName;
-                Path filePath = Paths.get(uploadDirectory, uniqueFileName);
+              String uniqueFileName = UUID.randomUUID().toString() + "-" + fileName;
+                 Path filePath = Paths.get(uploadDirectory, uniqueFileName);
 
                 Files.copy(logoFile.getInputStream(), filePath);
 
-                updateAttestationConfigDto.setLogo(filePath.toString());
-                attestationConfig.setLogo(filePath.toString());
+               // updateAttestationConfigDto.setLogo(filePath.toString());
+               // attestationConfig.setLogo(filePath.toString());
+
+                updateAttestationConfigDto.setLogo(getAttestationLogoUrl(uniqueFileName));
+                attestationConfig.setLogo(getAttestationLogoUrl(uniqueFileName));
 
             } catch (IOException e) {
                 throw new RuntimeException("Erreur lors de l'enregistrement du logo : " + e.getMessage());
@@ -113,6 +134,20 @@ public class AttestationConfigService {
                 updateParam.getLabelle(),
                 updateParam.getValue()
         );
+    }
+
+    public String getAttestationLogoUrl(String path) {
+         Path filePath = Paths.get("uploads", path).normalize();
+
+         File file = filePath.toFile();
+        if (!file.exists() || !file.isFile()) {
+            System.out.println("Fichier non trouvé ou invalide : " + filePath);
+            return "" + filePath;
+        }
+
+        String baseUrl = FileStoragePath.Request_URL.getPath();
+        String requestURL = baseUrl + path+"?service=drtss-ms";
+        return requestURL;
     }
 
 
