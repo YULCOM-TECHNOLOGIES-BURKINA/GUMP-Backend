@@ -18,8 +18,17 @@
       .ministry-name {
         font-size: 14px;
         margin-bottom: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
 
+      .ministry-box {
+        width: 200px;
+         display: flex;
+        justify-content: center;
+        align-items: center;
+      }
       .logo-container {
         display: flex;
         justify-content: center;
@@ -37,8 +46,7 @@
 
       .document-number {
         text-align: right;
-        margin: 20px 0;
-      }
+       }
 
       .title {
         text-align: center;
@@ -94,10 +102,12 @@
     <div></div>
     <div class="header">
       <div class="ministry-name">
-        MINISTERE DE L'ECONOMIE,<br />DES FINANCES ET DE LA<br />PROSPECTIVE
+        <span  class="ministry-box " th:text="${ministaire}">____________</span>
       </div>
       <div class="ministry-name">
-        BURKINAFASO<br />
+        <span>BURKINAFASO</span>
+      </div>
+      <div class="ministry-name">
         <span  class="devise" th:text="${devise}">____________</span>
       </div>
       <div class="ministry-name">----------</div>
@@ -159,10 +169,8 @@
         aucune copie, légalisée ou authentifiée ne pourra être utilisée par le
         soumissionnaire.
       </p>
-      <p style="font-size: 10px">
-        Immeuble DIAWARA, Avenue Hamado Paul YUGBARE<br />
-        Arrondissement n°3 de Ouagadougou (secteur n°29, quartier songtaaba)<br />
-        Tel : 25 38 68 67 / email : contactaje@aje.gov.bf
+      <p style="font-size: 10px ;width: 300px" >
+       <span th:text="${adressEmetrice}"></span>
       </p>
     </div>
   </body>

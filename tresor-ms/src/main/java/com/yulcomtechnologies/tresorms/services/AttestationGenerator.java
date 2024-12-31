@@ -86,13 +86,16 @@ public class AttestationGenerator {
         map.put("profession", documentRequest.getBusinessDomain());
         map.put("dateCreated", LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
 
-        /************
-         * New Params
-         */
         AttestationConfig ajeAttestation= attestationConfigService.getAttestationConfig();
         map.put("title",ajeAttestation.getTitle());
         map.put("logo",attestationConfigService.getAttestationConfig().getLogo());
         map.put("devise",attestationConfigService.findByLabelle("devise").get(0).getValue());
+        map.put("ministaire",attestationConfigService.findByLabelle("ministaire").get(0).getValue());
+        map.put("adressEmetrice",attestationConfigService.findByLabelle("adressEmetrice").get(0).getValue());
+        map.put("contactEmetrice",attestationConfigService.findByLabelle("contactEmetrice").get(0).getValue());
+        map.put("validiteSoumission",attestationConfigService.findByLabelle("validiteSoumission").get(0).getValue());
+        map.put("validiteLiquidation",attestationConfigService.findByLabelle("validiteLiquidation").get(0).getValue());
+
 
         if (documentRequest.getIfuNumber() != null) {
             map.put("ifu", documentRequest.getIfuNumber());
@@ -103,10 +106,10 @@ public class AttestationGenerator {
 
         try {
             var fileBytes = pdfQRCodeService.addQRCodeToPDF(templateProcessor.htmlToPdf(filledTemplate), appFrontUrl + "/api/verify-document/" + attestation.getNumber() + "/public?service=tresor-ms");
-            var filigraneTexte="Agence judiciaire de l'Etat - Valable pour (03 mois)";
+            var filigraneTexte="Agence judiciaire de l'Etat - Valable pour("+attestationConfigService.findByLabelle("validiteSoumission").get(0).getValue()+"mois)";
 
             if (typeResquest.equals(RequestType.LIQUIDATION.name())){
-                filigraneTexte="Agence judiciaire de l'Etat - Valable pour (01 mois)";
+                filigraneTexte="Agence judiciaire de l'Etat - Valable pour ("+attestationConfigService.findByLabelle("validiteLiquidation").get(0).getValue()+"mois)";
             }
 
             var finalFileBytes = pdfFiligraneService.addFiligraneToPDF(fileBytes,filigraneTexte);
@@ -165,31 +168,35 @@ public class AttestationGenerator {
         map.put("title",ajeAttestation.getTitle());
         map.put("logo",attestationConfigService.getAttestationConfig().getLogo());
         map.put("devise",attestationConfigService.findByLabelle("devise").get(0).getValue());
+        map.put("ministaire",attestationConfigService.findByLabelle("ministaire").get(0).getValue());
 
-     /*   map.put("validiteMois",attestationConfigService.findByLabelle("validiteMois").get(0).getValue());
+        map.put("adressEmetrice",attestationConfigService.findByLabelle("adressEmetrice").get(0).getValue());
+        map.put("contactEmetrice",attestationConfigService.findByLabelle("contactEmetrice").get(0).getValue());
+        map.put("validiteSoumission",attestationConfigService.findByLabelle("validiteSoumission").get(0).getValue());
+        map.put("validiteLiquidation",attestationConfigService.findByLabelle("validiteLiquidation").get(0).getValue());
+
+     /*
+      map.put("validiteMois",attestationConfigService.findByLabelle("validiteMois").get(0).getValue());
         map.put("validiteJours",attestationConfigService.findByLabelle("validiteJours").get(0).getValue());
         map.put("delaiTraitement",attestationConfigService.findByLabelle("delaiTraitement").get(0).getValue());
 
         map.put("prixActe",attestationConfigService.findByLabelle("prixActe").get(0).getValue());
         map.put("intitule",attestationConfigService.findByLabelle("intitule").get(0).getValue());
-        map.put("ministaire",attestationConfigService.findByLabelle("ministaire").get(0).getValue());
         map.put("titreSignataire",attestationConfigService.findByLabelle("titreSignataire").get(0).getValue());
-        map.put("adressEmetrice",attestationConfigService.findByLabelle("adressEmetrice").get(0).getValue());
-        map.put("contactEmetrice",attestationConfigService.findByLabelle("contactEmetrice").get(0).getValue());
-        map.put("vu1",attestationConfigService.findByLabelle("vu1").get(0).getValue());
+         map.put("vu1",attestationConfigService.findByLabelle("vu1").get(0).getValue());
         map.put("vu2",attestationConfigService.findByLabelle("vu2").get(0).getValue());*/
 
 
 
         var filledTemplate = templateProcessor.fillVariables("liquidation.html", map);
-        var typeResquest= "LIQUIDATION";
+        var typeResquest= "SOUMISSION";
 
         try {
             var fileBytes = pdfQRCodeService.addQRCodeToPDF(templateProcessor.htmlToPdf(filledTemplate), appFrontUrl + "/api/verify-document/" + attestation.getNumber() + "/public?service=tresor-ms");
-            var filigraneTexte="Agence judiciaire de l'Etat - Valable pour (03 mois)";
+            var filigraneTexte="Agence judiciaire de l'Etat - Valable pour("+attestationConfigService.findByLabelle("validiteSoumission").get(0).getValue()+"mois)";
 
             if (typeResquest.equals(RequestType.LIQUIDATION.name())){
-                filigraneTexte="Agence judiciaire de l'Etat - Valable pour (01 mois)";
+                filigraneTexte="Agence judiciaire de l'Etat - Valable pour ("+attestationConfigService.findByLabelle("validiteLiquidation").get(0).getValue()+"mois)";
             }
 
             var finalFileBytes = pdfFiligraneService.addFiligraneToPDF(fileBytes,filigraneTexte);
