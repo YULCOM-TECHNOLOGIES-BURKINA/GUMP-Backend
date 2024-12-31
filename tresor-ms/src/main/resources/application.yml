@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5430/gump
+    url: jdbc:postgresql://195.35.48.198:5430/gump
     username: gump
     password: gump
   application:

@@ -25,20 +25,16 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        margin: 20px 0;
       }
 
       .logo {
-        width: 80px;
-        height: 80px;
-        border: 2px solid #000;
-        border-radius: 50%;
+        width: 100px;
+        height: 100px;
         display: flex;
         align-items: center;
         justify-content: center;
         background: white;
       }
-
       .document-number {
         text-align: right;
         margin: 20px 0;
@@ -106,13 +102,12 @@
       <div class="ministry-name">----------</div>
       <div class="ministry-name">AGENCE JUDICIAIRE DE L'ETAT</div>
     </div>
-
     <div class="logo-container">
       <div class="logo">
         <img
-          class="logo"
-          src="https://kulturman-yelen-trash.s3.eu-west-3.amazonaws.com/LOGO+AJE.jpeg"
-          alt="AJE"
+                style="width: 100%; height: 100%"
+                th:src="${logo}"
+                alt="AJE LOGO"
         />
       </div>
     </div>

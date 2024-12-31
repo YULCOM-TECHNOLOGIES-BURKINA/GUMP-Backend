@@ -1,23 +1,19 @@
-package com.yulcomtechnologies.drtssms.controllers;
+package com.yulcomtechnologies.tresorms.controllers;
 
-import com.yulcomtechnologies.drtssms.dtos.*;
-import com.yulcomtechnologies.drtssms.services.AttestationConfigService;
-import com.yulcomtechnologies.drtssms.services.AttestationGenerator;
+import com.yulcomtechnologies.tresorms.dtos.AttestationConfigDto;
+import com.yulcomtechnologies.tresorms.dtos.ParamsConfigActeDto;
+import com.yulcomtechnologies.tresorms.dtos.UpdateAttestationConfigDto;
+import com.yulcomtechnologies.tresorms.dtos.UpdateParamsActeDto;
+import com.yulcomtechnologies.tresorms.services.AttestationConfigService;
+import com.yulcomtechnologies.tresorms.services.AttestationGenerator;
 import lombok.AllArgsConstructor;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
+
 
 @RestController
 @AllArgsConstructor
@@ -70,5 +66,12 @@ public class AttestationConfigController {
              return ResponseEntity.status(500).body("Erreur lors de la mise à jour de l'attestation : " + e.getMessage());
         }
     }
+
+
+   @GetMapping(path = "/attestation/test")
+    public void updateApplicationConfig() {
+            attestationGenerator.generateDocumentTest();
+    }
+
 
 }
