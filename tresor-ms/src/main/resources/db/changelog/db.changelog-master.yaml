@@ -27,3 +27,5 @@ databaseChangeLog:
       file: db/changelog/v1/010-remove-unique-constraints-on-debiteurs-table.xml
   - include:
       file: db/changelog/v1/011-init-attestation-params.xml
+  - include:
+        file: db/changelog/v1/012-add-some-params.xml

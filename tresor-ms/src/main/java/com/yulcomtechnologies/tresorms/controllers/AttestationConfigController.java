@@ -5,7 +5,6 @@ import com.yulcomtechnologies.tresorms.dtos.ParamsConfigActeDto;
 import com.yulcomtechnologies.tresorms.dtos.UpdateAttestationConfigDto;
 import com.yulcomtechnologies.tresorms.dtos.UpdateParamsActeDto;
 import com.yulcomtechnologies.tresorms.services.AttestationConfigService;
-import com.yulcomtechnologies.tresorms.services.AttestationGenerator;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +18,6 @@ import java.util.List;
 @AllArgsConstructor
 public class AttestationConfigController {
     private final AttestationConfigService attestationConfigService;
-    private final AttestationGenerator attestationGenerator;
 
     @GetMapping("/attestation-config")
     public List<AttestationConfigDto> getApplicationConfig() {
@@ -66,12 +64,4 @@ public class AttestationConfigController {
              return ResponseEntity.status(500).body("Erreur lors de la mise à jour de l'attestation : " + e.getMessage());
         }
     }
-
-
-   @GetMapping(path = "/attestation/test")
-    public void updateApplicationConfig() {
-            attestationGenerator.generateDocumentTest();
-    }
-
-
 }
